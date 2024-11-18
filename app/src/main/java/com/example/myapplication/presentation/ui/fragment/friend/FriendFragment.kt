@@ -1,10 +1,17 @@
 package com.example.myapplication.presentation.ui.fragment.friend
 
+import android.content.ActivityNotFoundException
+import android.util.Log
 import com.example.codingland.presenter.base.BaseFragment
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentFriendBinding
 import com.example.myapplication.domain.model.FriendsEntity
 import com.example.myapplication.presentation.adapter.FriendAdapter
+import com.kakao.sdk.common.util.KakaoCustomTabsClient
+import com.kakao.sdk.share.ShareClient
+import com.kakao.sdk.share.WebSharerClient
+import com.kakao.sdk.template.model.Link
+import com.kakao.sdk.template.model.TextTemplate
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -13,9 +20,10 @@ class FriendFragment : BaseFragment<FragmentFriendBinding>(R.layout.fragment_fri
 
     override fun setLayout() {
         initRecyclerView()
+        onClickBtn()
     }
 
-    private fun initRecyclerView(){
+    private fun initRecyclerView() {
         friendAdapter = FriendAdapter()
         binding.fragmentFriendsRankRv.adapter = friendAdapter
         friendAdapter.submitList(
@@ -46,6 +54,53 @@ class FriendFragment : BaseFragment<FragmentFriendBinding>(R.layout.fragment_fri
                 )
             )
         )
+    }
+
+    private fun onClickBtn() {
+        binding.freagmentFriendsShareIv.setOnClickListener {
+            sharedKakaoTalk()
+        }
+    }
+
+    private fun sharedKakaoTalk() {
+        val defaultText = TextTemplate(
+            text = """
+        무무와 함께 코딩 랜드로 떠나 보아요!
+    """.trimIndent(),
+            link = Link(
+                webUrl = "https://www.naver.com",
+                mobileWebUrl = "https://www.naver.com"
+            )
+        )
+        // 피드 메시지 보내기
+
+        val TAG = "카카오톡 쉐어"
+        if (ShareClient.instance.isKakaoTalkSharingAvailable(requireContext())) {
+            ShareClient.instance.shareDefault(
+                requireContext(),
+                defaultText
+            ) { sharingResult, error ->
+                if (error != null) {
+                    Log.e(TAG, "카카오톡 공유 실패", error)
+                } else if (sharingResult != null) {
+                    Log.d(TAG, "카카오톡 공유 성공 ${sharingResult.intent}")
+                    startActivity(sharingResult.intent)
+                    Log.w(TAG, "Warning Msg: ${sharingResult.warningMsg}")
+                    Log.w(TAG, "Argument Msg: ${sharingResult.argumentMsg}")
+                }
+            }
+        } else {
+            val sharerUrl = WebSharerClient.instance.makeDefaultUrl(defaultText)
+            try {
+                KakaoCustomTabsClient.openWithDefault(requireContext(), sharerUrl)
+            } catch (e: UnsupportedOperationException) {
+
+            }
+            try {
+                KakaoCustomTabsClient.open(requireContext(), sharerUrl)
+            } catch (e: ActivityNotFoundException) {
+            }
+        }
     }
 
 }
