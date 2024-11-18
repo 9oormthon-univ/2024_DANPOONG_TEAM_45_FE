@@ -9,7 +9,145 @@
         android:background="@color/white"
         tools:context=".presenter.ui.fragment.setting.SettingFragment">
 
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/activity_main_setting_tb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
+            <ImageView
+                android:id="@+id/activity_main_arrow_back_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_back" />
+
+            <TextView
+                style="@style/pretandard_semi_bold.16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="설정" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <ImageView
+            android:layout_marginTop="18dp"
+            android:id="@+id/fragment_setting_profile_iv"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintBottom_toBottomOf="@id/fragment_setting_edit_my_info_tv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/activity_main_setting_tb" />
+        <TextView
+            android:id="@+id/fragment_setting_nickname_tv"
+            app:layout_constraintStart_toEndOf="@id/fragment_setting_profile_iv"
+            app:layout_constraintTop_toTopOf="@id/fragment_setting_profile_iv"
+            android:text="유저 이름"
+            android:layout_marginStart="14dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/pretandard_semi_bold.16sp"/>
+
+        <TextView
+            android:id="@+id/fragment_setting_edit_my_info_tv"
+            style="@style/pretandard_medium.12sp"
+            android:textColor="@color/gray6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="내 정보 수정하기"
+            app:layout_constraintBottom_toBottomOf="@id/fragment_setting_profile_iv"
+            app:layout_constraintStart_toStartOf="@id/fragment_setting_nickname_tv"
+            />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/fragment_setting_divider_dv"
+            android:layout_width="match_parent"
+            android:layout_height="7dp"
+            app:dividerColor="@color/gray9"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fragment_setting_profile_iv"/>
+
+        <TextView
+            android:id="@+id/fragment_setting_notification_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="알림"
+            style="@style/pretandard_semi_bold.16sp"
+            app:layout_constraintStart_toStartOf="@id/fragment_setting_profile_iv"
+            app:layout_constraintTop_toBottomOf="@id/fragment_setting_divider_dv"
+            android:layout_marginTop="24dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_front"
+            app:layout_constraintTop_toTopOf="@id/fragment_setting_notification_tv"
+            app:layout_constraintBottom_toBottomOf="@id/fragment_setting_notification_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="20dp"/>
+
+        <TextView
+            android:id="@+id/fragment_setting_intro_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="안내"
+            style="@style/pretandard_semi_bold.16sp"
+            app:layout_constraintStart_toStartOf="@id/fragment_setting_profile_iv"
+            app:layout_constraintTop_toBottomOf="@id/fragment_setting_notification_tv"
+            android:layout_marginTop="34dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_front"
+            app:layout_constraintTop_toTopOf="@id/fragment_setting_intro_tv"
+            app:layout_constraintBottom_toBottomOf="@id/fragment_setting_intro_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="20dp"/>
+
+        <TextView
+            android:id="@+id/fragment_announcement_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="공지사항"
+            style="@style/pretandard_semi_bold.16sp"
+            app:layout_constraintStart_toStartOf="@id/fragment_setting_profile_iv"
+            app:layout_constraintTop_toBottomOf="@id/fragment_setting_intro_tv"
+            android:layout_marginTop="34dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_front"
+            app:layout_constraintTop_toTopOf="@id/fragment_announcement_tv"
+            app:layout_constraintBottom_toBottomOf="@id/fragment_announcement_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="20dp"/>
+
+        <TextView
+            android:id="@+id/fragment_question_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="자주 묻는 질문"
+            style="@style/pretandard_semi_bold.16sp"
+            app:layout_constraintStart_toStartOf="@id/fragment_setting_profile_iv"
+            app:layout_constraintTop_toBottomOf="@id/fragment_announcement_tv"
+            android:layout_marginTop="34dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_front"
+            app:layout_constraintTop_toTopOf="@id/fragment_question_tv"
+            app:layout_constraintBottom_toBottomOf="@id/fragment_question_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="20dp"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
