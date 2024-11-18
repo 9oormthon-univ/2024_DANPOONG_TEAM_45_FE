@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="pretandard_regular">
+        <item name="fontFamily">@font/pretendard_regular</item>
+    </style>
+
+    <style name="pretandard_medium">
+        <item name="fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="pretandard_bold">
+        <item name="fontFamily">@font/pretendard_bold</item>
+    </style>
+
+    <style name="pretandard_semi_bold">
+        <item name="fontFamily">@font/pretendard_semibold</item>
+    </style>
+</resources>
