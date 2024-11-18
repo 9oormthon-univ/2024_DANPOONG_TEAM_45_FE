@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_quiz_graph"
+    app:startDestination="@id/directionFragment"
+    >
+
+    <fragment
+        android:id="@+id/directionFragment"
+        android:name="com.example.codingland.presenter.ui.fragment.quest.DirectionFragment"
+        android:label="DirectionFragment"
+        tools:layout="@layout/item_character_move"
+        >
+
+    </fragment>
+    <fragment
+        android:id="@+id/ramenFragment"
+        android:name="com.example.codingland.presenter.ui.fragment.quest.RamenFragment"
+        android:label="RamenFragment"
+        tools:layout="@layout/item_ramen_order"
+        >
+
+    </fragment>
+    <fragment
+        android:id="@+id/biginnerProblem3Fragment"
+        android:name="com.example.codingland.presenter.ui.fragment.quest.BiginnerProblem3Fragment"
+        android:label="BiginnerProblem3Fragment"
+        tools:layout="@layout/fragment_biginner_problem3"
+        />
+</navigation>
