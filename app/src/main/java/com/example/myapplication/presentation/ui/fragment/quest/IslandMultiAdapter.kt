@@ -38,9 +38,12 @@ class IslandMultiAdapter(
             is IslandDto.IslandLeft -> {
                 (binding as ItemIslandLeftBinding)
                 if (item.locked) {
-                    binding.itemIslandLeftIv.setImageResource(R.drawable.iv_lake_island_locked)
+                    binding.itemIslandLeftIv.setImageResource(item.island)
                 } else {
-                    binding.itemIslandLeftIv.setImageResource(R.drawable.iv_biginner_island)
+                    when (item.name) {
+                        "초심자의 섬" -> binding.itemIslandLeftIv.setImageResource(R.drawable.iv_biginner_island)
+                        else -> binding.itemIslandLeftIv.setImageResource(R.drawable.iv_lake_island_unlocked)
+                    }
                 }
                 binding.root.setBackgroundResource(R.drawable.ic_island_left)
                 binding.itemIslandLeftNameTv.text = item.name
@@ -52,9 +55,12 @@ class IslandMultiAdapter(
             is IslandDto.IslandRight -> {
                 (binding as ItemIslandRightBinding)
                 if (item.locked) {
-                    binding.itemIslandRightIv.setImageResource(R.drawable.iv_lake_island_locked)
+                    binding.itemIslandRightIv.setImageResource(item.island)
                 } else {
-                    binding.itemIslandRightIv.setImageResource(R.drawable.iv_biginner_island)
+                    when (item.name) {
+                        "사탕의 섬" -> binding.itemIslandRightIv.setImageResource(R.drawable.iv_candy_island_unlocked)
+                        else -> binding.itemIslandRightIv.setImageResource(R.drawable.iv_candy_island_unlocked) // TODO 아마 섬 디자인 하나 추가 될듯
+                    }
                 }
                 binding.root.setBackgroundResource(R.drawable.ic_island_right)
                 binding.itemIslandRightNameTv.text = item.name

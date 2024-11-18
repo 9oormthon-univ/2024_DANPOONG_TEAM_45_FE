@@ -11,10 +11,10 @@ import com.example.myapplication.databinding.ItemReclcyerviewQuestBinding
 import com.example.myapplication.presentation.ui.fragment.quest.QuestDto
 import com.example.myapplication.presentation.widget.extention.loadCropRoundedSquareImage
 
-class QuestProblemAdapter (
+class QuestChapterAdapter (
     private val context: Context,
     private val quest_game_list: MutableList<QuestDto>
-) : RecyclerView.Adapter<QuestProblemAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<QuestChapterAdapter.ViewHolder>() {
 
     interface OnItemClickListener {
         fun OnItemClick(id: Int)

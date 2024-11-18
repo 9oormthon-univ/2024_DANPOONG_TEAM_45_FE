@@ -1,6 +1,5 @@
 package com.example.codingland.presenter.ui.fragment.quest
 
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.codingland.presenter.base.BaseFragment
@@ -11,7 +10,7 @@ import com.example.myapplication.presentation.widget.extention.loadCropImage
 
 class QuestChapterFragment : BaseFragment<FragmentQuestChapterBinding>(R.layout.fragment_quest_chapter) {
 
-    private lateinit var adapter: QuestProblemAdapter
+    private lateinit var adapter: QuestChapterAdapter
     val quest_item = mutableListOf<QuestDto>()
 
     override fun setLayout() {
@@ -32,7 +31,7 @@ class QuestChapterFragment : BaseFragment<FragmentQuestChapterBinding>(R.layout.
         }
 
         addItem()
-        adapter = QuestProblemAdapter(requireContext(), quest_item)
+        adapter = QuestChapterAdapter(requireContext(), quest_item)
 
         binding.rvBiginnerIsland.apply {
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
@@ -40,7 +39,7 @@ class QuestChapterFragment : BaseFragment<FragmentQuestChapterBinding>(R.layout.
         }
 
         // Adapter의 아이템 클릭 리스너 설정
-        adapter.itemClickListener = object : QuestProblemAdapter.OnItemClickListener {
+        adapter.itemClickListener = object : QuestChapterAdapter.OnItemClickListener {
             override fun OnItemClick(id: Int) {
                 val item = quest_item.find { it.id == id }
                 item?.let {
