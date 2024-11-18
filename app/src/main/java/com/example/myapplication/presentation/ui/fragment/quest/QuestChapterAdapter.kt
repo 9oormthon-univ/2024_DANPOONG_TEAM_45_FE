@@ -33,12 +33,12 @@ class QuestChapterAdapter (
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: QuestDto) {
-            binding.tvRvGameName.text = item.game_name
-            binding.tvRvGameDescript.text = item.game_descript
+            binding.tvRvGameName.text = item.gameName
+            binding.tvRvGameDescript.text = item.gameDescript
 //            binding.ibRvGamePic.setImageResource(item.game_img)
 
             // 게임 진행 상태
-            when(item.game_state) {
+            when(item.gameState) {
                 0 -> blockVisiblity(binding.ibGameStateIng, binding.ibGameStateIng, binding.ibGameStateDone)
                 1 -> blockVisiblity(binding.ibGameStateIng, binding.ibGameStateBefore, binding.ibGameStateDone)
                 2 -> blockVisiblity(binding.ibGameStateDone, binding.ibGameStateBefore, binding.ibGameStateIng)
@@ -46,7 +46,7 @@ class QuestChapterAdapter (
 
             }
 
-            binding.ibRvGamePic.loadCropRoundedSquareImage(item.game_img, 16)
+            binding.ibRvGamePic.loadCropRoundedSquareImage(item.gameImg, 16)
 
             binding.ibRvGamePic.setOnClickListener {
                 val position = adapterPosition

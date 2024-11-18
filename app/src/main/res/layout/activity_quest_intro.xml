@@ -64,10 +64,10 @@
             android:layout_marginTop="80dp" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/iv_basic_training0"
-            android:src="@drawable/iv_biginner_island_bigger"
+            android:layout_width="256dp"
+            android:layout_height="195dp"
+            android:id="@+id/iv_quest_intro"
+            android:src="@drawable/iv_biginner_island"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_quest_intro_sub"
@@ -87,7 +87,7 @@
             android:backgroundTint="@color/level_progress_end"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_basic_training0"
+            app:layout_constraintTop_toBottomOf="@id/iv_quest_intro"
             android:layout_marginTop="156dp"
             />
 
