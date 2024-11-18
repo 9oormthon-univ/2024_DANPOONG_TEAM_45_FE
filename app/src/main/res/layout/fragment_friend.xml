@@ -1,17 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         tools:context=".presenter.ui.fragment.friend.FriendFragment">
 
-        <!-- TODO: Update blank fragment layout -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/friend" />
 
-    </FrameLayout>
+        <androidx.appcompat.widget.Toolbar
+            android:layout_marginStart="20dp"
+            app:contentInsetStart="0dp"
+            app:contentInsetStartWithNavigation="0dp"
+            android:layout_marginEnd="20dp"
+            android:id="@+id/fragment_friends_tb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/fragment_friends_logo_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:src="@drawable/ic_logo_friends" />
+
+            <ImageView
+                android:id="@+id/freagment_friends_share_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:src="@drawable/ic_share" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/shape_square_rounded_16dp"
+            android:backgroundTint="@color/gray9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fragment_friends_tb">
+
+            <ImageView
+                android:id="@+id/fragment_friends_frame_1st_iv"
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/shape_circle_stroke_2dp_mint"
+                app:layout_constraintEnd_toStartOf="@+id/fragment_friends_frame_3rd_iv"
+                app:layout_constraintStart_toEndOf="@+id/fragment_friends_frame_2nd_iv"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/fragment_friends_crown_1st_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:paddingBottom="4dp"
+                android:src="@drawable/ic_friends_rank_1st"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_friends_frame_1st_iv"
+                app:layout_constraintEnd_toEndOf="@+id/fragment_friends_frame_1st_iv"
+                app:layout_constraintStart_toStartOf="@+id/fragment_friends_frame_1st_iv"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_friends_frame_1st_iv" />
+
+            <TextView
+                android:id="@+id/fragment_friends_name_1st_title_tv"
+                style="@style/pretandard_semi_bold.12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:text="김수진"
+                app:layout_constraintEnd_toEndOf="@+id/fragment_friends_crown_1st_iv"
+                app:layout_constraintStart_toStartOf="@+id/fragment_friends_crown_1st_iv"
+                app:layout_constraintTop_toBottomOf="@id/fragment_friends_crown_1st_iv" />
+
+            <TextView
+                android:id="@+id/textView"
+                style="@style/pretandard_regular.10sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:text="킹 선인장 71%"
+                android:textColor="@color/gray5"
+                app:layout_constraintEnd_toEndOf="@+id/fragment_friends_name_1st_title_tv"
+                app:layout_constraintStart_toStartOf="@+id/fragment_friends_name_1st_title_tv"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_friends_name_1st_title_tv" />
+
+            <ImageView
+                android:id="@+id/fragment_friends_frame_2nd_iv"
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="38dp"
+                android:background="@drawable/shape_circle_stroke_2dp_pink"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/fragment_friends_frame_1st_iv" />
+
+            <ImageView
+                android:id="@+id/fragment_friends_crown_2nd_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:paddingBottom="4dp"
+                android:src="@drawable/ic_friends_rank_2nd"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_friends_frame_2nd_iv"
+                app:layout_constraintEnd_toEndOf="@+id/fragment_friends_frame_2nd_iv"
+                app:layout_constraintStart_toStartOf="@+id/fragment_friends_frame_2nd_iv"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_friends_frame_2nd_iv" />
+
+            <TextView
+                android:id="@+id/fragment_friends_name_2nd_title_tv"
+                style="@style/pretandard_semi_bold.12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:text="김수진"
+                app:layout_constraintEnd_toEndOf="@+id/fragment_friends_crown_2nd_iv"
+                app:layout_constraintStart_toStartOf="@+id/fragment_friends_crown_2nd_iv"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_friends_crown_2nd_iv" />
+
+            <TextView
+                android:id="@+id/textView2"
+                style="@style/pretandard_regular.10sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="12dp"
+                android:gravity="center"
+                android:text="킹 선인장 71%"
+                android:textColor="@color/gray5"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/fragment_friends_name_2nd_title_tv"
+                app:layout_constraintStart_toStartOf="@+id/fragment_friends_name_2nd_title_tv"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_friends_name_2nd_title_tv" />
+
+            <ImageView
+                android:id="@+id/fragment_friends_frame_3rd_iv"
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:layout_marginTop="38dp"
+                android:layout_marginEnd="28dp"
+                android:background="@drawable/shape_circle_stroke_2dp_green"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/fragment_friends_frame_1st_iv" />
+
+            <ImageView
+                android:id="@+id/fragment_friends_crown_3rd_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:paddingBottom="4dp"
+                android:src="@drawable/ic_friends_rank_3rd"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_friends_frame_3rd_iv"
+                app:layout_constraintEnd_toEndOf="@+id/fragment_friends_frame_3rd_iv"
+                app:layout_constraintStart_toStartOf="@+id/fragment_friends_frame_3rd_iv"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_friends_frame_3rd_iv" />
+
+            <TextView
+                android:id="@+id/fragment_friends_name_3rd_title_tv"
+                style="@style/pretandard_semi_bold.12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:text="김수진"
+                app:layout_constraintEnd_toEndOf="@+id/fragment_friends_crown_3rd_iv"
+                app:layout_constraintStart_toStartOf="@+id/fragment_friends_crown_3rd_iv"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_friends_crown_2nd_iv" />
+
+            <TextView
+                style="@style/pretandard_regular.10sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="12dp"
+                android:gravity="center"
+                android:text="킹 선인장 71%"
+                android:textColor="@color/gray5"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/fragment_friends_name_3rd_title_tv"
+                app:layout_constraintStart_toStartOf="@+id/fragment_friends_name_3rd_title_tv"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_friends_name_3rd_title_tv" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fragment_friends_rank_rv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="25dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+            tools:listitem="@layout/item_friend" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
