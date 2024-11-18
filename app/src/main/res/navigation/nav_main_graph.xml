@@ -7,20 +7,20 @@
 
     <fragment
         android:id="@+id/friendFragment"
-        android:name="com.example.codingland.presenter.ui.fragment.friend.FriendFragment"
+        android:name="com.example.myapplication.presentation.ui.fragment.friend.FriendFragment"
         android:label="fragment_friend"
         tools:layout="@layout/fragment_friend" />
 
     <fragment
         android:id="@+id/questFragment"
-        android:name="com.example.codingland.presenter.ui.fragment.quest.QuestFragment"
+        android:name="com.example.myapplication.presentation.ui.fragment.quest.QuestFragment"
         android:label="fragment_quest"
         tools:layout="@layout/fragment_quest">
     </fragment>
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.codingland.presenter.ui.fragment.home.HomeFragment"
+        android:name="com.example.myapplication.presentation.ui.fragment.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
 
@@ -28,7 +28,7 @@
 
     <fragment
         android:id="@+id/settingFragment"
-        android:name="com.example.codingland.presenter.ui.fragment.setting.SettingFragment"
+        android:name="com.example.myapplication.presentation.ui.fragment.setting.SettingFragment"
         android:label="SettingFragment"
         tools:layout="@layout/fragment_setting" />
 
