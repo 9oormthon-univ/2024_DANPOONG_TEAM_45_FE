@@ -13,9 +13,20 @@
 
     <fragment
         android:id="@+id/questFragment"
-        android:name="com.example.myapplication.presentation.ui.fragment.quest.QuestFragment"
+        android:name="com.example.codingland.presenter.ui.fragment.quest.QuestFragment"
         android:label="fragment_quest"
         tools:layout="@layout/fragment_quest">
+
+        <action
+            android:id="@+id/action_questFragment_to_questProblemFragment"
+            app:destination="@id/questProblemFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/questProblemFragment"
+        android:name="com.example.codingland.presenter.ui.fragment.quest.QuestProblemFragment"
+        android:label="fragment_quest"
+        tools:layout="@layout/fragment_quest_problem">
     </fragment>
 
     <fragment
