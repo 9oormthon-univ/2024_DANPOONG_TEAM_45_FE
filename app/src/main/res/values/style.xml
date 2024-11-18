@@ -15,4 +15,114 @@
     <style name="pretandard_semi_bold">
         <item name="fontFamily">@font/pretendard_semibold</item>
     </style>
+
+    <!--크기-->
+    <style name="pretandard_bold.20sp">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="pretandard_bold.12sp">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="pretandard_bold.35sp">
+        <item name="android:textSize">35sp</item>
+    </style>
+
+    <style name="H1" parent="pretandard_semi_bold">
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="H2" parent="pretandard_semi_bold">
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="H3" parent="pretandard_semi_bold">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="pretandard_medium.12sp" >
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="pretandard_bold.16sp">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="pretandard_medium.16sp">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="pretandard_semi_bold.16sp">
+        <item name="android:textSize">16sp</item>
+    </style>
+    <!--색깔-->
+    <style name="pretandard_bold.white">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="pretandard_medium.767676">
+        <item name="android:textColor">@color/ex_login_color</item>
+    </style>
+
+
+    <style name="pretandard_bold.20sp.white">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="pretandard_bold.12sp.gray6">
+        <item name="android:textColor">@color/gray6</item>
+    </style>
+
+    <style name="pretandard_medium.12sp.white">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="pretandard_bold.16sp.gray2">
+        <item name="android:textColor">@color/gray2</item>
+    </style>
+
+    <style name="pretandard_medium.16sp.gray2">
+        <item name="android:textColor">@color/gray2</item>
+    </style>
+
+    <style name="pretandard_medium.16sp.gray6">
+        <item name="android:textColor">@color/gray6</item>
+    </style>
+
+    <style name="pretandard_semi_bold.16sp.gray2">
+        <item name="android:textColor">@color/gray2</item>
+    </style>
+
+    <style name="pretandard_medium.12sp.7C7C7C">
+        <item name="android:textColor">@color/sub_description</item>
+    </style>
+
+    <style name="CustomToolbarStyle" parent="Widget.MaterialComponents.Toolbar">
+        <item name="titleTextStyle">@style/pretandard_bold.35sp</item>
+        <item name="titleTextColor">@color/white</item> <!-- Customize title color -->
+    </style>
+
+    <!-- TextInputLayout용 스타일 추가 -->
+    <style name="CustomTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@drawable/selector_edit_text</item>
+        <item name="hintTextColor">@drawable/selector_edit_text</item>
+        <item name="android:textColorHint">@color/gray8</item>
+        <item name="fontFamily">@font/pretendard_semibold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <!-- EditText용 스타일 -->
+    <style name="CustomEditTextOnboardingStyle">
+        <item name="fontFamily">@font/pretendard_semibold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingStart">4dp</item>
+        <item name="android:paddingEnd">4dp</item>
+    </style>
+    <style name="CustomAppButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="fontFamily">@font/pretendard_semibold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>
