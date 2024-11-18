@@ -40,6 +40,7 @@
                     android:scheme="@string/scheme" />
             </intent-filter>
         </activity>
+        <activity android:name=".presentation.ui.activity.QuestIntroActivity" />
     </application>
 
 </manifest>
