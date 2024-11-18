@@ -20,6 +20,19 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(R.layout.fragment_s
     lateinit var tokenManager: TokenManager
 
     override fun setLayout() {
+        initUser()
+    }
+
+    //유저 초기화
+    private fun initUser() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                val nickname = tokenManager.getUserNickname.first()
+                val profile = tokenManager.getUserProfile.first()
+                binding.fragmentSettingProfileIv.loadProfileImage(profile!!)
+                binding.fragmentSettingNicknameTv.text = nickname
+            }
+        }
     }
 
 }
