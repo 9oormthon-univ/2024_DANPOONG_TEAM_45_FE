@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Focus 상태이고 텍스트가 있을 때 -->
+    <item android:drawable="@drawable/ic_clear_text" android:state_focused="true"/>
+    <!-- 기본 상태 -->
+    <item android:drawable="@drawable/ic_clear_text"/>
+</selector>
