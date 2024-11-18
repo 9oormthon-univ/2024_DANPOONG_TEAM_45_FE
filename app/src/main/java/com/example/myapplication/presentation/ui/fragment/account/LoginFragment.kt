@@ -30,7 +30,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
 
     override fun setLayout() {
-        binding.differentLoginTv.setOnClickListener {
+        binding.differentLoginTv.setOnClickListener{
             findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
         }
 
@@ -75,7 +75,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 loginViewModel.kakaoLogin.collectLatest {
-                    if (it.result.code == 0) { // TODO 200 -> 0 잠깐 바꿔 놓음 11.15
+                    if (it.result.code == 200) {
                         with(it.payload) {
                             saveToken(accessToken, refreshToken, picture, nickname)
                         }
