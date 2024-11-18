@@ -4,4 +4,6 @@
     <string name="quest">퀘스트</string>
     <string name="friend">친구</string>
     <string name="scheme">WJWZJnaebapQPVLrZaiyXRmgOwc=</string>
+    <string name="game_type_normal">NORMAL</string>
+    <string name="game_type_block">BLOCK</string>
 </resources>
