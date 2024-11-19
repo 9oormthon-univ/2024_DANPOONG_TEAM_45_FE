@@ -42,8 +42,10 @@
                     android:scheme="@string/appKey" />
             </intent-filter>
         </activity>
+
         <activity android:name=".presentation.ui.activity.QuestIntroActivity" />
         <activity android:name=".presentation.ui.activity.QuizActivity" />
+        <activity android:name=".presentation.ui.activity.QuizClearActivity" />
         <activity android:name=".presentation.ui.activity.PotionMysteryActivity" />
     </application>
 
