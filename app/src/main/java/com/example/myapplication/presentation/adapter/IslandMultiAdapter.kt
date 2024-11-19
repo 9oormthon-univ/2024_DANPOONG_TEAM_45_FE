@@ -1,4 +1,4 @@
-package com.example.myapplication.presentation.ui.fragment.quest
+package com.example.myapplication.presentation.adapter
 
 import android.content.Context
 import androidx.databinding.ViewDataBinding
@@ -7,6 +7,8 @@ import com.example.codingland.presenter.base.BaseMultiAdapter
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ItemIslandLeftBinding
 import com.example.myapplication.databinding.ItemIslandRightBinding
+import com.example.myapplication.presentation.ui.fragment.quest.IslandDto
+import com.example.myapplication.presentation.ui.fragment.quest.ItemClickListener
 
 class IslandMultiAdapter(
     private val context: Context,

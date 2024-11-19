@@ -20,8 +20,7 @@
                 android:id="@+id/item_algorithm_frame_iv"
                 android:layout_width="match_parent"
                 android:layout_height="185dp"
-                android:background="@drawable/shape_square_rounded_16dp"
-                android:backgroundTint="@color/gray7" />
+                android:background="@drawable/iv_background_quiz3" />
 
             <ImageButton
                 android:id="@+id/ib_biginner_problem_3_hint_off"

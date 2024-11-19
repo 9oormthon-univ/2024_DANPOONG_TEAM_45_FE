@@ -1,4 +1,4 @@
-package com.example.codingland.presenter.ui.fragment.quest
+package com.example.myapplication.presentation.adapter
 
 import android.content.Context
 import android.util.Log
@@ -20,7 +20,7 @@ class QuestChapterAdapter (
         fun OnItemClick(id: Int)
     }
 
-    var itemClickListener: OnItemClickListener ?= null
+    var itemClickListener: OnItemClickListener?= null
 
     fun blockVisiblity(visibleBlock: ImageView, goneBlock: ImageView, goneBlock2: ImageView) {
         visibleBlock.visibility = View.VISIBLE

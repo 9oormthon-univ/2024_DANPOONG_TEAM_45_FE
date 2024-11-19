@@ -6,7 +6,7 @@ import com.example.codingland.presenter.base.BaseFragment
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentQuestBinding
 import com.example.myapplication.presentation.ui.fragment.quest.IslandDto
-import com.example.myapplication.presentation.ui.fragment.quest.IslandMultiAdapter
+import com.example.myapplication.presentation.adapter.IslandMultiAdapter
 import com.example.myapplication.presentation.ui.fragment.quest.ItemClickListener
 
 class QuestFragment : BaseFragment<FragmentQuestBinding>(R.layout.fragment_quest),

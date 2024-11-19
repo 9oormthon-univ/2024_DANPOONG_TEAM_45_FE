@@ -23,8 +23,6 @@ class Quiz2Fragment : BaseFragment<ItemRamenOrderBinding>(R.layout.item_ramen_or
             binding.itemCharacterMoveClickMiddleBt
         )
         checkButtonState()
-
-        binding.itemCharacterMoveFrameIv.loadCropRoundedSquareImage(R.drawable.iv_background_quiz2, 16)
     }
 
     private val drawableList = listOf(
