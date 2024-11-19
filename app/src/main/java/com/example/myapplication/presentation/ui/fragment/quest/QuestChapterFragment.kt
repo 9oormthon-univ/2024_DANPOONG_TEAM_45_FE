@@ -48,17 +48,11 @@ class QuestChapterFragment : BaseFragment<FragmentQuestChapterBinding>(R.layout.
                     adapter.notifyDataSetChanged() // 어댑터에 변경사항 알림
                 }
 
-                when (id) {
-                    1 -> {
-                        val intent = Intent(requireActivity(), QuestIntroActivity::class.java).apply {
-                            putExtra("island name", islandName)
-                        }
-                        startActivity(intent)
-                    }  // ID에 따라 다른 Activity로 전환
-                    else -> {
-                        // TODO game activity로 이동
-                    }
+                val intent = Intent(requireActivity(), QuestIntroActivity::class.java).apply {
+                    putExtra("island name", islandName)
+                    putExtra("game id", item?.id)
                 }
+                startActivity(intent)
             }
         }
     }

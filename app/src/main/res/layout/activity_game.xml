@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/iv_game_basic_background"
+        android:background="@drawable/iv_game_basic_background"
+        android:id="@+id/gameplay_activity">
+
+        <ImageView
+            android:layout_width="500dp"
+            android:layout_height="600dp"
+            android:src="@drawable/iv_biginner_game1_image"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ib_gameplay_btn"
+            android:id="@+id/ib_gameplay_btn"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="53dp"
+            android:layout_marginLeft="30dp"
+            android:visibility="visible"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ib_gamestop_btn"
+            android:id="@+id/ib_gamestop_btn"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="53dp"
+            android:layout_marginLeft="30dp"
+            android:visibility="gone"/>
+
+        <ToggleButton
+            android:id="@+id/ib_bulb_btn"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="53dp"
+            android:background="@drawable/selector_bulb"
+            android:clickable="true"
+            android:text=""
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iv_game_hint"
+            android:src="@drawable/iv_game_hintbox"
+            android:scaleType="fitCenter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="48dp"
+            android:layout_marginLeft="90dp"
+            android:visibility="gone"/>
+
+        <!--        <TextView-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:id="@+id/txt_game_hint"-->
+        <!--            android:src="@drawable/iv_game_hintbox"-->
+        <!--            android:scaleType="fitCenter"-->
+        <!--            android:text="'반복하기' 버튼을 "-->
+        <!--            android:textAlignment="center"-->
+        <!--            android:textSize="12dp"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            android:layout_marginTop="48dp"-->
+        <!--            android:layout_marginLeft="90dp" />-->
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ib_gameplay_exit"
+            android:id="@+id/ib_gameplay_exit_btn"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="53dp"
+            android:layout_marginRight="20dp"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ib_gamestory_off"
+            android:src="@drawable/ib_gameplay_story_btn_off"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/linearLayout"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:visibility="gone"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ib_gamestory_on"
+            android:src="@drawable/ib_gameplay_story_btn_on"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/linearLayout"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ib_gamestory_msg"
+            android:src="@drawable/iv_game_story_msg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/linearLayout"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="60dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ib_gamestory_msg_txt"
+            android:text="무무가 아침 일정을 잘 마치도록 도와줘\n일어나기 > 세수하기 > 아침먹기 > 준비하기\n순서로 부탁할게! 해줄 수 있지?"
+            android:textSize="12sp"
+            android:textColor="@color/gray3"
+            app:layout_constraintStart_toStartOf="@+id/ib_gamestory_msg"
+            app:layout_constraintTop_toTopOf="@+id/ib_gamestory_msg"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="20dp"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+            <!-- 왼쪽 FrameLayout -->
+            <FrameLayout
+                android:id="@+id/leftFrameLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/rightFrameLayout"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <ImageView
+                    android:layout_width="187dp"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/iv_gameplay_layout_background" />
+
+                <!--                    <androidx.recyclerview.widget.RecyclerView-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:id="@+id/rv_game_block"-->
+                <!--                        android:layout_marginLeft="50dp"-->
+                <!--                        android:layout_marginTop="70dp"/>-->
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/linearLayout_block_list"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="50dp">
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <!-- 오른쪽 FrameLayout -->
+            <FrameLayout
+                android:id="@+id/rightFrameLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/leftFrameLayout">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/iv_gameplay_layout_background_2" />
+
+                <ImageButton
+                    android:id="@+id/ib_gameplay_when_start_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="15dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/iv_game_btn_start" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gameplay_area"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="50dp">
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ib_biginner_game1_space1"
+                        android:layout_marginTop="5dp">
+
+                        <ImageView
+                            android:id="@+id/ib_biginner_game1_practice_block_1"
+                            android:layout_width="120dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="5dp"
+                            android:src="@drawable/shape_square_rounded_16dp" />
+                        <TextView
+                            android:id="@+id/ib_biginner_game1_practice_txt_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginLeft="15dp"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:text="" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ib_biginner_game1_space2">
+
+                        <ImageView
+                            android:id="@+id/ib_biginner_game1_practice_block_2"
+                            android:layout_width="120dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="5dp"
+                            android:src="@drawable/shape_square_rounded_16dp" />
+                        <TextView
+                            android:id="@+id/ib_biginner_game1_practice_txt_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginLeft="15dp"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:text="" />
+                    </FrameLayout>
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ib_biginner_game1_space3">
+
+                        <ImageView
+                            android:id="@+id/ib_biginner_game1_practice_block_3"
+                            android:layout_width="120dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="5dp"
+                            android:src="@drawable/shape_square_rounded_16dp" />
+                        <TextView
+                            android:id="@+id/ib_biginner_game1_practice_txt_3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginLeft="15dp"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:text="" />
+                    </FrameLayout>
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ib_biginner_game1_space4">
+
+                        <ImageView
+                            android:id="@+id/ib_biginner_game1_practice_block_4"
+                            android:layout_width="120dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="5dp"
+                            android:src="@drawable/shape_square_rounded_16dp" />
+                        <TextView
+                            android:id="@+id/ib_biginner_game1_practice_txt_4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginLeft="15dp"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:text="" />
+                    </FrameLayout>
+                </LinearLayout>
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+

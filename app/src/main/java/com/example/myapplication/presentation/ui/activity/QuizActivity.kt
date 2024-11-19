@@ -168,7 +168,9 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
             }
 
             3 -> {
-//                startActivity(Intent(this@QuizActivity, NextStageActivity::class.java))
+                intent.putExtra("game1Activity", true)
+                intent.putExtra("button state", 2)
+                startActivity(Intent(this@QuizActivity, QuizClearActivity::class.java))
                 finish() // QuizActivity 종료
             }
         }
