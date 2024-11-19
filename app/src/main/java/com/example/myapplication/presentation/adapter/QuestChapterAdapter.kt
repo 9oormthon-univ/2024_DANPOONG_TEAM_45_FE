@@ -1,4 +1,4 @@
-package com.example.myapplication.presentation.ui.fragment.quest
+package com.example.myapplication.presentation.adapter
 
 import android.content.Context
 import android.util.Log
@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.databinding.ItemReclcyerviewQuestBinding
+import com.example.myapplication.presentation.ui.fragment.quest.QuestDto
 import com.example.myapplication.presentation.widget.extention.loadCropRoundedSquareImage
 
 class QuestChapterAdapter (
