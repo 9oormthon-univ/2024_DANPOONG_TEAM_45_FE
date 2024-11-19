@@ -1,9 +1,8 @@
 package com.example.myapplication.domain.repository.quizcleared
 
-import com.example.codingland.data.repository.remote.datasource.remote.IsQuizClearedDataSource
+import com.example.myapplication.data.repository.remote.datasource.remote.IsQuizClearedDataSource
 import com.example.myapplication.data.repository.remote.response.quizcleared.ClearStateListResponse
 import com.example.myapplication.data.repository.remote.response.quizcleared.ClearStateResponse
-import com.example.myapplication.domain.repository.quizcleared.IsQuizClearedRepository
 import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -13,7 +12,7 @@ data class IsQuizClearedRepositoryImpl @Inject constructor(
     private val isQuizClearedDataSource: IsQuizClearedDataSource
 ) : IsQuizClearedRepository {
     override suspend fun postQuizCleared(quiz_id: Int, user_id: Int): Flow<Response<ResponseBody>> =
-        isQuizClearedDataSource.postQuizCleared(quiz_id,user_id)
+        isQuizClearedDataSource.postQuizCleared(quiz_id, user_id)
 
     override suspend fun getQuizDistinct(isQuizCleared_id: Int): Flow<Response<ClearStateResponse>> =
         isQuizClearedDataSource.getQuizDistinct(isQuizCleared_id)
@@ -22,7 +21,7 @@ data class IsQuizClearedRepositoryImpl @Inject constructor(
         isQuizCleared_id: Int,
         isCleared: Boolean
     ): Flow<Response<ResponseBody>> =
-        isQuizClearedDataSource.patchQuizSuccessState(isQuizCleared_id,isCleared)
+        isQuizClearedDataSource.patchQuizSuccessState(isQuizCleared_id, isCleared)
 
     override suspend fun getQuizAll(): Flow<Response<ClearStateListResponse>> =
         isQuizClearedDataSource.getQuizAll()

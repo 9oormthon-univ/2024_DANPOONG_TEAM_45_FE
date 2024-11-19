@@ -1,4 +1,4 @@
-package com.example.codingland.presenter.ui.fragment.quest
+package com.example.myapplication.presentation.ui.fragment.quest
 
 import android.content.Context
 import android.util.Log
@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.databinding.ItemReclcyerviewQuestBinding
-import com.example.myapplication.presentation.ui.fragment.quest.QuestDto
 import com.example.myapplication.presentation.widget.extention.loadCropRoundedSquareImage
 
 class QuestChapterAdapter (
@@ -20,7 +19,7 @@ class QuestChapterAdapter (
         fun OnItemClick(id: Int)
     }
 
-    var itemClickListener: OnItemClickListener ?= null
+    var itemClickListener: OnItemClickListener?= null
 
     fun blockVisiblity(visibleBlock: ImageView, goneBlock: ImageView, goneBlock2: ImageView) {
         visibleBlock.visibility = View.VISIBLE
