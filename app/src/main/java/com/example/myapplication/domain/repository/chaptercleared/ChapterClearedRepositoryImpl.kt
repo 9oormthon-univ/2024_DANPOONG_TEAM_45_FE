@@ -1,9 +1,8 @@
 package com.example.myapplication.domain.repository.chaptercleared
 
-import com.example.codingland.data.repository.remote.datasource.remote.IsChapterClearedDataSource
-import com.example.codingland.data.repository.remote.response.chaptercleared.ClearChapterStateListResponse
-import com.example.codingland.data.repository.remote.response.chaptercleared.ClearChapterStateResponse
-import com.example.codingland.domain.repository.chaptercleared.ChapterClearedRepository
+import com.example.myapplication.data.repository.remote.datasource.remote.IsChapterClearedDataSource
+import com.example.myapplication.data.repository.remote.response.chaptercleared.ClearChapterStateListResponse
+import com.example.myapplication.data.repository.remote.response.chaptercleared.ClearChapterStateResponse
 import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
 import retrofit2.Response
