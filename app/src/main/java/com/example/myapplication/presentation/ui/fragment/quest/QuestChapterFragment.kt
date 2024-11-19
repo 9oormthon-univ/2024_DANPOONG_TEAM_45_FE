@@ -25,9 +25,9 @@ class QuestChapterFragment : BaseFragment<FragmentQuestChapterBinding>(R.layout.
         if(arguments != null){
             binding.ivBiginnerFlagTxt.text = islandName
             when (islandName) {
-                "초심자의 섬" -> binding.ivBiginnerIslandIcon.loadCropImage(R.drawable.iv_biginner_island)
-                "사탕의 섬" -> binding.ivBiginnerIslandIcon.loadCropImage(R.drawable.iv_candy_island_unlocked)
-                "호수의 섬" -> binding.ivBiginnerIslandIcon.loadCropImage(R.drawable.iv_lake_island_unlocked)
+                resources.getString(R.string.biginner_island) -> binding.ivBiginnerIslandIcon.loadCropImage(R.drawable.iv_biginner_island)
+                resources.getString(R.string.candy_island) -> binding.ivBiginnerIslandIcon.loadCropImage(R.drawable.iv_candy_island_unlocked)
+                resources.getString(R.string.lake_island) -> binding.ivBiginnerIslandIcon.loadCropImage(R.drawable.iv_lake_island_unlocked)
                 else -> binding.ivBiginnerIslandIcon.loadCropImage(R.drawable.iv_biginner_island)
             }
         }
@@ -67,13 +67,13 @@ class QuestChapterFragment : BaseFragment<FragmentQuestChapterBinding>(R.layout.
     private fun addItem() {
         val islandName = arguments?.getString("island name")
         when (islandName) {
-            "초심자의 섬" -> {
+            resources.getString(R.string.biginner_island) -> {
                 with(questItem) {
                     add(QuestDto(1, "@string/game_state_normal", "기초 훈련하기", "초보 모험가를 위한 기초 훈련!", R.drawable.iv_biginner_background_game1,0)) // drawable 리소스 아이디 사용
                     add(QuestDto(2, "@string/game_state_block","모험 준비하기", "본격적으로 모험을 준비해봐요!", R.drawable.iv_biginner_background_game2,0))
                 }
             }
-            "사탕의 섬" -> {
+            resources.getString(R.string.candy_island) -> {
                 with(questItem) {
                     add(QuestDto(1, "@string/game_state_block","달콤한 첫 걸음", "사탕의 섬에서의 첫 퀘스트!", R.drawable.iv_candy_background_game1,0)) //
                     add(QuestDto(2, "@string/game_state_block","사탕을 찾아가자!", "무무가 사탕을 찾도록 도와주세요", R.drawable.iv_candy_background_game2,0))
@@ -82,7 +82,7 @@ class QuestChapterFragment : BaseFragment<FragmentQuestChapterBinding>(R.layout.
                     add(QuestDto(5, "@string/game_state_block","사탕의 섬을 구해라!", "사탕의 섬이 녹아내리고 있어요", R.drawable.iv_candy_background_game5, 0))
                 }
             }
-            "호수의 섬" -> {
+            resources.getString(R.string.lake_island) -> {
                 with(questItem) {
                     add(QuestDto(1, "@string/game_state_normal", "기초 훈련하기", "초보 모험가를 위한 기초 훈련!", R.drawable.iv_biginner_background_game1,0))
                     add(QuestDto(2, "@string/game_state_block","모험 준비하기", "본격적으로 모험을 준비해봐요!", R.drawable.iv_biginner_background_game2,0))

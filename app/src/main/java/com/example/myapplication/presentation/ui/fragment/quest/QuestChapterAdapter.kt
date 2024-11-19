@@ -13,7 +13,7 @@ import com.example.myapplication.presentation.widget.extention.loadCropRoundedSq
 
 class QuestChapterAdapter (
     private val context: Context,
-    private val quest_game_list: MutableList<QuestDto>
+    private val questGameList: MutableList<QuestDto>
 ) : RecyclerView.Adapter<QuestChapterAdapter.ViewHolder>() {
 
     interface OnItemClickListener {
@@ -51,7 +51,7 @@ class QuestChapterAdapter (
             binding.ibRvGamePic.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    val itemId = quest_game_list[position].id  // ID 가져오기
+                    val itemId = questGameList[position].id  // ID 가져오기
                     itemClickListener?.OnItemClick(itemId)  // ID 전달
                 }
             }
@@ -65,10 +65,10 @@ class QuestChapterAdapter (
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.d("QuestProblemAdapter", "Binding item at position $position")
-        holder.bind(quest_game_list[position])
+        holder.bind(questGameList[position])
     }
 
     override fun getItemCount(): Int {
-        return quest_game_list.size
+        return questGameList.size
     }
 }

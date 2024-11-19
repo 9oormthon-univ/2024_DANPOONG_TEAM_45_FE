@@ -12,12 +12,9 @@ class QuestIntroActivity :
     override fun setLayout() {
 
         val islandName = intent.getStringExtra("island name")
-        if (islandName != null) {
-            Log.d("fdf", islandName)
-        }
 
         when (islandName) {
-            "초심자의 섬" -> {
+            resources.getString(R.string.biginner_island) -> {
                 binding.tvQuestIntro.text = "코딩 모험의 준비를\n위한 섬에 도착했어요!"
                 binding.ivQuestIntro.loadCropImage(R.drawable.iv_biginner_island)
                 binding.tvQuestIntroSub.text = "먼 길을 떠나기 전, 초심자의 섬 곳곳에 흩어진 \n미션들을 해결하며 기초를 쌓아 볼까요?"
