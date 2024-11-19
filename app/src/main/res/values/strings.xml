@@ -8,4 +8,6 @@
     <string name="lake_island">호수의 섬</string>
     <string name="game_type_normal">NORMAL</string>
     <string name="game_type_block">BLOCK</string>
+    <string name="block_type_normal">NORMAL</string>
+    <string name="block_type_repeat">REPEAT</string>
 </resources>

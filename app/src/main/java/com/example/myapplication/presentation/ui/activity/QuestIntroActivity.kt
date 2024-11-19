@@ -41,9 +41,16 @@ class QuestIntroActivity :
 
 
         binding.btnQuestIntroStart.setOnClickListener {
-            val intent = Intent(this, QuizActivity::class.java)
-            startActivity(intent)
-            this.finish()
+            if (islandName == resources.getString(R.string.biginner_island) && gameId == 1) {
+                val intent = Intent(this, QuizActivity::class.java)
+                startActivity(intent)
+                this.finish()
+            }
+            else {
+                val intent = Intent(this, GameActivity::class.java)
+                startActivity(intent)
+                this.finish()
+            }
         }
         binding.ivActivityQuestIntroExit.setOnClickListener {
             this.onBackPressed()
