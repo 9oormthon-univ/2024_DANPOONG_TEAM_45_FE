@@ -2,7 +2,7 @@ package com.example.myapplication.presentation.ui.fragment.home
 
 import android.content.Intent
 import androidx.navigation.fragment.findNavController
-import com.example.codingland.presenter.base.BaseFragment
+import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentHomeBinding
 import com.example.myapplication.presentation.ui.activity.PotionMysteryActivity

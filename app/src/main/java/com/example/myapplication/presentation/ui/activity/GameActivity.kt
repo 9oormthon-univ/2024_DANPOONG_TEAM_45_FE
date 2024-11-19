@@ -1,13 +1,9 @@
 package com.example.myapplication.presentation.ui.activity
 
-import com.example.myapplication.R
-import com.example.myapplication.databinding.ActivityGameBinding
-
 import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipDescription.MIMETYPE_TEXT_PLAIN
 import android.content.ContentValues.TAG
-import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.text.InputType
@@ -16,7 +12,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.DRAG_FLAG_GLOBAL
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -27,7 +22,9 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.DragStartHelper
 import androidx.draganddrop.DropHelper
-import com.example.codingland.presenter.base.BaseActivity
+import com.example.myapplication.R
+import com.example.myapplication.databinding.ActivityGameBinding
+import com.example.myapplication.presentation.base.BaseActivity
 
 class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
@@ -211,7 +208,10 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 Log.d(TAG, "타겟 ${index + 1}에 블록이 드롭되지 않았습니다.")
                 success = false
             } else if (droppedBlock != correctBlockOrder[index]) {
-                Log.d(TAG, "타겟 ${index + 1}에 잘못된 블록이 드롭되었습니다. 예상: ${correctBlockOrder[index]}, 실제: $droppedBlock")
+                Log.d(
+                    TAG,
+                    "타겟 ${index + 1}에 잘못된 블록이 드롭되었습니다. 예상: ${correctBlockOrder[index]}, 실제: $droppedBlock"
+                )
                 success = false
             }
         }
@@ -335,7 +335,12 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         dropTargets.forEach { target ->
             // 기존 ImageView 리셋
             val targetImageView = target.getChildAt(0) as ImageView
-            targetImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.shape_square_rounded_16dp))
+            targetImageView.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.shape_square_rounded_16dp
+                )
+            )
 
             // 기존에 있던 TextView를 제거하고 새로 추가
             if (target.childCount > 1) {

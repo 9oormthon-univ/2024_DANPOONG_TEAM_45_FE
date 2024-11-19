@@ -10,7 +10,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
-import com.example.codingland.presenter.base.BaseFragment
+import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentOnboardingBinding
 import com.example.myapplication.presentation.ui.activity.AccountActivity

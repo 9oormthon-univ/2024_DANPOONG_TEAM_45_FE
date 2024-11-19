@@ -8,7 +8,7 @@ import android.widget.Button
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
-import com.example.codingland.presenter.base.BaseActivity
+import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.presentation.ui.fragment.quest.CustomDialog
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityQuizBinding

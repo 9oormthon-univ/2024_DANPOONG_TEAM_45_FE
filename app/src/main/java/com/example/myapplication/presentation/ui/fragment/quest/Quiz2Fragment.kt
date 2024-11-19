@@ -2,7 +2,7 @@ package com.example.myapplication.presentation.ui.fragment.quest
 
 import android.util.Log
 import android.view.View
-import com.example.codingland.presenter.base.BaseFragment
+import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ItemRamenOrderBinding
 import com.example.myapplication.presentation.ui.activity.QuizActivity

@@ -1,15 +1,13 @@
 package com.example.myapplication.presentation.adapter
 
-import com.example.codingland.presenter.base.BaseAdapter
-import com.example.codingland.presenter.base.BaseDiffCallback
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ItemFriendBinding
 import com.example.myapplication.domain.model.FriendsEntity
+import com.example.myapplication.presentation.base.BaseAdapter
+import com.example.myapplication.presentation.base.BaseDiffCallback
 import com.example.myapplication.presentation.widget.extention.loadProfileImage
 
-
-class FriendAdapter(
-) : BaseAdapter<FriendsEntity, ItemFriendBinding>(
+class FriendAdapter : BaseAdapter<FriendsEntity, ItemFriendBinding>(
     BaseDiffCallback(
         itemsTheSame = { oldItem, newItem -> oldItem == newItem },
         contentsTheSame = { oldItem, newItem -> oldItem == newItem }
@@ -22,8 +20,7 @@ class FriendAdapter(
         with(binding) {
             friendData = item
             itemFriendIv.loadProfileImage(item.profile)
+            binding.itemFriendRankTv.text = item.rank
         }
     }
-
-
 }
