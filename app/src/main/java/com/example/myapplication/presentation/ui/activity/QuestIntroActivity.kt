@@ -1,5 +1,6 @@
 package com.example.myapplication.presentation.ui.activity
 
+import android.content.Intent
 import android.util.Log
 import com.example.codingland.presenter.base.BaseActivity
 import com.example.myapplication.R
@@ -32,9 +33,9 @@ class QuestIntroActivity :
 
 
         binding.btnQuestIntroStart.setOnClickListener {
-//            val intent = Intent(this, QuizActivity::class.java)
-//            startActivity(intent)
-//            this.finish()
+            val intent = Intent(this, QuizActivity::class.java)
+            startActivity(intent)
+            this.finish()
         }
         binding.ivActivityQuestIntroExit.setOnClickListener {
             this.onBackPressed()

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="42dp"
+        android:layout_marginEnd="42dp"
+        android:background="@drawable/shape_square_rounded_20dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <TextView
+            android:id="@+id/dialog_button_two_title"
+            style="@style/pretandard_semi_bold.16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="너무 맛있는 라면이야!"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/dialog_button_two_subtitle"
+            style="@style/pretandard_regular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="앞으로 잘 부탁해~"
+            android:textColor="@color/gray6"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dialog_button_two_title" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/dialog_button_stop"
+            style="@style/pretandard_semi_bold"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="26dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/shape_square_rounded_40dp_stroke_1dp_gray8"
+            android:text="그만하기"
+            android:layout_marginBottom="18dp"
+            android:textColor="@color/gray7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/dialog_button_next_step"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_button_two_subtitle" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/dialog_button_next_step"
+            style="@style/pretandard_semi_bold"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="26dp"
+            android:background="@drawable/shape_square_rounded_40dp_mint"
+            android:text="다음단계"
+            android:layout_marginBottom="18dp"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_button_two_subtitle" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

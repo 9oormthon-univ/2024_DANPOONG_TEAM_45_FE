@@ -43,6 +43,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".presentation.ui.activity.QuestIntroActivity" />
+        <activity android:name=".presentation.ui.activity.QuizActivity" />
+        <activity android:name=".presentation.ui.activity.PotionMysteryActivity" />
     </application>
 
 </manifest>
