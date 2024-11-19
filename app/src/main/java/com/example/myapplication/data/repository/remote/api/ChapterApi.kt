@@ -1,8 +1,8 @@
 package com.example.myapplication.data.repository.remote.api
 
-import com.example.codingland.data.repository.remote.request.chapter.RegisterChapterDto
-import com.example.codingland.data.repository.remote.response.chapter.AllChapterResponse
-import com.example.codingland.data.repository.remote.response.chapter.DistinctChapterResponse
+import com.example.myapplication.data.repository.remote.request.chapter.RegisterChapterDto
+import com.example.myapplication.data.repository.remote.response.chapter.AllChapterResponse
+import com.example.myapplication.data.repository.remote.response.chapter.DistinctChapterResponse
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body

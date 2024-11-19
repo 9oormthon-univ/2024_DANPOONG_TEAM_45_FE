@@ -1,8 +1,8 @@
 package com.example.myapplication.data.repository.remote.datasource.remote
 
-import com.example.codingland.data.repository.remote.request.chapter.RegisterChapterDto
-import com.example.codingland.data.repository.remote.response.chapter.AllChapterResponse
-import com.example.codingland.data.repository.remote.response.chapter.DistinctChapterResponse
+import com.example.myapplication.data.repository.remote.request.chapter.RegisterChapterDto
+import com.example.myapplication.data.repository.remote.response.chapter.AllChapterResponse
+import com.example.myapplication.data.repository.remote.response.chapter.DistinctChapterResponse
 import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
 import retrofit2.Response

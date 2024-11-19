@@ -1,6 +1,5 @@
-package com.example.codingland.domain.usecase.chapter
-
-import com.example.codingland.data.repository.remote.request.chapter.RegisterChapterDto
+package com.example.myapplication.domain.usecase.chapter
+import com.example.myapplication.data.repository.remote.request.chapter.RegisterChapterDto
 import com.example.myapplication.domain.repository.chapter.ChapterRepository
 import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
