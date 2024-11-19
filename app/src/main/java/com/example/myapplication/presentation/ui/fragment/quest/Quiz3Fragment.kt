@@ -17,8 +17,6 @@ open class Quiz3Fragment :
     override fun setLayout() {
         initList()
         btnClick()
-
-        binding.itemAlgorithmFrameIv.loadCropRoundedSquareImage(R.drawable.iv_background_quiz3, 16)
     }
 
     private fun initList() {

@@ -3,7 +3,8 @@ package com.example.myapplication.presentation.ui.fragment.quest
 import android.content.Intent
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapplication.presentation.base.BaseFragment
+import com.example.codingland.presenter.base.BaseFragment
+import com.example.myapplication.presentation.adapter.QuestChapterAdapter
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentQuestChapterBinding
 import com.example.myapplication.presentation.ui.activity.QuestIntroActivity
@@ -47,17 +48,11 @@ class QuestChapterFragment : BaseFragment<FragmentQuestChapterBinding>(R.layout.
                     adapter.notifyDataSetChanged() // 어댑터에 변경사항 알림
                 }
 
-                when (id) {
-                    1 -> {
-                        val intent = Intent(requireActivity(), QuestIntroActivity::class.java).apply {
-                            putExtra("island name", islandName)
-                        }
-                        startActivity(intent)
-                    }  // ID에 따라 다른 Activity로 전환
-                    else -> {
-                        // TODO game activity로 이동
-                    }
+                val intent = Intent(requireActivity(), QuestIntroActivity::class.java).apply {
+                    putExtra("island name", islandName)
+                    putExtra("game id", item?.id)
                 }
+                startActivity(intent)
             }
         }
     }
@@ -67,8 +62,8 @@ class QuestChapterFragment : BaseFragment<FragmentQuestChapterBinding>(R.layout.
         when (islandName) {
             resources.getString(R.string.biginner_island) -> {
                 with(questItem) {
-                    add(QuestDto(1, resources.getString(R.string.game_type_normal), "기초 훈련하기", "초보 모험가를 위한 기초 훈련!", R.drawable.iv_biginner_background_game1,0)) // drawable 리소스 아이디 사용
-                    add(QuestDto(2, resources.getString(R.string.game_type_block),"모험 준비하기", "본격적으로 모험을 준비해봐요!", R.drawable.iv_biginner_background_game2,0))
+                    add(QuestDto(1, resources.getString(R.string.game_type_normal), "기초 훈련하기", "초보 모험가를 위한 기초 훈련!", R.drawable.iv_background_biginner_game1,0)) // drawable 리소스 아이디 사용
+                    add(QuestDto(2, resources.getString(R.string.game_type_block),"모험 준비하기", "본격적으로 모험을 준비해봐요!", R.drawable.iv_background_biginner_game2,0))
                 }
             }
             resources.getString(R.string.candy_island) -> {
@@ -82,14 +77,14 @@ class QuestChapterFragment : BaseFragment<FragmentQuestChapterBinding>(R.layout.
             }
             resources.getString(R.string.lake_island) -> {
                 with(questItem) {
-                    add(QuestDto(1, resources.getString(R.string.game_type_normal), "기초 훈련하기", "초보 모험가를 위한 기초 훈련!", R.drawable.iv_biginner_background_game1,0))
-                    add(QuestDto(2, resources.getString(R.string.game_type_block),"모험 준비하기", "본격적으로 모험을 준비해봐요!", R.drawable.iv_biginner_background_game2,0))
+                    add(QuestDto(1, resources.getString(R.string.game_type_block), "바위점프!", "초보 모험가를 위한 기초 훈련!", R.drawable.iv_background_lake_game1,0))
+                    add(QuestDto(2, resources.getString(R.string.game_type_block),"모험 준비하기", "본격적으로 모험을 준비해봐요!", R.drawable.iv_background_lake_game2,0))
                 }
             }
             else -> {
                 with(questItem) {
-                    add(QuestDto(1, resources.getString(R.string.game_type_normal), "기초 훈련하기", "초보 모험가를 위한 기초 훈련!", R.drawable.iv_biginner_background_game1,0))
-                    add(QuestDto(2, resources.getString(R.string.game_type_block),"모험 준비하기", "본격적으로 모험을 준비해봐요!", R.drawable.iv_biginner_background_game2,0))
+                    add(QuestDto(1, resources.getString(R.string.game_type_normal), "기초 훈련하기", "초보 모험가를 위한 기초 훈련!", R.drawable.iv_background_biginner_game1,0))
+                    add(QuestDto(2, resources.getString(R.string.game_type_block),"모험 준비하기", "본격적으로 모험을 준비해봐요!", R.drawable.iv_background_biginner_game2,0))
                 }
             }
         }

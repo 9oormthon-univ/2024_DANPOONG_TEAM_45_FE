@@ -23,8 +23,6 @@ class Quiz1Fragment : BaseFragment<ItemCharacterMoveBinding>(R.layout.item_chara
             confirmCorrectQuestion()
             buttonSet(true)
         }
-
-        binding.itemCharacterMoveFrameIv.loadCropRoundedSquareImage(R.drawable.iv_background_quiz1, 16)
     }
 
     //버튼 상태 변경
