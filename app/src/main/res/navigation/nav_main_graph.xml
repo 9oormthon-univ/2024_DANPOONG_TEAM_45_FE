@@ -24,7 +24,7 @@
 
     <fragment
         android:id="@+id/questProblemFragment"
-        android:name="com.example.codingland.presenter.ui.fragment.quest.QuestChapterFragment"
+        android:name="com.example.myapplication.presentation.ui.fragment.quest.QuestChapterFragment"
         android:label="fragment_quest"
         tools:layout="@layout/fragment_quest_chapter">
     </fragment>

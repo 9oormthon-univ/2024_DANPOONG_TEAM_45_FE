@@ -3,6 +3,9 @@
     <string name="home">홈</string>
     <string name="quest">퀘스트</string>
     <string name="friend">친구</string>
+    <string name="biginner_island">초심자의 섬</string>
+    <string name="candy_island">사탕의 섬</string>
+    <string name="lake_island">호수의 섬</string>
     <string name="game_type_normal">NORMAL</string>
     <string name="game_type_block">BLOCK</string>
 </resources>

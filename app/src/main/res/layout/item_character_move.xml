@@ -9,6 +9,54 @@
         android:layout_height="wrap_content">
 
 
+        <ImageView
+            android:layout_marginBottom="16dp"
+            android:id="@+id/item_character_move_frame_iv"
+            android:layout_width="0dp"
+            android:layout_height="320dp"
+            android:background="@drawable/shape_square_rounded_16dp"
+            android:backgroundTint="@color/gray8"
+            app:layout_constraintBottom_toTopOf="@+id/item_character_move_click_left_bt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/item_character_move_click_left_bt"
+            android:text="왼쪽으로"
+            style="@style/pretandard_semi_bold.16sp"
+            android:layout_width="0dp"
+            android:layout_height="105dp"
+            android:layout_marginEnd="4dp"
+            android:textColor="@color/gray3"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/selector_checked_quiz"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guideline"
+            app:layout_constraintStart_toStartOf="@id/item_character_move_frame_iv" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/item_character_move_click_right_bt"
+            android:layout_width="0dp"
+            android:layout_height="105dp"
+            android:text="오른쪽으로"
+            style="@style/pretandard_semi_bold.16sp"
+            android:layout_marginBottom="32dp"
+            android:layout_marginStart="4dp"
+            android:background="@drawable/selector_checked_quiz"
+            android:textColor="@color/gray3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/item_character_move_frame_iv"
+            app:layout_constraintStart_toStartOf="@id/guideline" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
 
