@@ -3,29 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_quiz_graph"
-    app:startDestination="@id/directionFragment"
+    app:startDestination="@id/quiz1Fragment"
     >
 
     <fragment
-        android:id="@+id/directionFragment"
-        android:name="com.example.codingland.presenter.ui.fragment.quest.DirectionFragment"
-        android:label="DirectionFragment"
-        tools:layout="@layout/item_character_move"
-        >
-
+        android:id="@+id/quiz1Fragment"
+        android:name="com.example.myapplication.presentation.ui.fragment.quest.Quiz1Fragment"
+        android:label="Quiz1Fragment"
+        tools:layout="@layout/item_character_move">
+        <action
+            android:id="@+id/action_quiz1Fragment_to_quiz2Fragment"
+            app:destination="@id/quiz2Fragment" />
     </fragment>
     <fragment
-        android:id="@+id/ramenFragment"
-        android:name="com.example.codingland.presenter.ui.fragment.quest.RamenFragment"
-        android:label="RamenFragment"
+        android:id="@+id/quiz2Fragment"
+        android:name="com.example.myapplication.presentation.ui.fragment.quest.Quiz2Fragment"
+        android:label="Quiz2Fragment"
         tools:layout="@layout/item_ramen_order"
         >
 
+        <action
+            android:id="@+id/action_quiz2Fragment_to_biginnerProblem3Fragment"
+            app:destination="@id/quiz3Fragment" />
     </fragment>
     <fragment
-        android:id="@+id/biginnerProblem3Fragment"
-        android:name="com.example.codingland.presenter.ui.fragment.quest.BiginnerProblem3Fragment"
-        android:label="BiginnerProblem3Fragment"
-        tools:layout="@layout/fragment_biginner_problem3"
+        android:id="@+id/quiz3Fragment"
+        android:name="com.example.myapplication.presentation.ui.fragment.quest.Quiz3Fragment"
+        android:label="Quiz3Fragment"
+        tools:layout="@layout/item_algorithm"
         />
 </navigation>

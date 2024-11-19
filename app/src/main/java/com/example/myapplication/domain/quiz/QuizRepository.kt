@@ -1,4 +1,4 @@
-package com.example.myapplication.data.repository.remote.datasource.remote
+package com.example.myapplication.domain.quiz
 
 import com.example.myapplication.data.repository.remote.request.quiz.EditQuizDto
 import com.example.myapplication.data.repository.remote.request.quiz.QuizDto
@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
 import retrofit2.Response
 
-interface QuizDataSource {
+interface QuizRepository {
     suspend fun postCreateQuiz(quizDto: QuizDto): Flow<Response<ResponseBody>>
     suspend fun patchModifyQuiz(editQuizDto: EditQuizDto): Flow<Response<ResponseBody>>
     suspend fun deleteQuiz(quiz_id: Int): Flow<Response<ResponseBody>>

@@ -1,8 +1,8 @@
-package com.example.codingland.data.repository.remote.datasourceimpl
+package com.example.myapplication.data.repository.remote.datasourceImpl
 
 import android.util.Log
 import com.example.myapplication.data.repository.remote.api.QuizApi
-import com.example.codingland.data.repository.remote.datasource.remote.QuizDataSource
+import com.example.myapplication.data.repository.remote.datasource.remote.QuizDataSource
 import com.example.myapplication.data.repository.remote.request.quiz.EditQuizDto
 import com.example.myapplication.data.repository.remote.request.quiz.QuizDto
 import com.example.myapplication.data.repository.remote.response.quiz.AllQuizResponse

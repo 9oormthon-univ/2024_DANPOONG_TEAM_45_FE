@@ -9,6 +9,77 @@
         android:paddingEnd="20dp">
 
 
+        <ImageView
+            android:id="@+id/item_character_move_frame_iv"
+            android:layout_width="0dp"
+            android:layout_height="320dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/shape_square_rounded_16dp"
+            android:backgroundTint="@color/gray8"
+            app:layout_constraintBottom_toTopOf="@+id/item_character_move_click_middle_bt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.335" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.675" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/item_character_move_click_left_bt"
+            style="@style/pretandard_semi_bold.16sp"
+            android:layout_width="0dp"
+            android:layout_height="105dp"
+            android:layout_marginEnd="4dp"
+            android:text="면 넣기"
+            android:textColor="@color/gray3"
+            android:background="@drawable/shape_square_rounded_16dp_stroke_1dp_color_gray8_5"
+            app:layout_constraintBottom_toBottomOf="@+id/item_character_move_click_middle_bt"
+            app:layout_constraintEnd_toStartOf="@+id/guideline1"
+            app:layout_constraintStart_toStartOf="@id/item_character_move_frame_iv" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/item_character_move_click_middle_bt"
+            style="@style/pretandard_semi_bold.16sp"
+            android:layout_width="0dp"
+            android:layout_height="105dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:text="스프 넣기"
+            android:textColor="@color/gray3"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/shape_square_rounded_16dp_stroke_1dp_color_gray8_5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guideline2"
+            app:layout_constraintStart_toStartOf="@+id/guideline1" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/item_character_move_click_right_bt"
+            style="@style/pretandard_semi_bold.16sp"
+            android:layout_width="0dp"
+            android:layout_height="105dp"
+            android:layout_marginStart="4dp"
+            android:textColor="@color/gray3"
+            android:text="물 끓이기"
+            android:elevation="3dp"
+            android:background="@drawable/shape_square_rounded_16dp_stroke_1dp_color_gray8_5"
+            app:layout_constraintBottom_toBottomOf="@+id/item_character_move_click_middle_bt"
+            app:layout_constraintEnd_toEndOf="@id/item_character_move_frame_iv"
+            app:layout_constraintStart_toStartOf="@+id/guideline2" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
 

@@ -6,6 +6,7 @@ import com.example.codingland.presenter.base.BaseFragment
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentQuestBinding
 import com.example.myapplication.presentation.ui.fragment.quest.IslandDto
+import com.example.myapplication.presentation.ui.fragment.quest.IslandMultiAdapter
 import com.example.myapplication.presentation.ui.fragment.quest.ItemClickListener
 
 class QuestFragment : BaseFragment<FragmentQuestBinding>(R.layout.fragment_quest),
@@ -22,19 +23,19 @@ class QuestFragment : BaseFragment<FragmentQuestBinding>(R.layout.fragment_quest
                 R.drawable.ic_island_left,
                 R.drawable.iv_biginner_island,
                 false,
-                "초심자의 섬"
+                resources.getString(R.string.biginner_island)
             ),
             IslandDto.IslandRight(
                 R.drawable.ic_island_right,
                 R.drawable.iv_candy_island_locked,
                 true,
-                "사탕의 섬"
+                resources.getString(R.string.candy_island)
             ),
             IslandDto.IslandLeft(
                 R.drawable.ic_island_left,
                 R.drawable.iv_lake_island_locked,
                 true,
-                "호수의 섬"
+                resources.getString(R.string.lake_island)
             ),
             IslandDto.IslandRight(
                 R.drawable.ic_island_right,
@@ -43,7 +44,7 @@ class QuestFragment : BaseFragment<FragmentQuestBinding>(R.layout.fragment_quest
                 "GOAL"
             )
         )
-        islandAdapter = IslandMultiAdapter(this)
+        islandAdapter = IslandMultiAdapter(requireContext(), this)
         binding.fragmentQuestRv.adapter = islandAdapter
         islandAdapter.submitList(islandList)
     }

@@ -1,7 +1,7 @@
 package com.example.myapplication.domain.usecase.quizcleared
 
 import com.example.myapplication.data.repository.remote.response.quizcleared.ClearStateResponse
-import com.example.myapplication.domain.repository.quizcleared.IsQuizClearedRepository
+import com.example.myapplication.domain.quizcleared.IsQuizClearedRepository
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import javax.inject.Inject

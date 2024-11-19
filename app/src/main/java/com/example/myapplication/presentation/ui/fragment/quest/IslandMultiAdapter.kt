@@ -1,15 +1,15 @@
-package com.example.codingland.presenter.ui.fragment.quest
+package com.example.myapplication.presentation.ui.fragment.quest
 
+import android.content.Context
 import androidx.databinding.ViewDataBinding
 import com.example.codingland.presenter.base.BaseDiffCallback
 import com.example.codingland.presenter.base.BaseMultiAdapter
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ItemIslandLeftBinding
 import com.example.myapplication.databinding.ItemIslandRightBinding
-import com.example.myapplication.presentation.ui.fragment.quest.IslandDto
-import com.example.myapplication.presentation.ui.fragment.quest.ItemClickListener
 
 class IslandMultiAdapter(
+    private val context: Context,
     private val itemClickListener : ItemClickListener
 ) : BaseMultiAdapter<IslandDto, ViewDataBinding>(
     BaseDiffCallback(
@@ -41,7 +41,7 @@ class IslandMultiAdapter(
                     binding.itemIslandLeftIv.setImageResource(item.island)
                 } else {
                     when (item.name) {
-                        "초심자의 섬" -> binding.itemIslandLeftIv.setImageResource(R.drawable.iv_biginner_island)
+                        context.getString(R.string.biginner_island) -> binding.itemIslandLeftIv.setImageResource(R.drawable.iv_biginner_island)
                         else -> binding.itemIslandLeftIv.setImageResource(R.drawable.iv_lake_island_unlocked)
                     }
                 }
@@ -58,7 +58,7 @@ class IslandMultiAdapter(
                     binding.itemIslandRightIv.setImageResource(item.island)
                 } else {
                     when (item.name) {
-                        "사탕의 섬" -> binding.itemIslandRightIv.setImageResource(R.drawable.iv_candy_island_unlocked)
+                        context.getString(R.string.candy_island) -> binding.itemIslandRightIv.setImageResource(R.drawable.iv_candy_island_unlocked)
                         else -> binding.itemIslandRightIv.setImageResource(R.drawable.iv_candy_island_unlocked) // TODO 아마 섬 디자인 하나 추가 될듯
                     }
                 }

@@ -1,8 +1,8 @@
-package com.example.codingland.data.repository.remote.datasourceimpl
+package com.example.myapplication.data.repository.remote.datasourceImpl
 
 import android.util.Log
 import com.example.myapplication.data.repository.remote.api.QuizClearedApi
-import com.example.codingland.data.repository.remote.datasource.remote.IsQuizClearedDataSource
+import com.example.myapplication.data.repository.remote.datasource.remote.IsQuizClearedDataSource
 import com.example.myapplication.data.repository.remote.response.quizcleared.ClearStateListResponse
 import com.example.myapplication.data.repository.remote.response.quizcleared.ClearStateResponse
 import kotlinx.coroutines.flow.Flow

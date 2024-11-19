@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:id="@+id/iv_biginner_problem_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20dp"
+                android:id="@+id/item_algorithm_frame_iv"
+                android:layout_width="match_parent"
+                android:layout_height="185dp"
+                android:background="@drawable/shape_square_rounded_16dp"
+                android:backgroundTint="@color/gray7" />
+
+            <ImageButton
+                android:id="@+id/ib_biginner_problem_3_hint_off"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:layout_marginRight="40dp"
+                android:layout_marginBottom="12dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/selector_bulb"
+                android:scaleType="fitCenter" />
+
+            <ImageView
+                android:id="@+id/ib_biginner_problem_3_hint_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|bottom"
+                android:layout_marginRight="70dp"
+                android:layout_marginBottom="15dp"
+                android:src="@drawable/iv_biginner_quiz3_hint"
+                android:visibility="gone"/>
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/iv_biginner_answer_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_biginner_problem_3">
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:id="@+id/btn_biginner_problem3_answer1_off"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:background="@drawable/selector_checked_quiz"
+                android:paddingStart="18dp"
+                android:text="1. 도구를 이용해 문제를 해결하는 방법"
+                android:textColor="@color/gray3"
+                android:textSize="14sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20dp"
+                android:id="@+id/btn_biginner_problem3_answer1_on"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:background="@drawable/shape_square_rounded_16dp_stroke_gray"
+                android:paddingStart="18dp"
+                android:text="1. 도구를 이용해 문제를 해결하는 방법"
+                android:textColor="@color/gray3"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20dp"
+                android:id="@+id/btn_biginner_problem3_answer2_off"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="8dp"
+                android:layout_gravity="center"
+                android:background="@drawable/selector_checked_quiz"
+                android:paddingStart="18dp"
+                android:text="2. 컴퓨터가 문제를 해결하도록 명령하는 절차"
+                android:textColor="@color/gray3"
+                android:textSize="14sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20dp"
+                android:id="@+id/btn_biginner_problem3_answer2_on"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:background="@drawable/shape_square_rounded_16dp_stroke_gray"
+                android:paddingStart="18dp"
+                android:text="2. 컴퓨터가 문제를 해결하도록 명령하는 절차"
+                android:textColor="@color/gray3"
+                android:textSize="14sp"
+                android:visibility="gone"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20dp"
+                android:id="@+id/btn_biginner_problem3_answer3_off"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="8dp"
+                android:layout_gravity="center"
+                android:background="@drawable/selector_checked_quiz"
+                android:paddingStart="18dp"
+                android:text="3. 컴퓨터가 실행할 수 있는 게임 만들기"
+                android:textColor="@color/gray3"
+                android:textSize="14sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20dp"
+                android:id="@+id/btn_biginner_problem3_answer3_on"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:background="@drawable/shape_square_rounded_16dp_stroke_gray"
+                android:paddingStart="18dp"
+                android:text="3. 컴퓨터가 실행할 수 있는 게임 만들기"
+                android:textColor="@color/gray3"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20dp"
+                android:id="@+id/btn_biginner_problem3_answer4_off"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="8dp"
+                android:layout_gravity="center"
+                android:background="@drawable/selector_checked_quiz"
+                android:paddingStart="18dp"
+                android:text="4. 데이터를 저장하는 방법"
+                android:textColor="@color/gray3"
+                android:textSize="14sp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20dp"
+                android:id="@+id/btn_biginner_problem3_answer4_on"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:background="@drawable/shape_square_rounded_16dp_stroke_gray"
+                android:paddingStart="18dp"
+                android:text="4. 데이터를 저장하는 방법"
+                android:textColor="@color/gray3"
+                android:textSize="14sp"
+                android:visibility="gone"
+                />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+
