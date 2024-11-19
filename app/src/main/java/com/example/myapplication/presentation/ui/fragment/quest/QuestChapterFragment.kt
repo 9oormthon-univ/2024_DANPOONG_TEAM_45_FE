@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.codingland.presenter.base.BaseFragment
-import com.example.codingland.presenter.ui.fragment.quest.QuestChapterAdapter
+import com.example.myapplication.presentation.adapter.QuestChapterAdapter
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentQuestChapterBinding
 import com.example.myapplication.presentation.ui.activity.QuestIntroActivity
@@ -68,8 +68,8 @@ class QuestChapterFragment : BaseFragment<FragmentQuestChapterBinding>(R.layout.
         when (islandName) {
             resources.getString(R.string.biginner_island) -> {
                 with(questItem) {
-                    add(QuestDto(1, resources.getString(R.string.game_type_normal), "기초 훈련하기", "초보 모험가를 위한 기초 훈련!", R.drawable.iv_biginner_background_game1,0)) // drawable 리소스 아이디 사용
-                    add(QuestDto(2, resources.getString(R.string.game_type_block),"모험 준비하기", "본격적으로 모험을 준비해봐요!", R.drawable.iv_biginner_background_game2,0))
+                    add(QuestDto(1, resources.getString(R.string.game_type_normal), "기초 훈련하기", "초보 모험가를 위한 기초 훈련!", R.drawable.iv_background_biginner_game1,0)) // drawable 리소스 아이디 사용
+                    add(QuestDto(2, resources.getString(R.string.game_type_block),"모험 준비하기", "본격적으로 모험을 준비해봐요!", R.drawable.iv_background_biginner_game2,0))
                 }
             }
             resources.getString(R.string.candy_island) -> {
@@ -83,14 +83,14 @@ class QuestChapterFragment : BaseFragment<FragmentQuestChapterBinding>(R.layout.
             }
             resources.getString(R.string.lake_island) -> {
                 with(questItem) {
-                    add(QuestDto(1, resources.getString(R.string.game_type_normal), "기초 훈련하기", "초보 모험가를 위한 기초 훈련!", R.drawable.iv_biginner_background_game1,0))
-                    add(QuestDto(2, resources.getString(R.string.game_type_block),"모험 준비하기", "본격적으로 모험을 준비해봐요!", R.drawable.iv_biginner_background_game2,0))
+                    add(QuestDto(1, resources.getString(R.string.game_type_block), "바위점프!", "초보 모험가를 위한 기초 훈련!", R.drawable.iv_background_lake_game1,0))
+                    add(QuestDto(2, resources.getString(R.string.game_type_block),"모험 준비하기", "본격적으로 모험을 준비해봐요!", R.drawable.iv_background_lake_game2,0))
                 }
             }
             else -> {
                 with(questItem) {
-                    add(QuestDto(1, resources.getString(R.string.game_type_normal), "기초 훈련하기", "초보 모험가를 위한 기초 훈련!", R.drawable.iv_biginner_background_game1,0))
-                    add(QuestDto(2, resources.getString(R.string.game_type_block),"모험 준비하기", "본격적으로 모험을 준비해봐요!", R.drawable.iv_biginner_background_game2,0))
+                    add(QuestDto(1, resources.getString(R.string.game_type_normal), "기초 훈련하기", "초보 모험가를 위한 기초 훈련!", R.drawable.iv_background_biginner_game1,0))
+                    add(QuestDto(2, resources.getString(R.string.game_type_block),"모험 준비하기", "본격적으로 모험을 준비해봐요!", R.drawable.iv_background_biginner_game2,0))
                 }
             }
         }

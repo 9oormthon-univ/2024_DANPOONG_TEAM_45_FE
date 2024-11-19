@@ -10,12 +10,11 @@
 
 
         <ImageView
-            android:id="@+id/item_character_move_frame_iv"
+            android:id="@+id/item_ramen_order_frame_iv"
             android:layout_width="0dp"
             android:layout_height="320dp"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/shape_square_rounded_16dp"
-            android:backgroundTint="@color/gray8"
+            android:background="@drawable/iv_background_quiz2"
             app:layout_constraintBottom_toTopOf="@+id/item_character_move_click_middle_bt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -46,7 +45,7 @@
             android:background="@drawable/shape_square_rounded_16dp_stroke_1dp_color_gray8_5"
             app:layout_constraintBottom_toBottomOf="@+id/item_character_move_click_middle_bt"
             app:layout_constraintEnd_toStartOf="@+id/guideline1"
-            app:layout_constraintStart_toStartOf="@id/item_character_move_frame_iv" />
+            app:layout_constraintStart_toStartOf="@id/item_ramen_order_frame_iv" />
 
 
         <androidx.appcompat.widget.AppCompatButton
@@ -76,7 +75,7 @@
             android:elevation="3dp"
             android:background="@drawable/shape_square_rounded_16dp_stroke_1dp_color_gray8_5"
             app:layout_constraintBottom_toBottomOf="@+id/item_character_move_click_middle_bt"
-            app:layout_constraintEnd_toEndOf="@id/item_character_move_frame_iv"
+            app:layout_constraintEnd_toEndOf="@id/item_ramen_order_frame_iv"
             app:layout_constraintStart_toStartOf="@+id/guideline2" />
 
 
