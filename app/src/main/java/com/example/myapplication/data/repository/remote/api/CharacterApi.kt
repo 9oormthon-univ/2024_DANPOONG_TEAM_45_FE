@@ -43,5 +43,5 @@ interface CharacterApi {
     @DELETE("/character")
     suspend fun deleteCharacter(
         @Path("id") id : String
-    )
+    ) : Response<ResponseBody>
 }
