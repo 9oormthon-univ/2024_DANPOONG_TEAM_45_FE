@@ -1,5 +1,6 @@
 package com.example.myapplication.data.di
 
+import android.util.Log
 import com.example.myapplication.presentation.widget.extention.AccessTokenInterceptor
 import com.example.myapplication.presentation.widget.extention.TokenManager
 import dagger.Module
@@ -24,7 +25,6 @@ object NetworkModule {
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
-            level = HttpLoggingInterceptor.Level.HEADERS
         }
     }
 
@@ -50,6 +50,11 @@ object NetworkModule {
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor{ chain ->
+                val request = chain.request()
+                Log.d("토큰", "Headers: ${request.headers}")
+                chain.proceed(request)
+            }
             .addInterceptor(accessTokenInterceptor)
             .build()
     }
