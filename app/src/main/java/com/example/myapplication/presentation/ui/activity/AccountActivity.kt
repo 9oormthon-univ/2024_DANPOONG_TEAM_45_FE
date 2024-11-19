@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.example.codingland.presenter.base.BaseActivity
+import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityAccountBinding
 import dagger.hilt.android.AndroidEntryPoint

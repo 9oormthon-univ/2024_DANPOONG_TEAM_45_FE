@@ -5,6 +5,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface AiApi {
+
     //AI 질문
     @POST("/ai")
     suspend fun postAi(
