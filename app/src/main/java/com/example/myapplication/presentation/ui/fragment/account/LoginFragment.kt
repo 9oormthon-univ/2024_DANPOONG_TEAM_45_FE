@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.example.codingland.presenter.base.BaseFragment
+import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.R
 import com.example.myapplication.data.repository.remote.request.login.LogInKakaoDto
 import com.example.myapplication.databinding.FragmentLoginBinding
@@ -19,7 +19,6 @@ import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -28,15 +27,30 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     lateinit var tokenManager: TokenManager
     private lateinit var loginViewModel: LoginViewModel
 
+    override fun onStart() {
+        super.onStart()
+        initRemainToken()
+    }
 
     override fun setLayout() {
-        binding.differentLoginTv.setOnClickListener{
-            findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
-        }
-
+        onClickBtn()
         initViewModel()
         setOnclickBtn()
         observeLifeCycle()
+    }
+
+    //네비게이션 세팅
+    private fun onClickBtn() {
+        binding.differentLoginTv.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
+        }
+    }
+
+    //잔여 토큰 초기화
+    private fun initRemainToken() {
+        lifecycleScope.launch {
+            tokenManager.deleteAccessToken()
+        }
     }
 
     //뷰 모델 초기화
@@ -61,11 +75,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                 Log.e("카카오", "로그인 실패", error)
                 Toast.makeText(requireContext(), "로그인 실패", Toast.LENGTH_SHORT).show()
             } else if (token != null) {
-                runBlocking {
-                    tokenManager.deleteAccessToken()
-                    loginViewModel.postKakaoLogin(sendKakaoAccessToken(token.accessToken))
-                    Log.i("카카오", "로그인 성공 ${token.accessToken}")
-                }
+                loginViewModel.postKakaoLogin(sendKakaoAccessToken(token.accessToken))
+                Log.i("카카오", "로그인 성공 ${token.accessToken}")
             }
         }
     }
@@ -78,10 +89,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                     if (it.result.code == 200) {
                         with(it.payload) {
                             saveToken(accessToken, refreshToken, picture, nickname)
+                            startActivity(Intent(requireActivity(), MainActivity::class.java))
                         }
-                        Log.i("카카오", "로그인 성공 $it")
-                        startActivity(Intent(requireActivity(), MainActivity::class.java))
-                        Log.i("카카오", "Intent 실행 완료")
                     }
                 }
             }
@@ -103,5 +112,4 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
             }
         }
     }
-
 }
