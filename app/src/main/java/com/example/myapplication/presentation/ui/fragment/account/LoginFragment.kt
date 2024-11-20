@@ -8,10 +8,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.example.myapplication.presentation.base.BaseFragment
+import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.R
 import com.example.myapplication.data.repository.remote.request.login.LogInKakaoDto
 import com.example.myapplication.databinding.FragmentLoginBinding
+import com.example.myapplication.presentation.adapter.LoginBannerViewPagerAdapter
+import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.presentation.ui.activity.MainActivity
 import com.example.myapplication.presentation.viewmodel.LoginViewModel
 import com.example.myapplication.presentation.widget.extention.TokenManager
@@ -26,6 +28,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     @Inject
     lateinit var tokenManager: TokenManager
     private lateinit var loginViewModel: LoginViewModel
+    private lateinit var onBoardingViewPagerAdapter: LoginBannerViewPagerAdapter
 
     //화면 진입 시 토큰 초기화
     override fun onStart() {
@@ -35,10 +38,43 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     override fun setLayout() {
         onClickBtn()
+        initPager()
         initViewModel()
         setOnclickBtn()
         observeLifeCycle()
     }
+
+    private fun initPager() {
+        val list = arrayListOf(
+            R.drawable.ic_onboarding_image_1,
+            R.drawable.ic_onboarding_image_2
+        )
+        onBoardingViewPagerAdapter = LoginBannerViewPagerAdapter(list)
+
+        with(binding.activityAccountViewVp) {
+            adapter = onBoardingViewPagerAdapter
+            orientation = ViewPager2.ORIENTATION_HORIZONTAL
+
+            // 시작 위치를 중간으로 설정
+            val startPosition = Int.MAX_VALUE / 2
+            setCurrentItem(startPosition - (startPosition % list.size), false)
+
+            binding.activityAccountIndicatorIc.apply {
+                createIndicators(list.size, 0)  // 실제 이미지 개수만큼만 인디케이터 생성
+            }
+
+            // ViewPager2의 페이지 변경 리스너
+            binding.activityAccountViewVp.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    // 실제 포지션으로 인디케이터 업데이트
+                    val realPosition = position % list.size
+                    binding.activityAccountIndicatorIc.animatePageSelected(realPosition)
+                }
+            })
+        }
+    }
+
 
     //네비게이션 세팅
     private fun onClickBtn() {
