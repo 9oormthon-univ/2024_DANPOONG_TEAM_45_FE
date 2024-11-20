@@ -11,7 +11,7 @@
 
     <!-- 첫 번째 텍스트 (힌트) -->
     <TextView
-        android:id="@+id/tv_gameplay_way_hint"
+        android:id="@+id/tv_gameplay_fail_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -22,6 +22,7 @@
 
     <!-- 두 번째 텍스트 (힌트) -->
     <TextView
+        android:id="@+id/tv_gameplay_fail_subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

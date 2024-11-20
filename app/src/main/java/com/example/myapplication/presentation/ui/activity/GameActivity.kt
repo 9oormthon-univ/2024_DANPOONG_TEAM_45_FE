@@ -1,6 +1,7 @@
 package com.example.myapplication.presentation.ui.activity
 
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityGameBinding
 
@@ -28,17 +29,19 @@ import androidx.core.view.DragStartHelper
 import androidx.draganddrop.DropHelper
 import com.example.codingland.presenter.base.BaseActivity
 import com.example.myapplication.presentation.widget.extention.loadCropImage
+import org.w3c.dom.Text
 
 class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
     private var isFailDialogShown = false
     private var targetBlockMap = mutableMapOf<Int, Int?>()
+    private var isExit = false //나가기 버튼 클릭했는지 여부 판단
 
     private val dragSources = mutableListOf<View>()
     private var basicBlockId = 1 // 생성되는 블록 아이디 - 블록 색 지정을 위해 만든 변수
     private var repeatBlockId = 1 // 생성되는 블록 아이디
 
-    private var game1Wave: Boolean = false
+    private var isNextGame: Boolean = false // 다음 게임 넘어가는지 여부 판단
         set(value) {
             if (field != value) { // 값이 변경된 경우에만 업데이트
                 field = value
@@ -78,21 +81,22 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
     }
 
     override fun setLayout() {
-        initBlock(game1Wave)
-        initGame(game1Wave)
+        initBlock()
+        initGame()
         gameFunction()
         setupDragSources()
         setupDropTargets()
     }
 
     // init ---------------------------------------------------------
-    private fun initBlock(isWave: Boolean) {
+    private fun initBlock() {
         clearBlocks()
-        val gameId = intent.getIntExtra("game id", -1)
+        var gameId = intent.getIntExtra("game id", -1)
         Log.d("game id test", gameId.toString())
+        if (gameId != 2 && isNextGame) gameId += 1 // 다음 게임으로 전환되도록
         when(gameId) {
             2 -> {
-                if (!isWave) {
+                if (!isNextGame) {
                     addBlock(BlockDTO(resources.getString(R.string.block_type_normal), "준비하기", 0))
                     addBlock(BlockDTO(resources.getString(R.string.block_type_normal), "일어나기", 0))
                     addBlock(BlockDTO(resources.getString(R.string.block_type_normal), "세수하기", 0))
@@ -104,21 +108,33 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 }
 
             }
-            else -> {
+            3 -> {
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_up), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_down), 0))
+//                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_up), 0))
+//                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_down), 0))
+            }
+            4 -> {
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
             }
         }
 
     }
 
-    private fun initGame(isWave: Boolean) {
-        val gameId = intent.getIntExtra("game id", -1)
+    private fun initGame() {
+        var gameId = intent.getIntExtra("game id", -1)
+        isExit = false
+
+        // 캐릭터 관련
+        moveXCnt = 0
+        moveYCnt = 0
+        moveWay.clear()
 
         // 배경 설정
         if (gameId == 2) {
-            if (!isWave) backgroundVisibility(backgroundImg[0])
+            if (!isNextGame) backgroundVisibility(backgroundImg[0])
             else backgroundVisibility(backgroundImg[1])
 
             binding.ivGameCharacter.visibility = View.GONE
@@ -158,9 +174,25 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         }, 10000)  // 10초 후 메시지 사라짐
 
         // 캐릭터 다시 원래 위치로
-        val view = binding.ivGameCharacter
-        view.translationX = 0f  // X 좌표 초기화
-        view.translationY = 0f  // Y 좌표 초기화
+        if (isNextGame) gameId += 1
+        when (gameId) {
+            3 -> {
+                val view = binding.ivGameCharacter
+                view.translationX = 0f  // X 좌표 초기화
+                view.translationY = 0f  // Y 좌표 초기화
+            }
+            4 -> {
+                val character = binding.ivGameCharacter
+                character.translationX = -320f  // X 좌표 초기화
+                character.translationY = 0f  // Y 좌표 초기화
+
+                val candy = binding.ivGameCandy
+                candy.translationX = 200f
+                character.translationY = 0f
+            }
+
+        }
+
     }
 
     private fun addBlock(block: BlockDTO) {
@@ -325,7 +357,8 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             blockVisibility(binding.ibGameplayBtn, binding.ibGamestopBtn)
         }
         binding.ibGameplayExitBtn.setOnClickListener {
-            finish()
+            isExit = true
+            showSuccessDialog(isExit)
         }
 
         binding.ibBulbBtn.setOnClickListener {
@@ -507,7 +540,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
     // check success ------------------------------------------------
     private fun checkSuccess() {
-        val gameId = intent.getIntExtra("game id", -1)
+        var gameId = intent.getIntExtra("game id", -1)
+        if (isNextGame) gameId += 1
+
         var correctBlockOrder: List<Int>
         var success = true
         when (gameId) {
@@ -531,23 +566,27 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                     success = false
                 }
             }
-
-            else -> correctBlockOrder = listOf(R.string.game_move_straight) // TODO
+            else -> {
+                correctBlockOrder = listOf(R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_straight)
+                if (moveWay != correctBlockOrder) {
+                    success = false
+                }
+            }
         }
         if (success) {
             // 성공 다이얼로그 출력
-            showSuccessDialog()
-            game1Wave = true
+            showSuccessDialog(false)
+            isNextGame = true
         } else {
             // 실패 다이얼로그 출력
             if (!isFailDialogShown) { // 실패 다이얼로그가 이미 표시되지 않았으면
                 showFailDialog()
                 isFailDialogShown = true
-                game1Wave = false
+                if (!isNextGame) isNextGame = false
             }
         }
     }
-    private fun showSuccessDialog() {
+    private fun showSuccessDialog(exit: Boolean) {
         // 다이얼로그 레이아웃을 불러옴
         val dialogView =
             LayoutInflater.from(this).inflate(R.layout.dialog_success, null)
@@ -565,30 +604,53 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         val stopBtn = dialogView.findViewById<Button>(R.id.dialog_button_stop)
         val nextBtn = dialogView.findViewById<Button>(R.id.dialog_button_next_step)
 
+        if (exit) {
+            title.text = "정말 그만두시겠어요?"
+            subTitle.text = "그만하면 과정을 저장할 수 없어요"
+            nextBtn.text = "이어서 하기"
 
-        val gameId = intent.getIntExtra("game id", -1)
+            stopBtn.setOnClickListener {
+                dialog.dismiss()
+                finish()
+            }
 
-        if (gameId == 2) {
-            if (!game1Wave) {
-                title.text = successDialogComment[0].first
-                subTitle.text = successDialogComment[0].second
+            nextBtn.setOnClickListener {
+                dialog.dismiss()
             }
-            else {
-                title.text = successDialogComment[1].first
-                subTitle.text = successDialogComment[1].second
-            }
-        } else {
-            title.text = successDialogComment[gameId].first
-            subTitle.text = successDialogComment[gameId].second
         }
 
-        stopBtn.setOnClickListener {
-            dialog.dismiss()
-            finish()
-        }
-        nextBtn.setOnClickListener {
-            dialog.dismiss()
-            initGame(true)
+        else {
+            val gameId = intent.getIntExtra("game id", -1)
+
+            if (gameId == 2) {
+                if (!isNextGame) {
+                    title.text = successDialogComment[0].first
+                    subTitle.text = successDialogComment[0].second
+                }
+                else {
+                    title.text = successDialogComment[1].first
+                    subTitle.text = successDialogComment[1].second
+                }
+            } else {
+                if (!isNextGame) {
+                    title.text = successDialogComment[gameId - 1].first
+                    subTitle.text = successDialogComment[gameId - 1].second
+                }
+                else {
+                    title.text = successDialogComment[gameId].first
+                    subTitle.text = successDialogComment[gameId].second
+                }
+            }
+
+            stopBtn.setOnClickListener {
+                dialog.dismiss()
+                finish()
+            }
+
+            nextBtn.setOnClickListener {
+                dialog.dismiss()
+                initGame()
+            }
         }
         // 다이얼로그 보여주기
         dialog.show()
@@ -607,10 +669,15 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         // 다이얼로그 만들기
         val dialog = dialogBuilder.create()
 
+        val failTitle = dialogView.findViewById<TextView>(R.id.tv_gameplay_fail_title)
+        val failSubTitle = dialogView.findViewById<TextView>(R.id.tv_gameplay_fail_subtitle)
         val retryBtn = dialogView.findViewById<Button>(R.id.btn_dialog_biginner_quiz_fail)
 
+        failTitle.text = "앗 다시 한 번 도전해볼래?"
+        failSubTitle.text = "조금만 더 힘을 내봐!"
+
         retryBtn.setOnClickListener {
-            initGame(game1Wave)
+            initGame()
             dialog.dismiss()  // 다이얼로그 닫기
         }
         // 다이얼로그 보여주기
@@ -628,11 +695,13 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
     private fun characterMove(x: Float, y: Float) {
         val view = binding.ivGameCharacter // 이동할 뷰
+        val beforeX = view.translationX
+        val beforeY = view.translationY
         if (x != 0.0f) {
-            val moveX = 180 * x // 이동할 거리
+            val moveX = 130 * x // 이동할 거리
 
             // X축으로만 이동하는 애니메이션
-            val animatorMoveX = ValueAnimator.ofFloat(0f, moveX).apply {
+            val animatorMoveX = ValueAnimator.ofFloat(beforeX, moveX).apply {
                 addUpdateListener { animation ->
                     val value = animation.animatedValue as Float
                     view.translationX = value // translationX로 이동
@@ -644,9 +713,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         }
 
         if (y != 0.0f) {
-            val moveY = 180 * y // 이동할 거리
+            val moveY = 120 * y // 이동할 거리
 
-            val animatorMoveY = ValueAnimator.ofFloat(0f, moveY.toFloat()).apply {
+            val animatorMoveY = ValueAnimator.ofFloat(beforeY, moveY).apply {
                 addUpdateListener { animation ->
                     val value = animation.animatedValue as Float
                     view.translationY = value // translationY로 Y 좌표 이동
