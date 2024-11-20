@@ -1,5 +1,6 @@
 package com.example.myapplication.data.repository.remote.api
 
+import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.chaptercleared.ClearChapterStateListResponse
 import com.example.myapplication.data.repository.remote.response.chaptercleared.ClearChapterStateResponse
 import okhttp3.ResponseBody
@@ -13,11 +14,11 @@ import retrofit2.http.Query
 interface ChapterClearedApi {
 
     //챕터 완료 여부 등록
-    @POST("/isChapterCleared")
+    @POST("/v1/api/chapterclear")
     suspend fun postChapterCleared(
         @Query("chapterId") chapterId: Int,
         @Query("user_id") user_id: Int
-    ): Response<ResponseBody>
+    ): BaseResponse<Any>
 
     //챕터 완료 여부 단 건 조회
     @GET("/isChapterCleared/{isChapterCleared_id}")
