@@ -192,7 +192,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                         else -> setImageResource(R.drawable.iv_gameblock_basic_type1)
                     }
 
-                    if (block.blockDescript == "부채질 하기") {
+                    if (block.blockDescript == resources.getString(R.string.game_fanning)) {
                         setImageResource(R.drawable.iv_gameblock_basic_type3)
                     }
                 }
@@ -509,29 +509,31 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
     private fun checkSuccess() {
         val gameId = intent.getIntExtra("game id", -1)
         var correctBlockOrder: List<Int>
+        var success = true
         when (gameId) {
             2 -> {
                 correctBlockOrder = listOf(1, 2, 3, 0)
+                dropTargets.forEachIndexed { index, target ->
+                    // 올바른 블록이 각 dropTarget에 들어왔는지 확인
+                    val droppedBlock = targetBlockMap[index]
+                    if (droppedBlock == null) {
+                        Log.d(TAG, "타겟 ${index + 1}에 블록이 드롭되지 않았습니다.")
+                        success = false
+                    } else if (droppedBlock != correctBlockOrder[index]) {
+                        Log.d(TAG, "타겟 ${index + 1}에 잘못된 블록이 드롭되었습니다. 예상: ${correctBlockOrder[index]}, 실제: $droppedBlock")
+                        success = false
+                    }
+                }
             }
-            3 -> correctBlockOrder = listOf(1, 0, 0, 0)
+            3 -> {
+                correctBlockOrder = listOf(R.string.game_move_straight)
+                if (moveWay != correctBlockOrder) {
+                    success = false
+                }
+            }
+
             else -> correctBlockOrder = listOf(R.string.game_move_straight) // TODO
         }
-        // 올바른 블록이 각 dropTarget에 들어왔는지 확인
-        var success = true
-
-        // 각 dropTarget에 대한 검증
-        dropTargets.forEachIndexed { index, target ->
-            val droppedBlock = targetBlockMap[index]
-            if (droppedBlock == null) {
-                Log.d(TAG, "타겟 ${index + 1}에 블록이 드롭되지 않았습니다.")
-                success = false
-            } else if (droppedBlock != correctBlockOrder[index]) {
-                Log.d(TAG, "타겟 ${index + 1}에 잘못된 블록이 드롭되었습니다. 예상: ${correctBlockOrder[index]}, 실제: $droppedBlock")
-                success = false
-            }
-        }
-
-        // 결과 출력
         if (success) {
             // 성공 다이얼로그 출력
             showSuccessDialog()
@@ -630,7 +632,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             val moveX = 180 * x // 이동할 거리
 
             // X축으로만 이동하는 애니메이션
-            val animatorMoveX = ValueAnimator.ofFloat(0f, moveX.toFloat()).apply {
+            val animatorMoveX = ValueAnimator.ofFloat(0f, moveX).apply {
                 addUpdateListener { animation ->
                     val value = animation.animatedValue as Float
                     view.translationX = value // translationX로 이동
@@ -655,8 +657,8 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         }
     }
 
+    // 배경 지정
     private fun backgroundVisibility(background: Int) {
-        // 배경 지정
         binding.ivGameBackground.loadCropImage(background)
     }
 }
