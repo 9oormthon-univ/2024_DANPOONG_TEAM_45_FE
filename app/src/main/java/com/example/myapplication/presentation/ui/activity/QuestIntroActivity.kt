@@ -48,6 +48,8 @@ class QuestIntroActivity :
             }
             else {
                 val intent = Intent(this, GameActivity::class.java)
+                intent.putExtra("island name", islandName)
+                intent.putExtra("game id", gameId)
                 startActivity(intent)
                 this.finish()
             }

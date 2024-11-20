@@ -39,9 +39,9 @@ class QuestFragment : BaseFragment<FragmentQuestBinding>(R.layout.fragment_quest
             ),
             IslandDto.IslandRight(
                 R.drawable.ic_island_right,
-                R.drawable.iv_candy_island_locked,
+                R.drawable.iv_lake_island_locked,
                 true,
-                "GOAL"
+                "햇살의 섬"
             )
         )
         islandAdapter = IslandMultiAdapter(requireContext(), this)
