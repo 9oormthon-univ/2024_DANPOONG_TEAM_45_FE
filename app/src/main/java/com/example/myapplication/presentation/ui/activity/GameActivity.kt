@@ -121,13 +121,23 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
             }
+            5 -> {
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_up), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_down), 0))
+            }
         }
 
     }
 
     private fun initGame() {
+        binding.ivGameCharacter.bringToFront() // 게임 캐릭터가 무조건 최상단에 오도록
+
         var gameId = intent.getIntExtra("game id", -1)
         isExit = false
+        isDialogShown = false
 
         // 캐릭터 관련
         moveXCnt = 0
@@ -139,14 +149,23 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
         // 배경 설정
         if (gameId == 2) {
+            // 초심자의 섬
             if (!isNextGame) backgroundVisibility(backgroundImg[0])
             else backgroundVisibility(backgroundImg[1])
 
             binding.ivGameCharacter.visibility = View.GONE
             binding.ivGameWay.visibility = View.GONE
             binding.ivGameCandy.visibility = View.GONE
+
+            binding.ivGameWay2.visibility = View.GONE
+            binding.ivGameGum.visibility = View.GONE
         } else {
+            // 사탕의 섬
             backgroundVisibility(backgroundImg[2])
+            if (gameId == 3 || gameId == 4) {
+                binding.ivGameWay2.visibility = View.GONE
+                binding.ivGameGum.visibility = View.GONE
+            }
         }
 
         targetBlockMap = mutableMapOf()
@@ -189,7 +208,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 view.translationY = 0f  // Y 좌표 초기화
                 view.invalidate() // 강제로 뷰 갱신
             }
-            4 -> {
+            4, 5 -> {
                 val character = binding.ivGameCharacter
                 runOnUiThread {
                     character.translationX = -320f
@@ -350,17 +369,10 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         binding.ibGameplayBtn.setOnClickListener {
             blockVisibility(binding.ibGamestopBtn, binding.ibGameplayBtn)
 
-            for (move in moveWay) {
-                when (move) {
-                    R.string.game_move_straight -> moveXCnt += 1
-                    R.string.game_move_up -> moveYCnt -= 1
-                    R.string.game_move_down -> moveYCnt += 1
-                }
-
-                // characterMove 실행
-                characterMove(moveXCnt * 1f, moveYCnt * 1f) {
-                    checkSuccess()
-                }
+            if (moveWay.isEmpty()) {
+                checkSuccess()
+            } else {
+                characterMove()
             }
         }
 
@@ -579,8 +591,14 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                     success = false
                 }
             }
-            else -> {
+            4 -> {
                 correctBlockOrder = listOf(R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_straight)
+                if (moveWay != correctBlockOrder) {
+                    success = false
+                }
+            }
+            else -> {
+                correctBlockOrder = listOf(R.string.game_move_straight, R.string.game_move_down, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_up, R.string.game_move_straight)
                 if (moveWay != correctBlockOrder) {
                     success = false
                 }
@@ -667,6 +685,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 initGame()
             }
         }
+        Log.d("game id list", gameId.toString())
         // 다이얼로그 보여주기
         dialog.show()
     }
@@ -708,30 +727,26 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         return (this * density).toInt()
     }
 
-    private fun characterMove(x: Float, y: Float, onComplete: () -> Unit = {}) {
-
+    private fun moveAnimation(deltaX: Float, deltaY: Float, onComplete: () -> Unit = {}) {
         val view = binding.ivGameCharacter // 이동할 뷰
-        val beforeX = view.translationX
-        val beforeY = view.translationY
+        val targetX = view.translationX + (180 * deltaX)
+        val targetY = view.translationY + (180 * deltaY)
+
         var animationsCompleted = 0 // 완료된 애니메이션 카운터
 
         // X축 이동
-        if (x != 0.0f) {
-            val moveX = beforeX + (150 * x) // 이동할 거리
-
-            val animatorMoveX = ValueAnimator.ofFloat(beforeX, moveX).apply {
+        if (deltaX != 0f) {
+            val animatorMoveX = ValueAnimator.ofFloat(view.translationX, targetX).apply {
                 addUpdateListener { animation ->
-                    val value = animation.animatedValue as Float
-                    view.translationX = value
+                    view.translationX = animation.animatedValue as Float
                 }
                 addListener(onEnd = {
                     animationsCompleted++
                     if (animationsCompleted == 2) {
-                        if (!isDialogShown) onComplete()
+                        onComplete()
                     }
                 })
             }
-
             animatorMoveX.duration = 500
             animatorMoveX.start()
         } else {
@@ -739,28 +754,72 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         }
 
         // Y축 이동
-        if (y != 0.0f) {
-            val moveY = beforeY + (150 * y) // 이동할 거리
-
-            val animatorMoveY = ValueAnimator.ofFloat(beforeY, moveY).apply {
+        if (deltaY != 0f) {
+            val animatorMoveY = ValueAnimator.ofFloat(view.translationY, targetY).apply {
                 addUpdateListener { animation ->
-                    val value = animation.animatedValue as Float
-                    view.translationY = value
+                    view.translationY = animation.animatedValue as Float
                 }
                 addListener(onEnd = {
                     animationsCompleted++
                     if (animationsCompleted == 2) {
-                        if (!isDialogShown) onComplete()
+                        onComplete()
                     }
                 })
             }
-
             animatorMoveY.duration = 500
             animatorMoveY.start()
         } else {
             animationsCompleted++
         }
     }
+
+    private fun characterMove() {
+        var currentX = 0f // 현재 X 위치
+        var currentY = 0f // 현재 Y 위치
+
+        // 재귀적으로 이동 실행
+        fun moveStep(index: Int) {
+            if (index >= moveWay.size) {
+                checkSuccess() // 모든 이동이 끝난 후 성공 여부 확인
+                return
+            }
+
+            // 현재 이동 방향
+            val move = moveWay[index]
+            val deltaX: Float
+            val deltaY: Float
+
+            when (move) {
+                R.string.game_move_straight -> {
+                    deltaX = 1f
+                    deltaY = 0f
+                }
+                R.string.game_move_up -> {
+                    deltaX = 0f
+                    deltaY = -1f
+                }
+                R.string.game_move_down -> {
+                    deltaX = 0f
+                    deltaY = 1f
+                }
+                else -> {
+                    deltaX = 0f
+                    deltaY = 0f
+                }
+            }
+
+            // 상대적 이동 실행
+            moveAnimation(deltaX, deltaY) {
+                // 현재 위치 업데이트
+                currentX += deltaX
+                currentY += deltaY
+                moveStep(index + 1) // 다음 이동 실행
+            }
+        }
+
+        moveStep(0) // 첫 번째 이동 실행
+    }
+
 
     // 배경 지정
     private fun backgroundVisibility(background: Int) {
