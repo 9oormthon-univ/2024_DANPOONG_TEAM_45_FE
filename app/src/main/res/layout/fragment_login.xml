@@ -20,7 +20,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.viewpager2.widget.ViewPager2
-            android:background="@color/empty_back"
             android:id="@+id/activity_account_view_vp"
             android:layout_width="0dp"
             android:layout_height="360dp"

@@ -21,7 +21,7 @@
         <TextView
             android:id="@+id/item_island_right_name_tv"
             android:background="@drawable/shape_square_rounded_20dp"
-            android:textColor="@color/level_progress_end"
+            android:textColor="@color/mint0"
             style="@style/pretandard_bold.12sp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"

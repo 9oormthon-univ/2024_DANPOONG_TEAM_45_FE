@@ -1,6 +1,7 @@
 package com.example.myapplication.data.di
 
 import com.example.myapplication.data.repository.remote.api.LoginApi
+import com.example.myapplication.data.repository.remote.api.QuizApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,5 +17,11 @@ object ApiModule {
     fun provideLogInServer(
         @MainRetrofit retrofit: Retrofit
     ): LoginApi = retrofit.create(LoginApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideQuizServer(
+        @MainRetrofit retrofit: Retrofit
+    ): QuizApi = retrofit.create(QuizApi::class.java)
 
 }
