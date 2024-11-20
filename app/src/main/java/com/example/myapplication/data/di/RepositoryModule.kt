@@ -1,10 +1,15 @@
 package com.example.myapplication.data.di
 
 import com.example.myapplication.data.repository.remote.api.LoginApi
+import com.example.myapplication.data.repository.remote.api.QuizApi
 import com.example.myapplication.data.repository.remote.datasource.remote.LogInDataSource
+import com.example.myapplication.data.repository.remote.datasource.remote.QuizDataSource
 import com.example.myapplication.data.repository.remote.datasourceImpl.LogInDataSourceImpl
+import com.example.myapplication.data.repository.remote.datasourceImpl.QuizDataSorceImpl
 import com.example.myapplication.domain.repository.login.LoginRepository
 import com.example.myapplication.domain.repository.login.LoginRepositoryImpl
+import com.example.myapplication.domain.repository.quiz.QuizRepository
+import com.example.myapplication.domain.repository.quiz.QuizRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,4 +32,17 @@ object RepositoryModule {
     @Provides
     fun provideAccountRepository(logInDataSource: LogInDataSource): LoginRepository =
         LoginRepositoryImpl(logInDataSource)
+
+    @Provides
+    @Singleton
+    fun provideQuizDataSource(
+        quizApi: QuizApi
+    ): QuizDataSource {
+        return QuizDataSorceImpl(quizApi)
+    }
+
+    @Singleton
+    @Provides
+    fun provideQuizRepository(quizDataSource: QuizDataSource): QuizRepository =
+        QuizRepositoryImpl(quizDataSource)
 }
