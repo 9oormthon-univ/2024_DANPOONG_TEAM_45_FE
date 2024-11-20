@@ -1,4 +1,4 @@
-package com.example.codingland.presenter.base
+package com.example.myapplication.presentation.base
 
 import androidx.recyclerview.widget.DiffUtil
 

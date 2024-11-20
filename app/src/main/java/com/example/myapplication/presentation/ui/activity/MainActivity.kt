@@ -3,7 +3,7 @@ package com.example.myapplication.presentation.ui.activity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.example.codingland.presenter.base.BaseActivity
+import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,7 +15,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     override fun setLayout() {
         setBottomNavigation()
     }
-
     //바텀 네비게이션 세팅
     private fun setBottomNavigation() {
         val navHostFragment =

@@ -1,8 +1,7 @@
 package com.example.myapplication.presentation.ui.activity
 
 import android.content.Intent
-import android.util.Log
-import com.example.codingland.presenter.base.BaseActivity
+import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityQuestIntroBinding
 import com.example.myapplication.presentation.widget.extention.loadCropImage

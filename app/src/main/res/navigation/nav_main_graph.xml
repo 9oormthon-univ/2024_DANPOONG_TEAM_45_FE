@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/questFragment"
-        android:name="com.example.codingland.presenter.ui.fragment.quest.QuestFragment"
+        android:name="com.example.myapplication.presentation.ui.fragment.quest.QuestFragment"
         android:label="fragment_quest"
         tools:layout="@layout/fragment_quest">
 

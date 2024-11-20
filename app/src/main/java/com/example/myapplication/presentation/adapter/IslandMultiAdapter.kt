@@ -2,8 +2,8 @@ package com.example.myapplication.presentation.adapter
 
 import android.content.Context
 import androidx.databinding.ViewDataBinding
-import com.example.codingland.presenter.base.BaseDiffCallback
-import com.example.codingland.presenter.base.BaseMultiAdapter
+import com.example.myapplication.presentation.base.BaseDiffCallback
+import com.example.myapplication.presentation.base.BaseMultiAdapter
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ItemIslandLeftBinding
 import com.example.myapplication.databinding.ItemIslandRightBinding

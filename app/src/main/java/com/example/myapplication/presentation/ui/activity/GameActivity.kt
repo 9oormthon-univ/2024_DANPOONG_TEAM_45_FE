@@ -27,7 +27,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.DragStartHelper
 import androidx.draganddrop.DropHelper
-import com.example.codingland.presenter.base.BaseActivity
+import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.presentation.widget.extention.loadCropImage
 import org.w3c.dom.Text
 

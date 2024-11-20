@@ -1,4 +1,4 @@
-package com.example.codingland.presenter.base
+package com.example.myapplication.presentation.base
 
 import android.content.Intent
 import android.os.Bundle

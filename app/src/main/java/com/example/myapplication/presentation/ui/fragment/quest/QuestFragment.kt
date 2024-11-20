@@ -1,8 +1,8 @@
-package com.example.codingland.presenter.ui.fragment.quest
+package com.example.myapplication.presentation.ui.fragment.quest
 
 import android.os.Bundle
 import androidx.navigation.fragment.findNavController
-import com.example.codingland.presenter.base.BaseFragment
+import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentQuestBinding
 import com.example.myapplication.presentation.ui.fragment.quest.IslandDto

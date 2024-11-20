@@ -2,7 +2,7 @@ package com.example.myapplication.presentation.ui.fragment.friend
 
 import android.content.ActivityNotFoundException
 import android.util.Log
-import com.example.codingland.presenter.base.BaseFragment
+import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentFriendBinding
 import com.example.myapplication.domain.model.FriendsEntity
