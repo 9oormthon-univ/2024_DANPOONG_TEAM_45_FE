@@ -55,11 +55,13 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
     private var moveWay = mutableListOf<Int>()
 
     private val dropTargets by lazy {
-        listOf(
+        mutableListOf(
             binding.ibBiginnerGame1Space1,
             binding.ibBiginnerGame1Space2,
             binding.ibBiginnerGame1Space3,
-            binding.ibBiginnerGame1Space4
+            binding.ibBiginnerGame1Space4,
+            binding.ibBiginnerGame1Space5,
+            binding.ibBiginnerGame1Space6
         )
     }
 
@@ -96,6 +98,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         var gameId = intent.getIntExtra("game id", -1)
         Log.d("game id test", gameId.toString())
         if (gameId != 2 && isNextGame) gameId += 1 // 다음 게임으로 전환되도록
+
         when(gameId) {
             2 -> {
                 if (!isNextGame) {
@@ -108,7 +111,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                     addBlock(BlockDTO(resources.getString(R.string.block_type_repeat), "번 반복하기", 3))
                     addBlock(BlockDTO(resources.getString(R.string.block_type_normal), "파도 소리 재생", 0))
                 }
-
             }
             3 -> {
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
@@ -126,10 +128,16 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_up), 0))
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_down), 0))
             }
         }
-
+//        val blockCnt = dragSources.count()
+//
+//        // dropTargets에서 blockCnt만큼 남기고 뒤에서부터 제거
+//        while (dropTargets.size > blockCnt) {
+//            dropTargets.removeAt(dropTargets.size - 1)
+//        }
     }
 
     private fun initGame() {
@@ -165,6 +173,10 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             if (gameId == 3 || gameId == 4) {
                 binding.ivGameWay2.visibility = View.GONE
                 binding.ivGameGum.visibility = View.GONE
+            }
+            else {
+                binding.ivGameWay2.visibility = View.VISIBLE
+                binding.ivGameGum.visibility = View.VISIBLE
             }
         }
 

@@ -370,6 +370,52 @@
                             android:fontFamily="@font/pretendard_regular"
                             android:text="" />
                     </FrameLayout>
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ib_biginner_game1_space5">
+
+                        <ImageView
+                            android:id="@+id/ib_biginner_game1_practice_block_5"
+                            android:layout_width="120dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="5dp"
+                            android:src="@drawable/shape_square_rounded_16dp" />
+                        <TextView
+                            android:id="@+id/ib_biginner_game1_practice_txt_5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginLeft="15dp"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:text="" />
+                    </FrameLayout>
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ib_biginner_game1_space6">
+
+                        <ImageView
+                            android:id="@+id/ib_biginner_game1_practice_block_6"
+                            android:layout_width="120dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="5dp"
+                            android:src="@drawable/shape_square_rounded_16dp" />
+                        <TextView
+                            android:id="@+id/ib_biginner_game1_practice_txt_6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginLeft="15dp"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:text="" />
+                    </FrameLayout>
                 </LinearLayout>
             </FrameLayout>
 
