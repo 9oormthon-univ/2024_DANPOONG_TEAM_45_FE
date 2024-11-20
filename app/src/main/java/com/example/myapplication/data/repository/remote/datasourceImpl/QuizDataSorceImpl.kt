@@ -5,6 +5,7 @@ import com.example.myapplication.data.repository.remote.api.QuizApi
 import com.example.myapplication.data.repository.remote.datasource.remote.QuizDataSource
 import com.example.myapplication.data.repository.remote.request.quiz.EditQuizDto
 import com.example.myapplication.data.repository.remote.request.quiz.QuizDto
+import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.quiz.AllQuizResponse
 import com.example.myapplication.data.repository.remote.response.quiz.DistinctQuizResponse
 import kotlinx.coroutines.flow.Flow
@@ -39,16 +40,15 @@ class QuizDataSorceImpl @Inject constructor(
     }
 
     override suspend fun getDistinctQuiz(
-        quiz_id: Int,
-        user_id: Int
-    ): Flow<Response<DistinctQuizResponse>> = flow {
-        val result = quizApi.getDistinctQuiz(quiz_id,user_id)
+        quiz_id: Int
+    ): Flow<BaseResponse<DistinctQuizResponse>> = flow {
+        val result = quizApi.getDistinctQuiz(quiz_id)
         emit(result)
     }.catch { e ->
         Log.e("getDistinctQuiz 에러", e.message.toString())
     }
 
-    override suspend fun getQuizAll(): Flow<Response<AllQuizResponse>> = flow {
+    override suspend fun getQuizAll(): Flow<BaseResponse<AllQuizResponse>> = flow {
         val result = quizApi.getAllQuiz()
         emit(result)
     }.catch { e ->

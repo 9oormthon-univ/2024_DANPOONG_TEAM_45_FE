@@ -3,6 +3,7 @@ package com.example.myapplication.domain.repository.quiz
 import com.example.myapplication.data.repository.remote.datasource.remote.QuizDataSource
 import com.example.myapplication.data.repository.remote.request.quiz.EditQuizDto
 import com.example.myapplication.data.repository.remote.request.quiz.QuizDto
+import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.quiz.AllQuizResponse
 import com.example.myapplication.data.repository.remote.response.quiz.DistinctQuizResponse
 import kotlinx.coroutines.flow.Flow
@@ -26,13 +27,12 @@ data class QuizRepositoryImpl @Inject constructor(
 
 
     override suspend fun getDistinctQuiz(
-        quiz_id: Int,
-        user_id: Int
-    ): Flow<Response<DistinctQuizResponse>> =
-        quizDataSource.getDistinctQuiz(quiz_id, user_id)
+        quiz_id: Int
+    ): Flow<BaseResponse<DistinctQuizResponse>> =
+        quizDataSource.getDistinctQuiz(quiz_id)
 
 
-    override suspend fun getQuizAll(): Flow<Response<AllQuizResponse>> =
+    override suspend fun getQuizAll(): Flow<BaseResponse<AllQuizResponse>> =
         quizDataSource.getQuizAll()
 
 
