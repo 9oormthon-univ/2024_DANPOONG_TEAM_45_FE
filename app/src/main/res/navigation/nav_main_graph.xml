@@ -35,6 +35,9 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
 
+        <action
+            android:id="@+id/action_homeFragment_to_questFragment"
+            app:destination="@id/questFragment" />
     </fragment>
 
     <fragment

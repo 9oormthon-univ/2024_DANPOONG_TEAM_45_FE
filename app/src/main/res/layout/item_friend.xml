@@ -26,7 +26,7 @@
             android:background="@drawable/shape_circle_white"
             android:gravity="center"
             android:text="@{friendData.rank}"
-            android:textColor="@color/mint1"
+            android:textColor="@color/mint0"
             app:layout_constraintBottom_toBottomOf="@id/item_friend_iv"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/item_friend_iv" />

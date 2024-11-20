@@ -6,6 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/activity_main_home_tb"
             android:layout_width="match_parent"
@@ -53,20 +54,25 @@
                 android:layout_width="320dp"
                 android:layout_height="320dp"
                 android:layout_marginBottom="20dp"
-                android:src="@drawable/ic_catus"
+                android:src="@drawable/ic_cactus_1"
                 app:layout_constraintBottom_toTopOf="@+id/fragment_home_cactus_state_ll"
                 app:layout_constraintEnd_toEndOf="@id/fragment_home_title_tv"
                 app:layout_constraintStart_toStartOf="@id/fragment_home_title_tv" />
 
-            <TextView
-                android:id="@+id/fragment_home_nickname_tv"
-                style="@style/pretandard_bold.12sp.gray6"
-                android:layout_width="70dp"
-                android:layout_height="30dp"
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/fragment_home_nickname_bt"
+                style="@style/pretandard_bold"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
                 android:background="@drawable/shape_square_rounded_20dp"
                 android:backgroundTint="@color/white"
                 android:gravity="center"
-                android:text="김무무"
+                android:paddingStart="25dp"
+                android:paddingTop="2dp"
+                android:paddingEnd="25dp"
+                android:paddingBottom="2dp"
+                android:text="키우러가기"
+                android:textColor="@color/mint0"
                 app:layout_constraintBottom_toBottomOf="@id/fragment_home_character_iv"
                 app:layout_constraintEnd_toEndOf="@id/fragment_home_character_iv"
                 app:layout_constraintStart_toStartOf="@id/fragment_home_character_iv" />
@@ -87,15 +93,16 @@
 
                 <TextView
                     android:id="@+id/fragment_home_cactus_state_level_tv"
-                    style="@style/pretandard_medium.12sp.white"
+                    style="@style/pretandard_semi_bold.12sp"
                     android:layout_width="40dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/shape_square_rounded_6dp"
-                    android:backgroundTint="@color/level_back_color"
+                    android:backgroundTint="@color/level_back_color1"
                     android:gravity="center"
                     android:text="LV.1"
+                    android:textColor="@color/white"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -187,20 +194,21 @@
                     android:id="@+id/fragment_home_today_mission_stamp_1_iv"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
-                    android:layout_marginEnd="10dp"
+                    android:layout_marginEnd="24dp"
                     android:background="@drawable/selector_today_mission_check"
                     app:layout_constraintBottom_toBottomOf="@id/fragment_home_today_mission_subtitle_tv"
-                    app:layout_constraintEnd_toStartOf="@+id/fragment_home_today_take_reword_bt"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/fragment_home_today_mission_tv" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/fragment_home_today_take_reword_bt"
                     style="@style/pretandard_medium.12sp"
                     android:layout_width="70dp"
-                    android:layout_height="28dp"
+                    android:layout_height="35dp"
                     android:layout_marginEnd="24dp"
                     android:background="@drawable/shape_square_rounded_30dp"
                     android:backgroundTint="@color/selector_button_background"
+                    android:visibility="gone"
                     android:text="보상 받기"
                     android:textColor="@color/selector_button_text"
                     app:layout_constraintBottom_toBottomOf="@+id/fragment_home_today_mission_stamp_1_iv"

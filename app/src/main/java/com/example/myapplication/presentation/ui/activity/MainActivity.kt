@@ -22,5 +22,4 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         navController = navHostFragment.navController
         binding.activityMainBnv.setupWithNavController(navController)
     }
-
 }
