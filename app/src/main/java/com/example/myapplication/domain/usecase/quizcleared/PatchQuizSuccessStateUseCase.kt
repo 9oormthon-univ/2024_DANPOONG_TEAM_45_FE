@@ -1,5 +1,6 @@
 package com.example.myapplication.domain.usecase.quizcleared
 
+import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.domain.repository.quizcleared.IsQuizClearedRepository
 import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
@@ -10,5 +11,5 @@ class PatchQuizSuccessStateUseCase @Inject constructor(
     private val quizClearedRepository: IsQuizClearedRepository
 ) {
     suspend operator fun invoke(isChapterCleared_id: Int,isCleared : Boolean
-    ): Flow<Response<ResponseBody>> = quizClearedRepository.patchQuizSuccessState(isChapterCleared_id, isCleared)
+    ): Flow<BaseResponse<Any>> = quizClearedRepository.patchQuizSuccessState(isChapterCleared_id, isCleared)
 }

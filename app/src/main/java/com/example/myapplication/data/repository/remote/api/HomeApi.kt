@@ -1,6 +1,7 @@
 package com.example.myapplication.data.repository.remote.api
 
 import com.example.myapplication.data.repository.remote.request.home.PatchHomeDTO
+import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.home.DistinctHomeIdResponse
 import com.example.myapplication.data.repository.remote.response.home.HomeAllList
 import okhttp3.ResponseBody
@@ -17,7 +18,7 @@ interface HomeApi {
     //홈 등록
     @POST("/home")
     suspend fun postHome(
-    ): Response<ResponseBody>
+    ): BaseResponse<Any>
 
     //홈 단 건 조회
     @GET("/home/{home_id}")
@@ -29,19 +30,17 @@ interface HomeApi {
     @DELETE("/home/{home_id}")
     suspend fun deleteHomeId(
         @Path("home_id") home_id: String
-    ): Response<ResponseBody>
+    ): BaseResponse<Any>
 
     //홈 수정
     @PATCH("/home/{home_id}")
     suspend fun patchHomeEdit(
         @Path("home_id") home_id: String,
         @Body patchHomeDTO: PatchHomeDTO
-    ): Response<ResponseBody>
+    ): BaseResponse<Any>
 
     //등록된 홈 모두 조회
     @GET("/home/all")
     suspend fun getAllHome(
     ): HomeAllList
-
-
 }

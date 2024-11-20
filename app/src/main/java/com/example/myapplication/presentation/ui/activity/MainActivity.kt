@@ -8,30 +8,32 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityMainBinding
+import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.presentation.viewmodel.EduViewModel
-import com.example.myapplication.presentation.widget.extention.TokenManager
+import com.example.myapplication.presentation.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private lateinit var navController: NavController
     private lateinit var eduViewModel: EduViewModel
+    private lateinit var homeViewModel: HomeViewModel
     override fun setLayout() {
         initViewModel()
         setBottomNavigation()
         observeLifeCycle()
     }
 
-    private fun initViewModel(){
+    private fun initViewModel() {
         eduViewModel = ViewModelProvider(this)[EduViewModel::class.java]
-        eduViewModel.getAllQuiz()
-        eduViewModel.getDistinctQuiz(1)
+        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+        //eduViewModel.getAllQuiz()
+        //eduViewModel.getDistinctQuiz(1)
+        homeViewModel.getAllHome()
     }
 
     //바텀 네비게이션 세팅
@@ -42,9 +44,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         binding.activityMainBnv.setupWithNavController(navController)
     }
 
-    private fun observeLifeCycle(){
+    private fun observeLifeCycle() {
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED){
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
                 eduViewModel.getAllQuiz.collectLatest {
                     Log.d("값 도착", it.toString())
                 }
@@ -52,12 +54,19 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
 
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED){
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
                 eduViewModel.getDistinctQuiz.collectLatest {
                     Log.d("값 도착", it.toString())
                 }
             }
         }
-    }
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                homeViewModel.getAllHome.collectLatest {
+                    Log.d("값 도착", it.toString())
+                }
+            }
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.myapplication.domain.usecase.chaptercleared
 
+import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.domain.repository.chaptercleared.ChapterClearedRepository
 import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
@@ -10,5 +11,5 @@ class PostChapterClearedUseCase @Inject constructor(
     private val chapterClearedRepository: ChapterClearedRepository
 ) {
     suspend operator fun invoke(chapterId: Int,user_id: Int
-    ): Flow<Response<ResponseBody>> = chapterClearedRepository.postChapterCleared(chapterId, user_id)
+    ): Flow<BaseResponse<Any>> = chapterClearedRepository.postChapterCleared(chapterId, user_id)
 }

@@ -1,6 +1,7 @@
 package com.example.myapplication.domain.repository.chaptercleared
 
 import com.example.myapplication.data.repository.remote.datasource.remote.IsChapterClearedDataSource
+import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.chaptercleared.ClearChapterStateListResponse
 import com.example.myapplication.data.repository.remote.response.chaptercleared.ClearChapterStateResponse
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +15,7 @@ data class ChapterClearedRepositoryImpl @Inject constructor(
     override suspend fun postChapterCleared(
         chapterId: Int,
         user_id: Int
-    ): Flow<Response<ResponseBody>> =
+    ): Flow<BaseResponse<Any>> =
         isChapterClearedDataSource.postChapterCleared(chapterId,user_id)
 
     override suspend fun getChapterDistinct(isChapterCleared_id: Int): Flow<Response<ClearChapterStateResponse>> =

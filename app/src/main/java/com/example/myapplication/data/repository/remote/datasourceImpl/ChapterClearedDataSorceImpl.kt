@@ -3,6 +3,7 @@ package com.example.myapplication.data.repository.remote.datasourceImpl
 import android.util.Log
 import com.example.myapplication.data.repository.remote.api.ChapterClearedApi
 import com.example.myapplication.data.repository.remote.datasource.remote.IsChapterClearedDataSource
+import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.chaptercleared.ClearChapterStateListResponse
 import com.example.myapplication.data.repository.remote.response.chaptercleared.ClearChapterStateResponse
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +20,7 @@ class ChapterClearedDataSorceImpl @Inject constructor(
     override suspend fun postChapterCleared(
         chapterId: Int,
         user_id: Int
-    ): Flow<Response<ResponseBody>> = flow {
+    ): Flow<BaseResponse<Any>> = flow {
         val result = chapterClearedApi.postChapterCleared(chapterId,user_id)
         emit(result)
     }.catch { e ->

@@ -1,6 +1,7 @@
 package com.example.myapplication.data.repository.remote.api
 
 import com.example.myapplication.data.repository.remote.request.chapter.RegisterChapterDto
+import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.chapter.AllChapterResponse
 import com.example.myapplication.data.repository.remote.response.chapter.DistinctChapterResponse
 import okhttp3.ResponseBody
@@ -22,11 +23,11 @@ interface ChapterApi {
     ): Response<ResponseBody>
 
     //챕터 단 건 조회
-    @GET("/chapter/{chapter_id}")
+    @GET("/v1/api/chapter/{chapter_id}")
     suspend fun getDistinctChapter(
         @Path("chapter_id") chapter_id : Int,
         @Query("user_id") user_id : Int
-    ): Response<DistinctChapterResponse>
+    ): BaseResponse<DistinctChapterResponse>
 
     //챕터 삭제
     @DELETE("/chapter/{chapter_id}")
