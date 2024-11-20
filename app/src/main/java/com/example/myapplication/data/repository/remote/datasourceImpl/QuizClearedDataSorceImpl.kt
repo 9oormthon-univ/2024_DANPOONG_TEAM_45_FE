@@ -3,6 +3,7 @@ package com.example.myapplication.data.repository.remote.datasourceImpl
 import android.util.Log
 import com.example.myapplication.data.repository.remote.api.QuizClearedApi
 import com.example.myapplication.data.repository.remote.datasource.remote.IsQuizClearedDataSource
+import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.quizcleared.ClearStateListResponse
 import com.example.myapplication.data.repository.remote.response.quizcleared.ClearStateResponse
 import kotlinx.coroutines.flow.Flow
@@ -15,15 +16,15 @@ import javax.inject.Inject
 class QuizClearedDataSorceImpl @Inject constructor(
     private val quizClearedApi: QuizClearedApi
 ) : IsQuizClearedDataSource {
-    override suspend fun postQuizCleared(quiz_id: Int, user_id: Int): Flow<Response<ResponseBody>> = flow {
-        val result = quizClearedApi.postQuizCleared(quiz_id,user_id)
+    override suspend fun postQuizCleared(quiz_id: Int):Flow<BaseResponse<Any>> = flow {
+        val result = quizClearedApi.postQuizCleared(quiz_id)
         emit(result)
     }.catch { e ->
         Log.e("getQuizDistinct 에러", e.message.toString())
     }
 
 
-    override suspend fun getQuizDistinct(isQuizCleared_id: Int): Flow<Response<ClearStateResponse>> = flow {
+    override suspend fun getQuizDistinct(isQuizCleared_id: Int):  Flow<BaseResponse<ClearStateResponse>> = flow {
         val result = quizClearedApi.getQuizDistinct(isQuizCleared_id)
         emit(result)
     }.catch { e ->
@@ -33,14 +34,14 @@ class QuizClearedDataSorceImpl @Inject constructor(
     override suspend fun patchQuizSuccessState(
         isQuizCleared_id: Int,
         isCleared: Boolean
-    ): Flow<Response<ResponseBody>> = flow {
+    ): Flow<BaseResponse<Any>> = flow {
         val result = quizClearedApi.patchQuizSuccessState(isQuizCleared_id,isCleared)
         emit(result)
     }.catch { e ->
         Log.e("patchQuizSuccessState 에러", e.message.toString())
     }
 
-    override suspend fun getQuizAll(): Flow<Response<ClearStateListResponse>> = flow {
+    override suspend fun getQuizAll(): Flow<BaseResponse<ClearStateListResponse>> = flow {
         val result = quizClearedApi.getQuizAll()
         emit(result)
     }.catch { e ->
