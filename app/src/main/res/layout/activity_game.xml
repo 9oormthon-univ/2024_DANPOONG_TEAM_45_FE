@@ -12,10 +12,44 @@
         <ImageView
             android:layout_width="500dp"
             android:layout_height="600dp"
+            android:id="@+id/iv_game_background"
             android:src="@drawable/iv_biginner_game1_image"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="452dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/iv_game_way"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="190dp"
+                android:src="@drawable/iv_game_way" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/iv_game_character"
+                android:src="@drawable/iv_game_character"
+                android:layout_marginTop="120dp"
+                android:layout_marginStart="120dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/iv_game_candy"
+                android:src="@drawable/iv_game_candy"
+                android:layout_marginTop="200dp"
+                android:layout_marginStart="230dp"/>
+
+        </FrameLayout>
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -201,7 +235,7 @@
                 app:layout_constraintStart_toEndOf="@+id/leftFrameLayout">
 
                 <ImageView
-                    android:layout_width="match_parent"
+                    android:layout_width="225dp"
                     android:layout_height="match_parent"
                     android:scaleType="fitCenter"
                     android:src="@drawable/iv_gameplay_layout_background_2" />

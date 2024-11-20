@@ -36,6 +36,7 @@ class IslandMultiAdapter(
     }
 
     override fun bind(binding: ViewDataBinding, item: IslandDto) {
+
         when (item) {
             is IslandDto.IslandLeft -> {
                 (binding as ItemIslandLeftBinding)
@@ -61,7 +62,7 @@ class IslandMultiAdapter(
                 } else {
                     when (item.name) {
                         context.getString(R.string.candy_island) -> binding.itemIslandRightIv.setImageResource(R.drawable.iv_candy_island_unlocked)
-                        else -> binding.itemIslandRightIv.setImageResource(R.drawable.iv_candy_island_unlocked) // TODO 아마 섬 디자인 하나 추가 될듯
+                        else -> binding.itemIslandRightIv.setImageResource(R.drawable.iv_lake_island_locked)
                     }
                 }
                 binding.root.setBackgroundResource(R.drawable.ic_island_right)
