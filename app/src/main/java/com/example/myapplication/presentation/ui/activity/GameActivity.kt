@@ -1,6 +1,5 @@
 package com.example.myapplication.presentation.ui.activity
 
-import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityGameBinding
@@ -9,7 +8,6 @@ import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipDescription.MIMETYPE_TEXT_PLAIN
 import android.content.ContentValues.TAG
-import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.text.InputType
@@ -18,7 +16,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.DRAG_FLAG_GLOBAL
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -30,6 +27,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.DragStartHelper
 import androidx.draganddrop.DropHelper
 import com.example.codingland.presenter.base.BaseActivity
+import com.example.myapplication.presentation.widget.extention.loadCropImage
 
 class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
@@ -37,20 +35,19 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
     private var targetBlockMap = mutableMapOf<Int, Int?>()
 
     private val dragSources = mutableListOf<View>()
-    private var basicBlockId = 1 // 생성되는 블록 아이디
+    private var basicBlockId = 1 // 생성되는 블록 아이디 - 블록 색 지정을 위해 만든 변수
     private var repeatBlockId = 1 // 생성되는 블록 아이디
 
-    private var game1Wave = false
+    private var game1Wave: Boolean = false
+        set(value) {
+            if (field != value) { // 값이 변경된 경우에만 업데이트
+                field = value
+                setLayout() // 레이아웃 초기화 호출
+            }
+        }
     private var moveXCnt = 0
     private var moveYCnt = 0
-
-    private val backgroundImg by lazy {
-        listOf(
-            binding.ivBiginnerGame1Background,
-            binding.ivBiginnerGame2Background,
-            binding.ivCandyGameBackground
-        )
-    }
+    private var moveWay = mutableListOf<Int>()
 
     private val dropTargets by lazy {
         listOf(
@@ -58,6 +55,14 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             binding.ibBiginnerGame1Space2,
             binding.ibBiginnerGame1Space3,
             binding.ibBiginnerGame1Space4
+        )
+    }
+
+    private val backgroundImg by lazy {
+        listOf(
+            R.drawable.iv_biginner_game1_image,
+            R.drawable.iv_biginner_game2_image,
+            R.drawable.iv_candy_game_image
         )
     }
 
@@ -73,7 +78,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
     }
 
     override fun setLayout() {
-        initBlock()
+        initBlock(game1Wave)
         initGame(game1Wave)
         gameFunction()
         setupDragSources()
@@ -81,12 +86,13 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
     }
 
     // init ---------------------------------------------------------
-    private fun initBlock() {
+    private fun initBlock(isWave: Boolean) {
+        clearBlocks()
         val gameId = intent.getIntExtra("game id", -1)
         Log.d("game id test", gameId.toString())
         when(gameId) {
             2 -> {
-                if (!game1Wave) {
+                if (!isWave) {
                     addBlock(BlockDTO(resources.getString(R.string.block_type_normal), "준비하기", 0))
                     addBlock(BlockDTO(resources.getString(R.string.block_type_normal), "일어나기", 0))
                     addBlock(BlockDTO(resources.getString(R.string.block_type_normal), "세수하기", 0))
@@ -99,18 +105,20 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
             }
             else -> {
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), "앞으로 가기", 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_up), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_down), 0))
             }
         }
 
     }
 
-    private fun initGame(game1Wave: Boolean) {
+    private fun initGame(isWave: Boolean) {
         val gameId = intent.getIntExtra("game id", -1)
 
         // 배경 설정
         if (gameId == 2) {
-            if (!game1Wave) backgroundVisibility(backgroundImg[0])
+            if (!isWave) backgroundVisibility(backgroundImg[0])
             else backgroundVisibility(backgroundImg[1])
 
             binding.ivGameCharacter.visibility = View.GONE
@@ -286,13 +294,33 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
     }
 
+    private fun blockVisibility(visibleBlock: ImageButton, goneBlock: ImageButton) {
+        visibleBlock.visibility = View.VISIBLE
+        goneBlock.visibility = View.GONE
+    }
+
+    private fun clearBlocks() {
+        binding.linearLayoutBlockList.removeAllViews()
+    }
+
     private fun gameFunction() {
         // 각종 버튼들 처리
         binding.ibGameplayBtn.setOnClickListener {
             blockVisibility(binding.ibGamestopBtn, binding.ibGameplayBtn)
-            characterMove(moveXCnt*1f, moveYCnt*1f)
+
+            for (move in moveWay) {
+                when (move) {
+                    R.string.game_move_straight -> moveXCnt += 1
+                    R.string.game_move_up -> moveYCnt -= 1
+                    R.string.game_move_down -> moveYCnt += 1
+                }
+
+                // characterMove 실행
+                characterMove(moveXCnt * 1f, moveYCnt * 1f)
+            }
             checkSuccess()
         }
+
         binding.ibGamestopBtn.setOnClickListener {
             blockVisibility(binding.ibGameplayBtn, binding.ibGamestopBtn)
         }
@@ -465,9 +493,15 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         }
 
         when (blockMove) {
-            "앞으로 가기" -> moveXCnt = 1
-            "위로 가기" -> moveYCnt = 1
-            "아래로 가기" -> moveYCnt = -1
+            resources.getString(R.string.game_move_straight) -> {
+                moveWay.add(R.string.game_move_straight)
+            }
+            resources.getString(R.string.game_move_up) -> {
+                moveWay.add(R.string.game_move_up)
+            }
+            resources.getString(R.string.game_move_down) -> {
+                moveWay.add(R.string.game_move_down)
+            }
         }
     }
 
@@ -480,7 +514,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 correctBlockOrder = listOf(1, 2, 3, 0)
             }
             3 -> correctBlockOrder = listOf(1, 0, 0, 0)
-            else -> correctBlockOrder = listOf(1, 2, 3, 0) // TODO
+            else -> correctBlockOrder = listOf(R.string.game_move_straight) // TODO
         }
         // 올바른 블록이 각 dropTarget에 들어왔는지 확인
         var success = true
@@ -583,22 +617,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
     // else function -------------------------------------------------------------------------------
 
-    private fun backgroundVisibility(visibleBack: View) {
-        // 배경 지정
-        for (backImg in backgroundImg) {
-            if (backImg == visibleBack) {
-                visibleBack.visibility = View.VISIBLE
-            }
-            else {
-                visibleBack.visibility = View.GONE
-            }
-        }
-    }
-
-    private fun blockVisibility(visibleBlock: ImageButton, goneBlock: ImageButton) {
-        visibleBlock.visibility = View.VISIBLE
-        goneBlock.visibility = View.GONE
-    }
 
     // dp를 px로 변환하는 확장 함수
     private fun Int.dpToPx(): Int {
@@ -619,7 +637,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 }
             }
 
-            animatorMoveX.duration = 1000 // 애니메이션 시간 설정 (1초)
+            animatorMoveX.duration = 500 // 애니메이션 시간 설정 (0.5초)
             animatorMoveX.start() // 애니메이션 시작
         }
 
@@ -632,9 +650,14 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                     view.translationY = value // translationY로 Y 좌표 이동
                 }
             }
-            animatorMoveY.duration = 1000 // 애니메이션 시간 설정 (1초)
+            animatorMoveY.duration = 500 // 애니메이션 시간 설정 (0.5초)
             animatorMoveY.start() // 애니메이션 시작
         }
+    }
+
+    private fun backgroundVisibility(background: Int) {
+        // 배경 지정
+        binding.ivGameBackground.loadCropImage(background)
     }
 }
 

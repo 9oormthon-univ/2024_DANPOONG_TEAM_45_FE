@@ -10,4 +10,7 @@
     <string name="game_type_block">BLOCK</string>
     <string name="block_type_normal">NORMAL</string>
     <string name="block_type_repeat">REPEAT</string>
+    <string name="game_move_straight">앞으로 가기</string>
+    <string name="game_move_up">위로 가기</string>
+    <string name="game_move_down">아래로 가기</string>
 </resources>

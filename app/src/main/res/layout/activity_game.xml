@@ -12,31 +12,11 @@
         <ImageView
             android:layout_width="500dp"
             android:layout_height="600dp"
-            android:id="@+id/iv_biginner_game1_background"
+            android:id="@+id/iv_game_background"
             android:src="@drawable/iv_biginner_game1_image"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:layout_width="500dp"
-            android:layout_height="600dp"
-            android:id="@+id/iv_biginner_game2_background"
-            android:src="@drawable/iv_biginner_game2_image"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="gone"/>
-
-        <ImageView
-            android:layout_width="500dp"
-            android:layout_height="600dp"
-            android:id="@+id/iv_candy_game_background"
-            android:src="@drawable/iv_candy_game_image"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="gone"/>
 
         <FrameLayout
             android:layout_width="wrap_content"
