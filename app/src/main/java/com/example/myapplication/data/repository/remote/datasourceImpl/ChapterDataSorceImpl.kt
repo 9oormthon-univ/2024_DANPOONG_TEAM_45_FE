@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.myapplication.data.repository.remote.api.ChapterApi
 import com.example.myapplication.data.repository.remote.datasource.remote.ChapterDataSource
 import com.example.myapplication.data.repository.remote.request.chapter.RegisterChapterDto
+import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.chapter.AllChapterResponse
 import com.example.myapplication.data.repository.remote.response.chapter.DistinctChapterResponse
 import kotlinx.coroutines.flow.Flow
@@ -26,7 +27,7 @@ class ChapterDataSorceImpl @Inject constructor(
     override suspend fun getDistinctChapter(
         chapter_id: Int,
         user_id: Int
-    ): Flow<Response<DistinctChapterResponse>> = flow {
+    ): Flow<BaseResponse<DistinctChapterResponse>> = flow {
         val result = chapterApi.getDistinctChapter(chapter_id, user_id)
         emit(result)
     }.catch { e ->

@@ -1,6 +1,7 @@
 package com.example.myapplication.domain.repository.chapter
 import com.example.myapplication.data.repository.remote.datasource.remote.ChapterDataSource
 import com.example.myapplication.data.repository.remote.request.chapter.RegisterChapterDto
+import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.chapter.AllChapterResponse
 import com.example.myapplication.data.repository.remote.response.chapter.DistinctChapterResponse
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +18,7 @@ data class ChapterRepositoryImpl @Inject constructor(
     override suspend fun getDistinctChapter(
         chapter_id: Int,
         user_id: Int
-    ): Flow<Response<DistinctChapterResponse>> =
+    ): Flow<BaseResponse<DistinctChapterResponse>> =
         chapterDataSource.getDistinctChapter(
             chapter_id,
             user_id
