@@ -27,6 +27,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     lateinit var tokenManager: TokenManager
     private lateinit var loginViewModel: LoginViewModel
 
+    //화면 진입 시 토큰 초기화
     override fun onStart() {
         super.onStart()
         initRemainToken()
