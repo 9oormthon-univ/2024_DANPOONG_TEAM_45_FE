@@ -1,11 +1,16 @@
 package com.example.myapplication.data.di
 
+import com.example.myapplication.data.repository.remote.api.HomeApi
 import com.example.myapplication.data.repository.remote.api.LoginApi
 import com.example.myapplication.data.repository.remote.api.QuizApi
+import com.example.myapplication.data.repository.remote.datasource.remote.HomeDataSource
 import com.example.myapplication.data.repository.remote.datasource.remote.LogInDataSource
 import com.example.myapplication.data.repository.remote.datasource.remote.QuizDataSource
+import com.example.myapplication.data.repository.remote.datasourceImpl.HomeDataSourceImpl
 import com.example.myapplication.data.repository.remote.datasourceImpl.LogInDataSourceImpl
 import com.example.myapplication.data.repository.remote.datasourceImpl.QuizDataSorceImpl
+import com.example.myapplication.domain.repository.home.HomeRepository
+import com.example.myapplication.domain.repository.home.HomeRepositoryImpl
 import com.example.myapplication.domain.repository.login.LoginRepository
 import com.example.myapplication.domain.repository.login.LoginRepositoryImpl
 import com.example.myapplication.domain.repository.quiz.QuizRepository
@@ -45,4 +50,17 @@ object RepositoryModule {
     @Provides
     fun provideQuizRepository(quizDataSource: QuizDataSource): QuizRepository =
         QuizRepositoryImpl(quizDataSource)
+
+    @Provides
+    @Singleton
+    fun provideHomeDataSource(
+        homeApi: HomeApi
+    ): HomeDataSource {
+        return HomeDataSourceImpl(homeApi)
+    }
+
+    @Singleton
+    @Provides
+    fun provideHomeRepository(homeDataSource: HomeDataSource): HomeRepository =
+        HomeRepositoryImpl(homeDataSource)
 }
