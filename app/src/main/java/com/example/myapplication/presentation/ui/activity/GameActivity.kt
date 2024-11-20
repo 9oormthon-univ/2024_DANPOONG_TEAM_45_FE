@@ -24,6 +24,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
 import androidx.core.view.DragStartHelper
 import androidx.draganddrop.DropHelper
@@ -36,6 +37,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
     private var isFailDialogShown = false
     private var targetBlockMap = mutableMapOf<Int, Int?>()
     private var isExit = false //나가기 버튼 클릭했는지 여부 판단
+    private var isDialogShown = false // 다이얼로그 표시 상태 플래그
 
     private val dragSources = mutableListOf<View>()
     private var basicBlockId = 1 // 생성되는 블록 아이디 - 블록 색 지정을 위해 만든 변수
@@ -131,6 +133,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         moveXCnt = 0
         moveYCnt = 0
         moveWay.clear()
+        if (gameId != 2 && isNextGame) gameId += 1
+        Log.d("game id test", gameId.toString())
+        initCharacter(gameId)
 
         // 배경 설정
         if (gameId == 2) {
@@ -173,26 +178,31 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             blockVisibility(binding.ibGamestoryOff, binding.ibGamestoryOn)
         }, 10000)  // 10초 후 메시지 사라짐
 
+    }
+
+    private fun initCharacter(game: Int) {
         // 캐릭터 다시 원래 위치로
-        if (isNextGame) gameId += 1
-        when (gameId) {
+        when (game) {
             3 -> {
                 val view = binding.ivGameCharacter
                 view.translationX = 0f  // X 좌표 초기화
                 view.translationY = 0f  // Y 좌표 초기화
+                view.invalidate() // 강제로 뷰 갱신
             }
             4 -> {
                 val character = binding.ivGameCharacter
-                character.translationX = -320f  // X 좌표 초기화
-                character.translationY = 0f  // Y 좌표 초기화
+                runOnUiThread {
+                    character.translationX = -320f
+                    character.translationY = 0f
+                }
 
                 val candy = binding.ivGameCandy
-                candy.translationX = 200f
-                character.translationY = 0f
+                runOnUiThread {
+                    candy.translationX = 200f
+                    candy.translationY = 0f
+                }
             }
-
         }
-
     }
 
     private fun addBlock(block: BlockDTO) {
@@ -348,9 +358,10 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 }
 
                 // characterMove 실행
-                characterMove(moveXCnt * 1f, moveYCnt * 1f)
+                characterMove(moveXCnt * 1f, moveYCnt * 1f) {
+                    checkSuccess()
+                }
             }
-            checkSuccess()
         }
 
         binding.ibGamestopBtn.setOnClickListener {
@@ -540,8 +551,10 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
     // check success ------------------------------------------------
     private fun checkSuccess() {
+        if (isDialogShown) return
         var gameId = intent.getIntExtra("game id", -1)
         if (isNextGame) gameId += 1
+        initCharacter(gameId)
 
         var correctBlockOrder: List<Int>
         var success = true
@@ -574,6 +587,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             }
         }
         if (success) {
+            isDialogShown = true
             // 성공 다이얼로그 출력
             showSuccessDialog(false)
             isNextGame = true
@@ -587,6 +601,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         }
     }
     private fun showSuccessDialog(exit: Boolean) {
+        val gameId = intent.getIntExtra("game id", -1)
         // 다이얼로그 레이아웃을 불러옴
         val dialogView =
             LayoutInflater.from(this).inflate(R.layout.dialog_success, null)
@@ -620,8 +635,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         }
 
         else {
-            val gameId = intent.getIntExtra("game id", -1)
-
             if (gameId == 2) {
                 if (!isNextGame) {
                     title.text = successDialogComment[0].first
@@ -643,11 +656,13 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             }
 
             stopBtn.setOnClickListener {
+                isDialogShown = false
                 dialog.dismiss()
                 finish()
             }
 
             nextBtn.setOnClickListener {
+                isDialogShown = false
                 dialog.dismiss()
                 initGame()
             }
@@ -693,36 +708,57 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         return (this * density).toInt()
     }
 
-    private fun characterMove(x: Float, y: Float) {
+    private fun characterMove(x: Float, y: Float, onComplete: () -> Unit = {}) {
+
         val view = binding.ivGameCharacter // 이동할 뷰
         val beforeX = view.translationX
         val beforeY = view.translationY
-        if (x != 0.0f) {
-            val moveX = 130 * x // 이동할 거리
+        var animationsCompleted = 0 // 완료된 애니메이션 카운터
 
-            // X축으로만 이동하는 애니메이션
+        // X축 이동
+        if (x != 0.0f) {
+            val moveX = beforeX + (150 * x) // 이동할 거리
+
             val animatorMoveX = ValueAnimator.ofFloat(beforeX, moveX).apply {
                 addUpdateListener { animation ->
                     val value = animation.animatedValue as Float
-                    view.translationX = value // translationX로 이동
+                    view.translationX = value
                 }
+                addListener(onEnd = {
+                    animationsCompleted++
+                    if (animationsCompleted == 2) {
+                        if (!isDialogShown) onComplete()
+                    }
+                })
             }
 
-            animatorMoveX.duration = 500 // 애니메이션 시간 설정 (0.5초)
-            animatorMoveX.start() // 애니메이션 시작
+            animatorMoveX.duration = 500
+            animatorMoveX.start()
+        } else {
+            animationsCompleted++
         }
 
+        // Y축 이동
         if (y != 0.0f) {
-            val moveY = 120 * y // 이동할 거리
+            val moveY = beforeY + (150 * y) // 이동할 거리
 
             val animatorMoveY = ValueAnimator.ofFloat(beforeY, moveY).apply {
                 addUpdateListener { animation ->
                     val value = animation.animatedValue as Float
-                    view.translationY = value // translationY로 Y 좌표 이동
+                    view.translationY = value
                 }
+                addListener(onEnd = {
+                    animationsCompleted++
+                    if (animationsCompleted == 2) {
+                        if (!isDialogShown) onComplete()
+                    }
+                })
             }
-            animatorMoveY.duration = 500 // 애니메이션 시간 설정 (0.5초)
-            animatorMoveY.start() // 애니메이션 시작
+
+            animatorMoveY.duration = 500
+            animatorMoveY.start()
+        } else {
+            animationsCompleted++
         }
     }
 
