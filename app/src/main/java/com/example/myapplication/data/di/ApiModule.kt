@@ -1,5 +1,6 @@
 package com.example.myapplication.data.di
 
+import com.example.myapplication.data.repository.remote.api.ChapterApi
 import com.example.myapplication.data.repository.remote.api.CharacterApi
 import com.example.myapplication.data.repository.remote.api.HomeApi
 import com.example.myapplication.data.repository.remote.api.LoginApi
@@ -37,5 +38,11 @@ object ApiModule {
     fun provideCharacterServer(
         @MainRetrofit retrofit: Retrofit
     ): CharacterApi = retrofit.create(CharacterApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideChapterServer(
+        @MainRetrofit retrofit: Retrofit
+    ): ChapterApi = retrofit.create(ChapterApi::class.java)
 
 }
