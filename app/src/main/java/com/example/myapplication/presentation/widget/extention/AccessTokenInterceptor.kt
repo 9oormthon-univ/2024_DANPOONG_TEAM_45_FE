@@ -20,9 +20,16 @@ class AccessTokenInterceptor @Inject constructor(
             tokenManager.getAccessToken.firstOrNull() // Flow에서 첫 번째 값을 가져옴
         }
         val requestBuilder = chain.request().newBuilder()
-        if (token != null) {
-            requestBuilder.addHeader(HEADER_AUTHORIZATION, "$TOKEN_TYPE $token")
-            Log.d("토큰","$TOKEN_TYPE $token")
+
+        val jwtTokenRegex = """^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$""".toRegex()
+        if (token != null && token.matches(jwtTokenRegex)) {
+            // JWT 토큰 형식이 유효한 경우
+            val formattedToken = "$TOKEN_TYPE $token"
+            requestBuilder.addHeader(HEADER_AUTHORIZATION, formattedToken)
+            Log.d("토큰", "유효한 JWT 토큰: $formattedToken")
+        } else {
+            // 토큰이 없거나 형식이 유효하지 않은 경우
+            Log.e("토큰", "잘못된 토큰 형식 또는 토큰 없음")
         }
         val request = requestBuilder.build()
         return chain.proceed(request)
