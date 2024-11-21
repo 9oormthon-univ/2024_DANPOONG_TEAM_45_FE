@@ -1,17 +1,22 @@
 package com.example.myapplication.data.di
 
+import com.example.myapplication.data.repository.remote.api.ChapterApi
 import com.example.myapplication.data.repository.remote.api.CharacterApi
 import com.example.myapplication.data.repository.remote.api.HomeApi
 import com.example.myapplication.data.repository.remote.api.LoginApi
 import com.example.myapplication.data.repository.remote.api.QuizApi
+import com.example.myapplication.data.repository.remote.datasource.remote.ChapterDataSource
 import com.example.myapplication.data.repository.remote.datasource.remote.CharacterDataSource
 import com.example.myapplication.data.repository.remote.datasource.remote.HomeDataSource
 import com.example.myapplication.data.repository.remote.datasource.remote.LogInDataSource
 import com.example.myapplication.data.repository.remote.datasource.remote.QuizDataSource
+import com.example.myapplication.data.repository.remote.datasourceImpl.ChapterDataSorceImpl
 import com.example.myapplication.data.repository.remote.datasourceImpl.CharacterDataSourceImpl
 import com.example.myapplication.data.repository.remote.datasourceImpl.HomeDataSourceImpl
 import com.example.myapplication.data.repository.remote.datasourceImpl.LogInDataSourceImpl
 import com.example.myapplication.data.repository.remote.datasourceImpl.QuizDataSorceImpl
+import com.example.myapplication.domain.repository.chapter.ChapterRepository
+import com.example.myapplication.domain.repository.chapter.ChapterRepositoryImpl
 import com.example.myapplication.domain.repository.character.CharacterRepository
 import com.example.myapplication.domain.repository.character.CharacterRepositoryImpl
 import com.example.myapplication.domain.repository.home.HomeRepository
@@ -81,4 +86,17 @@ object RepositoryModule {
     @Provides
     fun provideCharacterRepository(characterDataSource: CharacterDataSource): CharacterRepository =
         CharacterRepositoryImpl(characterDataSource)
+
+    @Provides
+    @Singleton
+    fun provideChapterDataSource(
+        chapterApi: ChapterApi
+    ): ChapterDataSource {
+        return ChapterDataSorceImpl(chapterApi)
+    }
+
+    @Singleton
+    @Provides
+    fun provideChapterRepository(chapterDataSource: ChapterDataSource): ChapterRepository =
+        ChapterRepositoryImpl(chapterDataSource)
 }
