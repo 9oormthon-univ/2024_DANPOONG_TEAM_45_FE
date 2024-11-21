@@ -43,12 +43,38 @@
                 android:src="@drawable/iv_game_way_2" />
 
             <ImageView
+                android:id="@+id/iv_game_way_3"
+                android:layout_width="430dp"
+                android:layout_height="300dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="00dp"
+                android:layout_marginTop="80dp"
+                android:src="@drawable/iv_game_way_3" />
+
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/iv_game_gum"
                 android:src="@drawable/iv_game_gum"
                 android:layout_marginTop="200dp"
                 android:layout_marginStart="160dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/iv_game_fire"
+                android:src="@drawable/iv_game_fire"
+                android:layout_marginTop="130dp"
+                android:layout_marginStart="245dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/iv_game_fan"
+                android:src="@drawable/iv_game_fan"
+                android:layout_marginTop="60dp"
+                android:layout_marginStart="220dp"
+                android:visibility="gone"/>
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -407,6 +433,29 @@
                             android:src="@drawable/shape_square_rounded_16dp" />
                         <TextView
                             android:id="@+id/ib_biginner_game1_practice_txt_6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginLeft="15dp"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:text="" />
+                    </FrameLayout>
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ib_biginner_game1_space7">
+
+                        <ImageView
+                            android:id="@+id/ib_biginner_game1_practice_block_7"
+                            android:layout_width="120dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="5dp"
+                            android:src="@drawable/shape_square_rounded_16dp" />
+                        <TextView
+                            android:id="@+id/ib_biginner_game1_practice_txt_7"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
