@@ -14,4 +14,5 @@
     <string name="game_move_up">위로 가기</string>
     <string name="game_move_down">아래로 가기</string>
     <string name="game_fanning">부채질 하기</string>
+    <string name="game_repeat">번 반복하기</string>
 </resources>

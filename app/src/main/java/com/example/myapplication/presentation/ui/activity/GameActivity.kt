@@ -59,7 +59,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
     private var moveWay = mutableListOf<Int>()
 
     private var isRepeat = false
-
     private val dropTargets by lazy {
         mutableListOf(
             binding.ibBiginnerGame1Space1,
@@ -546,6 +545,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         val blockDTO = draggedBlock.tag as? BlockDTO
         val blockType = blockDTO?.blockType
         val blockMove = blockDTO?.blockDescript
+        var repeatIdx: Int = 0
 
         when (blockType) {
             resources.getString(R.string.block_type_normal) -> {
@@ -555,10 +555,13 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
                 if (target is FrameLayout) {
                     // 기존에 "repeat" 블록이 있는지 확인
-                    val repeatImageView = target.getTag(R.id.ib_gameplay_btn) as? ImageView
+                    val repeatImageView = target.getTag(R.id.ib_gamestop_btn) as? ImageView
                     if (repeatImageView != null) {
                         // repeat 블록이 이미 존재하면 newImageView3의 visibility를 VISIBLE로 변경
                         repeatImageView.visibility = View.VISIBLE
+                        if (target.childCount > 1) {
+                            target.removeViewAt(1)
+                        }
                         // TextView를 target에 새로 추가
                         val overlayTextView = TextView(this).apply {
                             text = draggedTextView.text
@@ -566,7 +569,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                             setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
                             setPadding(45, 90, 0, 0)
                         }
-
                         target.addView(overlayTextView, 1)
                         overlayTextView.bringToFront()
                         overlayTextView.invalidate()
@@ -657,10 +659,10 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                         visibility = View.GONE // 기본값을 GONE으로 설정
                     }
                     target.addView(newImageView3)
-                    target.setTag(R.id.ib_gameplay_btn, newImageView3) // newImageView3를 tag로 저장
+                    target.setTag(R.id.ib_gamestop_btn, newImageView3) // newImageView3를 tag로 저장
 
                     // EditText 추가
-                    val overlayEditText = EditText(this).apply {
+                    val newEditText = EditText(this).apply {
                         setText(draggedEditText.text)
                         setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
                         inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
@@ -673,14 +675,17 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                         }
                         setPadding(30, 0, 0, 0)
                     }
-                    target.addView(overlayEditText)
+                    target.addView(newEditText)
+                    target.setTag(R.id.ib_gameplay_btn, newEditText)
                 }
+
             }
 
             else -> {
                 // 블록 타입이 정의되지 않았을 경우 처리
                 Log.e("block type error", "블록 타입이 정해지지 않았습니다.")
             }
+
         }
 
         when (blockMove) {
@@ -692,6 +697,10 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             }
             resources.getString(R.string.game_move_down) -> {
                 moveWay.add(R.string.game_move_down)
+            }
+            resources.getString(R.string.game_repeat) -> {
+                moveWay.add(R.string.game_repeat)
+                repeatIdx = moveWay.size - 1
             }
             resources.getString(R.string.game_fanning) -> {
                 moveWay.add(R.string.game_fanning)
@@ -948,10 +957,21 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                     deltaX = 0f
                     deltaY = 1f
                 }
+                R.string.game_repeat -> {
+                    deltaX = 0f
+                    deltaY = 0f
+                    moveStep(index + 1)
+                }
+                R.string.game_fanning -> {
+                    deltaX = 0f
+                    deltaY = 0f
+                    if (isFireCondition())
+                        handleFireCondition()
+                    moveStep(index + 1)
+                }
                 else -> {
                     deltaX = 0f
                     deltaY = 0f
-                    handleFireCondition()
                 }
             }
 
@@ -996,7 +1016,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         // Fire 처리 로직
         binding.ivGameFire.visibility = View.GONE
         binding.ivGameFan.visibility = View.VISIBLE
-        return
     }
 }
 
