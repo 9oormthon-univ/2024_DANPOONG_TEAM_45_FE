@@ -122,8 +122,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             }
             3 -> {
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
-//                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_up), 0))
-//                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_down), 0))
             }
             4 -> {
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
@@ -148,15 +146,8 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_down), 0))
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_repeat), "번 반복하기", 0))
             }
         }
-//        val blockCnt = dragSources.count()
-//
-//        // dropTargets에서 blockCnt만큼 남기고 뒤에서부터 제거
-//        while (dropTargets.size > blockCnt) {
-//            dropTargets.removeAt(dropTargets.size - 1)
-//        }
     }
 
     private fun initGame() {
@@ -209,6 +200,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
                 binding.ivGameWay3.visibility = View.VISIBLE
                 binding.ivGameFire.visibility = View.VISIBLE
+                binding.ivGameFan.visibility = View.GONE
             }
         }
 
@@ -276,7 +268,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 val candy = binding.ivGameCandy
                 runOnUiThread {
                     candy.translationX = 200f
-                    candy.translationY = 180f
+                    candy.translationY = 0f
                 }
             }
         }
@@ -747,7 +739,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             }
 
             6 -> {
-                correctBlockOrder = listOf(R.string.game_move_straight, R.string.game_move_up, R.string.game_move_straight, R.string.game_fanning, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_straight)
+                correctBlockOrder = listOf(R.string.game_move_straight, R.string.game_move_up, R.string.game_move_straight, R.string.game_fanning, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_down)
                 if (moveWay != correctBlockOrder) {
                     success = false
                 }
@@ -965,9 +957,13 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 R.string.game_fanning -> {
                     deltaX = 0f
                     deltaY = 0f
-                    if (isFireCondition())
+                    if (isFireCondition()) {
                         handleFireCondition()
-                    moveStep(index + 1)
+                    }
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        binding.ivGameFan.visibility = View.GONE
+                        moveStep(index + 1)
+                    }, 1000)
                 }
                 else -> {
                     deltaX = 0f
@@ -980,10 +976,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 // 현재 위치 업데이트
                 currentX += deltaX
                 currentY += deltaY
-
-//                if (isFireCondition()) {
-//                    handleFireCondition()
-//                }
 
                 moveStep(index + 1) // 다음 이동 실행
             }
