@@ -15,7 +15,7 @@ class HomeRepositoryImpl @Inject constructor(
 ) : HomeRepository{
     override suspend fun postHome(): Flow<BaseResponse<Any>> = homeDataSource.postHome()
 
-    override suspend fun getDistinctHome(home_id: Int): Flow<DistinctHomeIdResponse> = homeDataSource.getDistinctChapter(home_id)
+    override suspend fun getDistinctHome(): Flow<BaseResponse<DistinctHomeIdResponse>> = homeDataSource.getDistinctHome()
 
     override suspend fun deleteHomeId(home_id: String): Flow<BaseResponse<Any>> = homeDataSource.deleteHomeId(home_id)
 

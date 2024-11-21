@@ -21,10 +21,9 @@ interface HomeApi {
     ): BaseResponse<Any>
 
     //홈 단 건 조회
-    @GET("/home/{home_id}")
-    suspend fun getDistinctChapter(
-        @Path("home_id") home_id: Int
-    ): DistinctHomeIdResponse
+    @GET("/v1/api/home/")
+    suspend fun getDistinctHome(
+    ): BaseResponse<DistinctHomeIdResponse>
 
     //홈 삭제
     @DELETE("/home/{home_id}")

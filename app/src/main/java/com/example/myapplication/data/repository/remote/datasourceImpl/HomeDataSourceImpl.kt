@@ -23,8 +23,8 @@ class HomeDataSourceImpl @Inject constructor(
         Log.e("postHome 에러", e.message.toString())
     }
 
-    override suspend fun getDistinctChapter(home_id: Int): Flow<DistinctHomeIdResponse> = flow {
-        val result = homeApi.getDistinctChapter(home_id)
+    override suspend fun getDistinctHome(): Flow<BaseResponse<DistinctHomeIdResponse>> = flow {
+        val result = homeApi.getDistinctHome()
         emit(result)
     }.catch { e ->
         Log.e("getDistinctChapter 에러", e.message.toString())
