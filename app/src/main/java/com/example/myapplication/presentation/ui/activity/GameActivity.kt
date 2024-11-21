@@ -27,6 +27,7 @@ import android.widget.TextView
 import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
 import androidx.core.view.DragStartHelper
+import androidx.core.view.forEach
 import androidx.draganddrop.DropHelper
 import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.presentation.widget.extention.loadCropImage
@@ -117,7 +118,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                     isFirstStage = true
                 }
                 else {
-                    addBlock(BlockDTO(resources.getString(R.string.block_type_repeat), "번 반복하기", 3))
+                    addBlock(BlockDTO(resources.getString(R.string.block_type_repeat), resources.getString(R.string.game_repeat), 3))
                     addBlock(BlockDTO(resources.getString(R.string.block_type_normal), "파도 소리 재생", 0))
 
                     isFirstStage = false
@@ -154,8 +155,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_up), 0))
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_down), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_down), 0))
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_fanning), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_repeat), "번 반복하기", 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_repeat), resources.getString(R.string.game_repeat), 0))
             }
         }
     }
@@ -177,7 +179,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         // 배경 설정
         if (curGameId == 2) {
             // 초심자의 섬
-            if (!isNextGame) backgroundVisibility(backgroundImg[0])
+            if (isFirstStage) backgroundVisibility(backgroundImg[0])
             else backgroundVisibility(backgroundImg[1])
 
             binding.ivGameCharacter.visibility = View.GONE
@@ -473,7 +475,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             initGame()
         }
         binding.ibGameplayBtn.setOnClickListener {
-            if (repeatIdx != -1) {
+            if (repeatIdx != -1 && isRepeat) {
                 Log.d("repeat index", repeatIdx.toString())
                 val repeatEditText = dropTargets[repeatIdx]?.getTag(R.id.ib_gameplay_btn) as? EditText
                 var tempStr = when (draggedTextView?.text.toString()) { // null 체크
@@ -485,9 +487,10 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
                 if (repeatEditText?.text.toString().toInt() > 0) {
                     for (i in 1..< repeatEditText?.text.toString().toInt()) {
-                        moveWay.add(repeatIdx, tempStr)
+                        moveWay.add(i, tempStr)
                     }
                 }
+                isRepeat = false
             }
             blockVisibility(binding.ibGamestopBtn, binding.ibGameplayBtn)
 
@@ -772,15 +775,25 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         var success = true
         when (curGameId) {
             2 -> {
-                var successCnt = 0
-                correctBlockOrder = listOf(1, 2, 3, 0)
-                for (i: Int in 0..3) {
-                    if (targetBlockMap[i] == correctBlockOrder[i]) {
-                        successCnt += 1
+                if (isFirstStage) {
+                    var successCnt = 0
+                    correctBlockOrder = listOf(1, 2, 3, 0)
+                    for (i: Int in 0..3) {
+                        if (targetBlockMap[i] == correctBlockOrder[i]) {
+                            successCnt += 1
+                        }
                     }
+                    if (successCnt == 4) success = true
+                    else success = false
                 }
-                if (successCnt == 4) success = true
-                else success = false
+                else {
+//                    if (targetBlockMap[0] == 0 && targetBlockMap[1] == 1){
+//                        success = true
+//                    }
+//                    else
+//                        success = false
+                }
+
             }
             3 -> {
                 correctBlockOrder = listOf(R.string.game_move_straight)
@@ -920,7 +933,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         failTitle.text = "앗 다시 한 번 도전해볼래?"
         failSubTitle.text = "조금만 더 힘을 내봐!"
 
-        isFirstStage = true
+        isFirstStage = false
         isNextGame = false
 
         retryBtn.setOnClickListener {
