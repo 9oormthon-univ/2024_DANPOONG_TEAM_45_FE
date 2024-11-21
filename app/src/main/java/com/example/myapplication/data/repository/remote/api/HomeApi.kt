@@ -26,20 +26,20 @@ interface HomeApi {
     ): BaseResponse<DistinctHomeIdResponse>
 
     //홈 삭제
-    @DELETE("/home/{home_id}")
+    @DELETE("/v1/api/home/{home_id}")
     suspend fun deleteHomeId(
         @Path("home_id") home_id: String
     ): BaseResponse<Any>
 
     //홈 수정
-    @PATCH("/home/{home_id}")
+    @PATCH("/v1/api/home/{home_id}")
     suspend fun patchHomeEdit(
         @Path("home_id") home_id: String,
         @Body patchHomeDTO: PatchHomeDTO
     ): BaseResponse<Any>
 
     //등록된 홈 모두 조회
-    @GET("/home/all")
+    @GET("/v1/api/home/all")
     suspend fun getAllHome(
     ): HomeAllList
 }
