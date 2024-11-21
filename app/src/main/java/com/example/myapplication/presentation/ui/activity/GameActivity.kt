@@ -485,12 +485,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
                 if (repeatEditText?.text.toString().toInt() > 0) {
                     for (i in 1..< repeatEditText?.text.toString().toInt()) {
-                        if (repeatIdx == 0) {
-                            moveWay.add(0, tempStr)
-                        }
-                        else {
-                            moveWay.add(repeatIdx - 1, tempStr)
-                        }
+                        moveWay.add(repeatIdx, tempStr)
                     }
                 }
             }
@@ -813,7 +808,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 }
             }
             7 -> {
-                correctBlockOrder = listOf(R.string.game_fanning, R.string.game_move_down, R.string.game_repeat, R.string.game_move_straight, R.string.game_move_down)
+                correctBlockOrder = listOf(R.string.game_fanning, R.string.game_move_down, R.string.game_repeat, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_down)
                 if (moveWay != correctBlockOrder) {
                     success = false
                 }
