@@ -11,11 +11,10 @@ import retrofit2.Response
 interface ChapterRepository {
     suspend fun postCreateChapter(registerChapterDto: RegisterChapterDto): Flow<Response<ResponseBody>>
     suspend fun getDistinctChapter(
-        chapter_id: Int,
-        user_id: Int
+        chapter_id: Int
     ): Flow<BaseResponse<DistinctChapterResponse>>
 
     suspend fun deleteChapter(lchapter_id: String): Flow<Response<ResponseBody>>
     suspend fun modifyChapter(registerChapterDto: RegisterChapterDto): Flow<Response<ResponseBody>>
-    suspend fun getAllChapter(): Flow<Response<AllChapterResponse>>
+    suspend fun getAllChapter(): Flow<BaseResponse<AllChapterResponse>>
 }

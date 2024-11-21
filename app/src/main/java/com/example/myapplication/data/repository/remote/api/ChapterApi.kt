@@ -17,7 +17,7 @@ import retrofit2.http.Query
 interface ChapterApi {
 
     //챕터 등록
-    @POST("/chapter")
+    @POST("/v1/api/chapter")
     suspend fun postCreateChapter(
         @Body registerChapterDto: RegisterChapterDto
     ): Response<ResponseBody>
@@ -25,25 +25,24 @@ interface ChapterApi {
     //챕터 단 건 조회
     @GET("/v1/api/chapter/{chapter_id}")
     suspend fun getDistinctChapter(
-        @Path("chapter_id") chapter_id : Int,
-        @Query("user_id") user_id : Int
+        @Path("chapter_id") chapter_id : Int
     ): BaseResponse<DistinctChapterResponse>
 
     //챕터 삭제
-    @DELETE("/chapter/{chapter_id}")
+    @DELETE("/v1/api/chapter/{chapter_id}")
     suspend fun deleteChapter(
         @Path("chapter_id") chapter_id : String
     ) : Response<ResponseBody>
 
     //챕터 수정
-    @PATCH("/chapter/{chapter_id}")
+    @PATCH("/v1/api/chapter/{chapter_id}")
     suspend fun modifyChapter(
         @Body registerChapterDto: RegisterChapterDto
     ): Response<ResponseBody>
 
     //등록된 챕터 모두 조회
-    @GET("/chapter/all")
+    @GET("/v1/api/chapter/all")
     suspend fun getAllChapter(
-    ): Response<AllChapterResponse>
+    ): BaseResponse<AllChapterResponse>
 
 }

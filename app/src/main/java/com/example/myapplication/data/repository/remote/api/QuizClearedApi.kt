@@ -33,7 +33,7 @@ interface QuizClearedApi {
     ): BaseResponse<Any>
 
     //퀴즈 완료 여부 모두 조회
-    @GET("/isQuizCleared/all")
+    @GET("/v1/api/quizclear/all")
     suspend fun getQuizAll(
     ): BaseResponse<ClearStateListResponse>
 

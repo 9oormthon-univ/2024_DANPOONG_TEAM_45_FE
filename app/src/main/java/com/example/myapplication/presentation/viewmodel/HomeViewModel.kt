@@ -32,8 +32,8 @@ class HomeViewModel @Inject constructor(
     private val _getAllHome = MutableStateFlow(HomeAllList())
     val getAllHome: StateFlow<HomeAllList> = _getAllHome
 
-    private val _getDistinctHome = MutableStateFlow(DistinctHomeIdResponse())
-    val getDistinctHome: StateFlow<DistinctHomeIdResponse> = _getDistinctHome
+    private val _getDistinctHome = MutableStateFlow(BaseResponse<DistinctHomeIdResponse>())
+    val getDistinctHome: StateFlow<BaseResponse<DistinctHomeIdResponse>> = _getDistinctHome
 
 
     private val _patchHome = MutableStateFlow(BaseResponse<Any>())
@@ -68,10 +68,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getDistinctHome(home_id: Int) {
+    fun getDistinctHome() {
         viewModelScope.launch {
             try {
-                getDistinctHomeUseCase(home_id).collect {
+                getDistinctHomeUseCase().collect {
                     _getDistinctHome.value = it
                 }
             } catch (e: Exception) {

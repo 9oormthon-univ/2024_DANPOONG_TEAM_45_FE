@@ -25,10 +25,9 @@ class ChapterDataSorceImpl @Inject constructor(
     }
 
     override suspend fun getDistinctChapter(
-        chapter_id: Int,
-        user_id: Int
+        chapter_id: Int
     ): Flow<BaseResponse<DistinctChapterResponse>> = flow {
-        val result = chapterApi.getDistinctChapter(chapter_id, user_id)
+        val result = chapterApi.getDistinctChapter(chapter_id)
         emit(result)
     }.catch { e ->
         Log.e("getDistinctChapter 에러", e.message.toString())
@@ -48,7 +47,7 @@ class ChapterDataSorceImpl @Inject constructor(
         Log.e("modifyChapter 에러", e.message.toString())
     }
 
-    override suspend fun getAllChapter(): Flow<Response<AllChapterResponse>> = flow {
+    override suspend fun getAllChapter(): Flow<BaseResponse<AllChapterResponse>> = flow {
         val result = chapterApi.getAllChapter()
         emit(result)
     }.catch { e ->

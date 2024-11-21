@@ -16,12 +16,10 @@ data class ChapterRepositoryImpl @Inject constructor(
         chapterDataSource.postCreateChapter(registerChapterDto)
 
     override suspend fun getDistinctChapter(
-        chapter_id: Int,
-        user_id: Int
+        chapter_id: Int
     ): Flow<BaseResponse<DistinctChapterResponse>> =
         chapterDataSource.getDistinctChapter(
-            chapter_id,
-            user_id
+            chapter_id
         )
 
     override suspend fun deleteChapter(lchapter_id: String): Flow<Response<ResponseBody>> =
@@ -30,6 +28,6 @@ data class ChapterRepositoryImpl @Inject constructor(
     override suspend fun modifyChapter(registerChapterDto: RegisterChapterDto): Flow<Response<ResponseBody>> =
         chapterDataSource.modifyChapter(registerChapterDto)
 
-    override suspend fun getAllChapter(): Flow<Response<AllChapterResponse>> =
+    override suspend fun getAllChapter(): Flow<BaseResponse<AllChapterResponse>> =
         chapterDataSource.getAllChapter()
 }

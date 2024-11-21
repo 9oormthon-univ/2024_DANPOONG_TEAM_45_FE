@@ -11,7 +11,7 @@ interface HomeRepository {
     suspend fun postHome(): Flow<BaseResponse<Any>>
 
     //홈 단 건 조회
-    suspend fun getDistinctHome(home_id: Int): Flow<DistinctHomeIdResponse>
+    suspend fun getDistinctHome(): Flow<BaseResponse<DistinctHomeIdResponse>>
 
     //홈 삭제
     suspend fun deleteHomeId(home_id: String): Flow<BaseResponse<Any>>

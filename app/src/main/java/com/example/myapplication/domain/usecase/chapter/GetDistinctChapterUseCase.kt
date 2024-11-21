@@ -12,7 +12,7 @@ class GetDistinctChapterUseCase @Inject constructor(
     private val chapterRepository: ChapterRepository
 ) {
     suspend operator fun invoke(
-        chapter_id: Int, user_id: Int
+        chapter_id: Int
     ): Flow<BaseResponse<DistinctChapterResponse>> =
-        chapterRepository.getDistinctChapter(chapter_id, user_id)
+        chapterRepository.getDistinctChapter(chapter_id)
 }

@@ -21,20 +21,20 @@ interface ChapterClearedApi {
     ): BaseResponse<Any>
 
     //챕터 완료 여부 단 건 조회
-    @GET("/isChapterCleared/{isChapterCleared_id}")
+    @GET("/v1/api/chapterclear/{isChapterCleared_id}")
     suspend fun getChapterDistinct(
         @Path("isChapterCleared_id") isChapterCleared_id: Int
     ): Response<ClearChapterStateResponse>
 
     //챕터 완료 여부 수정
-    @PUT("/isChapterCleared/{isChapterCleared_id}")
+    @PUT("/v1/api/chapterclear")
     suspend fun putChapterCleared(
         @Query("isChapterCleared_id") isChapterCleared_id: Int,
         @Query("isCleared") isCleared: Boolean
     ): Response<ResponseBody>
 
     //챕터 완료 여부 모두 조회
-    @GET("/isChapterCleared/all")
+    @GET("/v1/api/chapterclear/all")
     suspend fun getChapterAll(
     ): Response<ClearChapterStateListResponse>
 
