@@ -1,6 +1,7 @@
 package com.example.myapplication.domain.usecase.chapter
 
 import com.example.myapplication.data.repository.remote.request.chapter.RegisterChapterDto
+import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.domain.repository.chapter.ChapterRepository
 import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
@@ -11,5 +12,5 @@ class PostCreateChapterUseCase @Inject constructor(
     private val chapterRepository: ChapterRepository
 ) {
     suspend operator fun invoke(registerChapterDto: RegisterChapterDto
-    ): Flow<Response<ResponseBody>> = chapterRepository.postCreateChapter(registerChapterDto)
+    ): Flow<BaseResponse<Any>> = chapterRepository.postCreateChapter(registerChapterDto)
 }

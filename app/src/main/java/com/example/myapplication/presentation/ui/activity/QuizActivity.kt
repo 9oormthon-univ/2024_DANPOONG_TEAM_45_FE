@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.view.LayoutInflater
 import android.widget.Button
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
@@ -13,6 +14,7 @@ import com.example.myapplication.presentation.ui.fragment.quest.CustomDialog
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityQuizBinding
 import com.example.myapplication.presentation.ui.fragment.quest.DialogClickListener
+import com.example.myapplication.presentation.viewmodel.ChapterViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,6 +23,7 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
     private lateinit var navController: NavController
     private var buttonPosition = 1
     lateinit var customDialog: CustomDialog
+    lateinit var chapterViewModel : ChapterViewModel
 
     val titleList = listOf(
         "Q.\n무무가 가야할 방향은\n어디일까요?",
@@ -39,8 +42,13 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
     override fun setLayout() {
         setNavController()
         toolBarSetting()
+        setViewModel()
         nextFragment()
         moveToolBarLevel()
+    }
+
+    private fun setViewModel(){
+        ViewModelProvider(this)[ChapterViewModel::class.java]
     }
 
     //네비게이션 컨트롤러 세팅

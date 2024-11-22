@@ -8,7 +8,10 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class TokenManager @Inject constructor(
@@ -22,6 +25,12 @@ class TokenManager @Inject constructor(
         private val LIST_KEY = stringPreferencesKey("list_key")
         private val USER_NICKNAME_KEY = stringPreferencesKey("nickname_key")
         private val USER_PROFILE_KEY = stringPreferencesKey("profile_key")
+        private val CHARACTER_KEY = stringPreferencesKey("character_id")
+        private val USER_KEY = stringPreferencesKey("user_id")
+        private val DATE_KEY = stringPreferencesKey("date")
+        private val COUNT_KEY = stringPreferencesKey("count")
+        private val TUTORIAL_1 = stringPreferencesKey("tut1")
+        private val TUTORIAL_2 = stringPreferencesKey("tut2")
     }
 
     val getAccessToken: Flow<String?> = dataStore.data
@@ -40,7 +49,6 @@ class TokenManager @Inject constructor(
             preferences[ACCESS_TOKEN_KEY] = ""
         }
     }
-
 
     val getUserProfile: Flow<String?> = dataStore.data
         .map { preferences ->
@@ -61,6 +69,35 @@ class TokenManager @Inject constructor(
     suspend fun saveUserNickname(nickname: String) {
         dataStore.edit { preferences ->
             preferences[USER_NICKNAME_KEY] = nickname
+        }
+    }
+
+    val getUserId: Flow<String?> = dataStore.data
+        .map { preferences ->
+            preferences[USER_KEY]
+        }
+
+    suspend fun saveUserId(id: String) {
+        dataStore.edit { preferences ->
+            preferences[USER_KEY] = id
+        }
+    }
+
+    val getCharacterId: Flow<String?> = dataStore.data
+        .map { preferences ->
+            preferences[CHARACTER_KEY]
+        }
+
+    suspend fun saveCharacterId(id: String) {
+        dataStore.edit { preferences ->
+            preferences[CHARACTER_KEY] = id
+        }
+    }
+
+    suspend fun deleteHome() {
+        dataStore.edit { preferences ->
+            preferences[USER_KEY] = ""
+            preferences[CHARACTER_KEY] = ""
         }
     }
 
@@ -92,5 +129,50 @@ class TokenManager @Inject constructor(
             Gson().fromJson(json, object : TypeToken<List<String>>() {}.type) ?: emptyList()
         }
     }
+
+
+    suspend fun saveDateToken(token: String) {
+        dataStore.edit { preferences ->
+            preferences[DATE_KEY] = token
+        }
+    }
+
+    val getDateToken : Flow<String?> = dataStore.data
+        .map { preferences ->
+            preferences[DATE_KEY]
+        }
+
+    suspend fun saveCountToken(token: String) {
+        dataStore.edit { preferences ->
+            preferences[COUNT_KEY] = token
+        }
+    }
+
+    val getCountToken : Flow<String?> = dataStore.data
+        .map { preferences ->
+            preferences[COUNT_KEY]
+        }
+
+    suspend fun saveTut1(token: String) {
+        dataStore.edit { preferences ->
+            preferences[TUTORIAL_1] = token
+        }
+    }
+
+    val getTut1 : Flow<String?> = dataStore.data
+        .map { preferences ->
+            preferences[TUTORIAL_1]
+        }
+
+    suspend fun saveTut2(token: String) {
+        dataStore.edit { preferences ->
+            preferences[TUTORIAL_2] = token
+        }
+    }
+
+    val getTut2 : Flow<String?> = dataStore.data
+        .map { preferences ->
+            preferences[TUTORIAL_2]
+        }
 
 }

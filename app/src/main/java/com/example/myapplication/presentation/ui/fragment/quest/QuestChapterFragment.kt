@@ -1,22 +1,35 @@
 package com.example.myapplication.presentation.ui.fragment.quest
 
 import android.content.Intent
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapplication.presentation.adapter.QuestChapterAdapter
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentQuestChapterBinding
+import com.example.myapplication.presentation.adapter.QuestChapterAdapter
 import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.presentation.ui.activity.QuestIntroActivity
+import com.example.myapplication.presentation.viewmodel.LoginViewModel
 import com.example.myapplication.presentation.widget.extention.loadCropImage
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-class QuestChapterFragment : BaseFragment<FragmentQuestChapterBinding>(R.layout.fragment_quest_chapter) {
+@AndroidEntryPoint
+class QuestChapterFragment :
+    BaseFragment<FragmentQuestChapterBinding>(R.layout.fragment_quest_chapter) {
 
     private lateinit var adapter: QuestChapterAdapter
     val questItem = mutableListOf<QuestDto>()
 
+    val loginViewModel: LoginViewModel by viewModels()
+
     override fun setLayout() {
         initBiginnerItem()
+        observeLifeCycle()
     }
 
     private fun initBiginnerItem() {
@@ -70,28 +83,7 @@ class QuestChapterFragment : BaseFragment<FragmentQuestChapterBinding>(R.layout.
         val islandName = arguments?.getString("island name")
         when (islandName) {
             resources.getString(R.string.biginner_island) -> {
-                with(questItem) {
-                    add(
-                        QuestDto(
-                            1,
-                            resources.getString(R.string.game_type_normal),
-                            "기초 훈련하기",
-                            "초보 모험가를 위한 기초 훈련!",
-                            R.drawable.iv_background_biginner_game1,
-                            0
-                        )
-                    ) // drawable 리소스 아이디 사용
-                    add(
-                        QuestDto(
-                            2,
-                            resources.getString(R.string.game_type_block),
-                            "모험 준비하기",
-                            "본격적으로 모험을 준비해봐요!",
-                            R.drawable.iv_background_biginner_game2,
-                            0
-                        )
-                    )
-                }
+                loginViewModel.getTraining()
             }
 
             resources.getString(R.string.candy_island) -> {
@@ -200,5 +192,64 @@ class QuestChapterFragment : BaseFragment<FragmentQuestChapterBinding>(R.layout.
             }
         }
         println("아이템 수: ${questItem.size}") // 아이템 수 확인용 로그
+    }
+
+    private fun observeLifeCycle(){
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                loginViewModel.training.collectLatest {
+                    when (it.result.code) {
+                        200 -> {
+                            if (it.payload!!) {
+                                questItem.add(
+                                    QuestDto(
+                                        1,
+                                        resources.getString(R.string.game_type_normal),
+                                        "기초 훈련하기",
+                                        "초보 모험가를 위한 기초 훈련!",
+                                        R.drawable.iv_background_biginner_game1,
+                                        2
+                                    )
+                                ) // drawable 리소스 아이디 사용
+                                questItem.add(
+                                    QuestDto(
+                                        2,
+                                        resources.getString(R.string.game_type_block),
+                                        "모험 준비하기",
+                                        "본격적으로 모험을 준비해봐요!",
+                                        R.drawable.iv_background_biginner_game2,
+                                        2
+                                    )
+                                )
+                            } else {
+                                with(questItem) {
+                                    add(
+                                        QuestDto(
+                                            1,
+                                            resources.getString(R.string.game_type_normal),
+                                            "기초 훈련하기",
+                                            "초보 모험가를 위한 기초 훈련!",
+                                            R.drawable.iv_background_biginner_game1,
+                                            0
+                                        )
+                                    ) // drawable 리소스 아이디 사용
+                                    add(
+                                        QuestDto(
+                                            2,
+                                            resources.getString(R.string.game_type_block),
+                                            "모험 준비하기",
+                                            "본격적으로 모험을 준비해봐요!",
+                                            R.drawable.iv_background_biginner_game2,
+                                            0
+                                        )
+                                    )
+                                }
+                            }
+                            adapter.notifyDataSetChanged() // 어댑터에 변경사항 알림
+                        }
+                    }
+                }
+            }
+        }
     }
 }

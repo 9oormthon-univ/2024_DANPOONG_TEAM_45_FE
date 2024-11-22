@@ -20,6 +20,7 @@ import com.example.myapplication.presentation.widget.extention.TokenManager
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -126,7 +127,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                     if (it.result.code == 200) {
                         with(it.payload) {
                             saveToken(accessToken, refreshToken, picture, nickname)
-                            startActivity(Intent(requireActivity(), MainActivity::class.java))
+                            if(tokenManager.getCharacterId.first() == null){
+                                findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
+                            }
+                            else {
+                                startActivity(Intent(requireActivity(), MainActivity::class.java))
+                            }
                         }
                     }
                 }

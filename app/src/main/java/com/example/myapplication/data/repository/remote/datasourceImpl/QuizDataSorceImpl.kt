@@ -18,7 +18,7 @@ import javax.inject.Inject
 class QuizDataSorceImpl @Inject constructor(
     private val quizApi: QuizApi
 ) : QuizDataSource {
-    override suspend fun postCreateQuiz(quizDto: QuizDto): Flow<Response<ResponseBody>> = flow {
+    override suspend fun postCreateQuiz(quizDto: QuizDto): Flow<BaseResponse<Any>> = flow {
         val result = quizApi.postCreateQuiz(quizDto)
         emit(result)
     }.catch { e ->
@@ -32,7 +32,7 @@ class QuizDataSorceImpl @Inject constructor(
         Log.e("patchModifyQuiz 에러", e.message.toString())
     }
 
-    override suspend fun deleteQuiz(quiz_id: Int): Flow<Response<ResponseBody>> = flow {
+    override suspend fun deleteQuiz(quiz_id: Int): Flow<BaseResponse<Any>> = flow {
         val result = quizApi.deleteQuiz(quiz_id)
         emit(result)
     }.catch { e ->

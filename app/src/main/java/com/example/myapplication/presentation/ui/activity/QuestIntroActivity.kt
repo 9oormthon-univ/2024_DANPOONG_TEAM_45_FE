@@ -5,9 +5,12 @@ import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityQuestIntroBinding
 import com.example.myapplication.presentation.widget.extention.loadCropImage
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class QuestIntroActivity :
     BaseActivity<ActivityQuestIntroBinding>(R.layout.activity_quest_intro) {
+
 
     override fun setLayout() {
 

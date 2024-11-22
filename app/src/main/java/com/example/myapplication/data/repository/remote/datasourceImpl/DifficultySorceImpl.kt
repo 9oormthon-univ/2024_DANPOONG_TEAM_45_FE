@@ -3,6 +3,7 @@ package com.example.myapplication.data.repository.remote.datasourceImpl
 import android.util.Log
 import com.example.myapplication.data.repository.remote.api.DifficultyApi
 import com.example.myapplication.data.repository.remote.datasource.remote.DifficultyDatasourceDataSource
+import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.difficulty.DifficultyLevelList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -15,14 +16,14 @@ class DifficultySorceImpl @Inject constructor(
     private val difficultyApi: DifficultyApi
 ) : DifficultyDatasourceDataSource {
 
-    override suspend fun postDifficultyLevel(level: String): Flow<Response<ResponseBody>> = flow {
+    override suspend fun postDifficultyLevel(level: String): Flow<BaseResponse<Any>> = flow {
         val result = difficultyApi.postDifficultyLevel(level)
         emit(result)
     }.catch { e ->
         Log.e("postDifficultyLevel 에러", e.message.toString())
     }
 
-    override suspend fun deleteDifficultyLevel(difficulty_id: String): Flow<Response<ResponseBody>> =
+    override suspend fun deleteDifficultyLevel(difficulty_id: String): Flow<BaseResponse<Any>> =
         flow {
             val result = difficultyApi.deleteDifficultyLevel(difficulty_id)
             emit(result)

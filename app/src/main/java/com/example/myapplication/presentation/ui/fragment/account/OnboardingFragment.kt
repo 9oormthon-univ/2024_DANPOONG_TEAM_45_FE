@@ -7,21 +7,41 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
-import com.example.myapplication.presentation.base.BaseFragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.myapplication.R
+import com.example.myapplication.data.repository.remote.request.character.CharacterDTO
 import com.example.myapplication.databinding.FragmentOnboardingBinding
+import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.presentation.ui.activity.AccountActivity
 import com.example.myapplication.presentation.ui.activity.MainActivity
+import com.example.myapplication.presentation.viewmodel.CharacterViewModel
+import com.example.myapplication.presentation.widget.extention.TokenManager
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class OnboardingFragment : BaseFragment<FragmentOnboardingBinding>(R.layout.fragment_onboarding) {
     private var currentCount = 0
+    private lateinit var characterViewModel: CharacterViewModel
 
+    @Inject
+    lateinit var tokenManager: TokenManager
     override fun setLayout() {
+        characterViewModel = ViewModelProvider(this)[CharacterViewModel::class.java]
         onClickView()
         textChange()
+        observeLifeCycle()
     }
 
     private fun onClickView() {
@@ -31,10 +51,30 @@ class OnboardingFragment : BaseFragment<FragmentOnboardingBinding>(R.layout.frag
         }
         binding.fragmentOnboardingStartBt.setOnClickListener {
             if (it.isSelected) {
-                val activity = requireActivity() as AccountActivity
-                activity.startActivityWithClear(MainActivity::class.java)
+                runBlocking {
+                    val name = binding.fragmentOnboardingInputNameEt.text.toString()
+                    val character_id = tokenManager.getCharacterId.first()?.toInt()
+                    Log.d("okhttp", "${name} ${character_id}")
+                    characterViewModel.postCharacter(CharacterDTO(name))
+                }
             }
         }
+    }
+
+    private fun observeLifeCycle() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                characterViewModel.postCharacter.collectLatest {
+                    when (it.result.code) {
+                        200 -> {
+                            val activity = requireActivity() as AccountActivity
+                            activity.startActivityWithClear(MainActivity::class.java)
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     private fun hideKeyboard() {

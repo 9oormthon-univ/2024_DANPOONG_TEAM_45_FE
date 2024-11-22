@@ -2,11 +2,13 @@ package com.example.myapplication.presentation.ui.fragment.friend
 
 import android.content.ActivityNotFoundException
 import android.util.Log
+import androidx.fragment.app.activityViewModels
 import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentFriendBinding
 import com.example.myapplication.domain.model.FriendsEntity
 import com.example.myapplication.presentation.adapter.FriendAdapter
+import com.example.myapplication.presentation.viewmodel.ChapterViewModel
 import com.kakao.sdk.common.util.KakaoCustomTabsClient
 import com.kakao.sdk.share.ShareClient
 import com.kakao.sdk.share.WebSharerClient

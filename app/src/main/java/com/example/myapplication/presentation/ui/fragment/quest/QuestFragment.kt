@@ -1,52 +1,64 @@
 package com.example.myapplication.presentation.ui.fragment.quest
 
 import android.os.Bundle
+import android.util.Log
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.R
+import com.example.myapplication.data.mapper.toDomain
+import com.example.myapplication.data.repository.remote.response.chapter.AllChapterResponse
 import com.example.myapplication.databinding.FragmentQuestBinding
-import com.example.myapplication.presentation.ui.fragment.quest.IslandDto
 import com.example.myapplication.presentation.adapter.IslandMultiAdapter
-import com.example.myapplication.presentation.ui.fragment.quest.ItemClickListener
+import com.example.myapplication.presentation.base.BaseFragment
+import com.example.myapplication.presentation.viewmodel.ChapterViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class QuestFragment : BaseFragment<FragmentQuestBinding>(R.layout.fragment_quest),
     ItemClickListener {
     private lateinit var islandAdapter: IslandMultiAdapter
+    private val chapterViewModel: ChapterViewModel by viewModels()
 
     override fun setLayout() {
         initAdapter()
+        observeLifeCycle()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        initChapter()
+    }
+
+    private fun initChapter() {
+        chapterViewModel.getAllChapter()
+    }
+
+    private fun observeLifeCycle() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                chapterViewModel.getAllChapter.collectLatest {
+                    val islandList = it.payload?.toDomain()
+                    Log.d("okhttp", "$islandList")
+                    Log.d("okhttp", "${it.payload}")
+                    when (it.result.code) {
+                        200 -> {
+                            islandAdapter.submitList(islandList)
+                            binding.fragmentQuestRv.adapter = islandAdapter
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     private fun initAdapter() {
-        val islandList = listOf(
-            IslandDto.IslandLeft(
-                R.drawable.ic_island_left,
-                R.drawable.iv_biginner_island,
-                false,
-                resources.getString(R.string.biginner_island)
-            ),
-            IslandDto.IslandRight(
-                R.drawable.ic_island_right,
-                R.drawable.iv_candy_island_locked,
-                true,
-                resources.getString(R.string.candy_island)
-            ),
-            IslandDto.IslandLeft(
-                R.drawable.ic_island_left,
-                R.drawable.iv_lake_island_locked,
-                true,
-                resources.getString(R.string.lake_island)
-            ),
-            IslandDto.IslandRight(
-                R.drawable.ic_island_right,
-                R.drawable.iv_lake_island_locked,
-                true,
-                "햇살의 섬"
-            )
-        )
         islandAdapter = IslandMultiAdapter(requireContext(), this)
-        binding.fragmentQuestRv.adapter = islandAdapter
-        islandAdapter.submitList(islandList)
     }
 
     override fun click(item: Any) {

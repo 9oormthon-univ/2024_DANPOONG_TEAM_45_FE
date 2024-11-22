@@ -1,4 +1,5 @@
 package com.example.myapplication.domain.repository.chapter
+
 import com.example.myapplication.data.repository.remote.datasource.remote.ChapterDataSource
 import com.example.myapplication.data.repository.remote.request.chapter.RegisterChapterDto
 import com.example.myapplication.data.repository.remote.response.BaseResponse
@@ -12,17 +13,13 @@ import javax.inject.Inject
 data class ChapterRepositoryImpl @Inject constructor(
     private val chapterDataSource: ChapterDataSource
 ) : ChapterRepository {
-    override suspend fun postCreateChapter(registerChapterDto: RegisterChapterDto): Flow<Response<ResponseBody>> =
+    override suspend fun postCreateChapter(registerChapterDto: RegisterChapterDto): Flow<BaseResponse<Any>> =
         chapterDataSource.postCreateChapter(registerChapterDto)
 
-    override suspend fun getDistinctChapter(
-        chapter_id: Int
-    ): Flow<BaseResponse<DistinctChapterResponse>> =
-        chapterDataSource.getDistinctChapter(
-            chapter_id
-        )
+    override suspend fun getDistinctChapter(chapter_id: Int): Flow<BaseResponse<DistinctChapterResponse>> =
+        chapterDataSource.getDistinctChapter(chapter_id)
 
-    override suspend fun deleteChapter(lchapter_id: String): Flow<Response<ResponseBody>> =
+    override suspend fun deleteChapter(lchapter_id: String): Flow<BaseResponse<Any>> =
         chapterDataSource.deleteChapter(lchapter_id)
 
     override suspend fun modifyChapter(registerChapterDto: RegisterChapterDto): Flow<Response<ResponseBody>> =

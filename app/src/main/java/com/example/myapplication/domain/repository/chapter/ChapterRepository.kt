@@ -9,12 +9,9 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 
 interface ChapterRepository {
-    suspend fun postCreateChapter(registerChapterDto: RegisterChapterDto): Flow<Response<ResponseBody>>
-    suspend fun getDistinctChapter(
-        chapter_id: Int
-    ): Flow<BaseResponse<DistinctChapterResponse>>
-
-    suspend fun deleteChapter(lchapter_id: String): Flow<Response<ResponseBody>>
+    suspend fun postCreateChapter(registerChapterDto: RegisterChapterDto):  Flow<BaseResponse<Any>>
+    suspend fun getDistinctChapter(chapter_id: Int): Flow<BaseResponse<DistinctChapterResponse>>
+    suspend fun deleteChapter(lchapter_id: String): Flow<BaseResponse<Any>>
     suspend fun modifyChapter(registerChapterDto: RegisterChapterDto): Flow<Response<ResponseBody>>
     suspend fun getAllChapter(): Flow<BaseResponse<AllChapterResponse>>
 }

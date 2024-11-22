@@ -1,5 +1,6 @@
 package com.example.myapplication.domain.usecase.chapter
 
+import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.domain.repository.chapter.ChapterRepository
 import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
@@ -11,5 +12,5 @@ class DeleteChapterUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         chapter_id: String
-    ): Flow<Response<ResponseBody>> = chapterRepository.deleteChapter(chapter_id)
+    ): Flow<BaseResponse<Any>> = chapterRepository.deleteChapter(chapter_id)
 }

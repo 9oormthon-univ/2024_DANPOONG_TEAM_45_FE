@@ -21,7 +21,7 @@ interface HomeApi {
     ): BaseResponse<Any>
 
     //홈 단 건 조회
-    @GET("/v1/api/home/")
+    @GET("/v1/api/home")
     suspend fun getDistinctHome(
     ): BaseResponse<DistinctHomeIdResponse>
 
