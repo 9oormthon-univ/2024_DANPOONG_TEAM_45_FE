@@ -20,7 +20,10 @@ import com.example.myapplication.presentation.widget.extention.TokenManager
 import com.example.myapplication.presentation.widget.extention.loadCropImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -32,18 +35,38 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     lateinit var tokenManager: TokenManager
 
     override fun setLayout() {
+        initCount()
+        initHome()
         observeLifeCycle()
-        stateManage()
         onClickBtn()
     }
 
     override fun onStart() {
         super.onStart()
+        initCount()
         initHome()
     }
 
     private fun initHome() {
+        lifecycleScope.launch {
+            try {
+                stateManage(tokenManager.getCountToken.first().toString().toInt())
+            }catch (e : Exception){
+                stateManage(0)
+            }
+        }
         homeViewModel.getDistinctHome()
+    }
+
+    private fun initCount() {
+        lifecycleScope.launch {
+            val today = LocalDateTime.now().toString()
+            val prepareDay = tokenManager.getDateToken.first().toString()
+            if (today != prepareDay) {
+                tokenManager.saveCountToken("0")
+                tokenManager.saveDateToken(today)
+            }
+        }
     }
 
     private fun observeLifeCycle() {
@@ -61,7 +84,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                                 fragmentHomeCharacterIv.loadCropImage(
                                     setCharacterDrawable(stringToEnum(character.type))
                                 )
-                                Log.d("이미지","${resources.getResourceEntryName(setCharacterDrawable(stringToEnum(character.type)))}")
+                                Log.d(
+                                    "이미지",
+                                    "${
+                                        resources.getResourceEntryName(
+                                            setCharacterDrawable(stringToEnum(character.type))
+                                        )
+                                    }"
+                                )
                                 fragmentHomeCactusStateProgressPb.progress =
                                     character.activityPoints
                             }
@@ -100,15 +130,26 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         }
     }
 
-    private fun stateManage() {
-        binding.fragmentHomeTodayMissionStamp1Iv.setOnClickListener {
-            it.isSelected = true
-            buttonStateCheck()
+    private fun stateManage(count: Int) {
+        when (count) {
+            0-> {
+                binding.fragmentHomeTodayMissionStamp1Iv.isSelected = false
+                binding.fragmentHomeTodayMissionStamp2Iv.isSelected = false
+            }
+            1 -> {
+                binding.fragmentHomeTodayMissionStamp1Iv.isSelected = false
+                binding.fragmentHomeTodayMissionStamp2Iv.isSelected = true
+            }
+            2 -> {
+                binding.fragmentHomeTodayMissionStamp1Iv.isSelected = true
+                binding.fragmentHomeTodayMissionStamp2Iv.isSelected = true
+            }
+            else -> {
+                binding.fragmentHomeTodayMissionStamp1Iv.isSelected = false
+                binding.fragmentHomeTodayMissionStamp2Iv.isSelected = false
+            }
         }
-        binding.fragmentHomeTodayMissionStamp2Iv.setOnClickListener {
-            it.isSelected = true
-            buttonStateCheck()
-        }
+        buttonStateCheck()
     }
 
     //뷰를 보여주거나 숨겨주는 함수

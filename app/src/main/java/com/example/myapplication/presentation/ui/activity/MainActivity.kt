@@ -9,16 +9,17 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.myapplication.R
-import com.example.myapplication.data.repository.remote.request.character.CharacterDTO
 import com.example.myapplication.databinding.ActivityMainBinding
 import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.presentation.viewmodel.ChapterViewModel
 import com.example.myapplication.presentation.viewmodel.CharacterViewModel
 import com.example.myapplication.presentation.viewmodel.EduViewModel
 import com.example.myapplication.presentation.viewmodel.HomeViewModel
+import com.example.myapplication.presentation.widget.extention.TokenManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
@@ -85,21 +86,20 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
 
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED){
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
                 chapterViewModel.getDistinctChapter.collectLatest {
-                    Log.d("값 도착",it.toString())
+                    Log.d("값 도착", it.toString())
                 }
             }
         }
 
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED){
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
                 chapterViewModel.getAllChapter.collectLatest {
-                    Log.d("값 도착",it.toString())
+                    Log.d("값 도착", it.toString())
                 }
             }
         }
-
     }
 
 }

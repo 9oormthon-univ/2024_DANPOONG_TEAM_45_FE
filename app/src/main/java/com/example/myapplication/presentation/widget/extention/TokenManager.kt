@@ -8,7 +8,10 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class TokenManager @Inject constructor(
@@ -24,6 +27,8 @@ class TokenManager @Inject constructor(
         private val USER_PROFILE_KEY = stringPreferencesKey("profile_key")
         private val CHARACTER_KEY = stringPreferencesKey("character_id")
         private val USER_KEY = stringPreferencesKey("user_id")
+        private val DATE_KEY = stringPreferencesKey("date")
+        private val COUNT_KEY = stringPreferencesKey("count")
     }
 
     val getAccessToken: Flow<String?> = dataStore.data
@@ -116,5 +121,28 @@ class TokenManager @Inject constructor(
             Gson().fromJson(json, object : TypeToken<List<String>>() {}.type) ?: emptyList()
         }
     }
+
+
+    suspend fun saveDateToken(token: String) {
+        dataStore.edit { preferences ->
+            preferences[DATE_KEY] = token
+        }
+    }
+
+    val getDateToken : Flow<String?> = dataStore.data
+        .map { preferences ->
+            preferences[DATE_KEY]
+        }
+
+    suspend fun saveCountToken(token: String) {
+        dataStore.edit { preferences ->
+            preferences[COUNT_KEY] = token
+        }
+    }
+
+    val getCountToken : Flow<String?> = dataStore.data
+        .map { preferences ->
+            preferences[COUNT_KEY]
+        }
 
 }
