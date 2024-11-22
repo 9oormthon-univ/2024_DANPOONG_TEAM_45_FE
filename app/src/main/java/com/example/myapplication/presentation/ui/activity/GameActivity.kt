@@ -9,6 +9,7 @@ import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipDescription.MIMETYPE_TEXT_PLAIN
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.text.InputType
@@ -30,7 +31,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.DragStartHelper
 import androidx.core.view.forEach
 import androidx.draganddrop.DropHelper
+import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.presentation.base.BaseActivity
+import com.example.myapplication.presentation.viewmodel.QuizViewModel
 import com.example.myapplication.presentation.widget.extention.loadCropImage
 import dagger.hilt.android.AndroidEntryPoint
 import org.w3c.dom.Text
@@ -47,6 +50,8 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
     private var basicBlockId = 1 // 생성되는 블록 아이디 - 블록 색 지정을 위해 만든 변수
     private var repeatBlockId = 1 // 생성되는 블록 아이디
     private var curGameId = 2
+
+    private lateinit var isQuizClearedViewModel: QuizViewModel
 
     private var isNextGame: Boolean = false // 다음 게임 넘어가는지 여부 판단
         set(value) {
@@ -131,11 +136,16 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         curGameId = intent.getIntExtra("game id", -1)
 //        binding.ivGameHintTxt.text = hintComment[curGameId - 2]
 //        binding.ibGamestoryMsgTxt.text = moomooMessage[curGameId - 2]
+        initViewModel()
         initBlock()
         initGame()
         gameFunction()
         setupDragSources()
         setupDropTargets()
+    }
+
+    private fun initViewModel() {
+        isQuizClearedViewModel = ViewModelProvider(this)[QuizViewModel::class.java]
     }
 
     // init ---------------------------------------------------------
@@ -906,6 +916,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         //********
         if (success) {
             isDialogShown = true
+            Log.d("cur id testtest", curGameId.toString())
+//            isQuizClearedViewModel.postQuizClear(curGameId)
+
             // 성공 다이얼로그 출력
             showSuccessDialog(false)
         } else {
@@ -979,6 +992,11 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
             //****
             nextBtn.setOnClickListener {
+                if (!isFirstStage) {
+                    val intent = Intent(this, QuizClearActivity::class.java)
+                    intent.putExtra("game2Activity", true)
+                    startActivity(intent)
+                }
                 isDialogShown = false
                 isFirstStage = false
                 isNextGame = true
