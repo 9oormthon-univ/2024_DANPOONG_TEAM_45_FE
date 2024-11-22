@@ -31,8 +31,10 @@ import androidx.core.view.forEach
 import androidx.draganddrop.DropHelper
 import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.presentation.widget.extention.loadCropImage
+import dagger.hilt.android.AndroidEntryPoint
 import org.w3c.dom.Text
 
+@AndroidEntryPoint
 class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
     private var isFailDialogShown = false
