@@ -53,7 +53,7 @@ class CharacterDataSourceImpl @Inject constructor(
             val result = characterApi.putCharacter(character_id, name)
             emit(result)
         }.catch { e ->
-            Log.e("deleteCharacter 에러", e.message.toString())
+            Log.e("putCharacter 에러", e.message.toString())
         }
 
     override suspend fun postIncreaseActivityPoint(

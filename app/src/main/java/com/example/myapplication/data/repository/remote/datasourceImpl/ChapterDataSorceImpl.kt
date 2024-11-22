@@ -17,7 +17,7 @@ import javax.inject.Inject
 class ChapterDataSorceImpl @Inject constructor(
     private val chapterApi: ChapterApi
 ) : ChapterDataSource {
-    override suspend fun postCreateChapter(registerChapterDto: RegisterChapterDto): Flow<Response<ResponseBody>>  = flow {
+    override suspend fun postCreateChapter(registerChapterDto: RegisterChapterDto):  Flow<BaseResponse<Any>> = flow {
         val result = chapterApi.postCreateChapter(registerChapterDto)
         emit(result)
     }.catch { e ->
@@ -33,7 +33,7 @@ class ChapterDataSorceImpl @Inject constructor(
         Log.e("getDistinctChapter 에러", e.message.toString())
     }
 
-    override suspend fun deleteChapter(lchapter_id: String): Flow<Response<ResponseBody>> = flow {
+    override suspend fun deleteChapter(lchapter_id: String): Flow<BaseResponse<Any>> = flow {
         val result = chapterApi.deleteChapter(lchapter_id)
         emit(result)
     }.catch { e ->

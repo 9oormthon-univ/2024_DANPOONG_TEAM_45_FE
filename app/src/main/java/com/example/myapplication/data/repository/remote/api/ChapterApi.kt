@@ -20,7 +20,7 @@ interface ChapterApi {
     @POST("/v1/api/chapter")
     suspend fun postCreateChapter(
         @Body registerChapterDto: RegisterChapterDto
-    ): Response<ResponseBody>
+    ): BaseResponse<Any>
 
     //챕터 단 건 조회
     @GET("/v1/api/chapter/{chapter_id}")
@@ -32,7 +32,7 @@ interface ChapterApi {
     @DELETE("/v1/api/chapter/{chapter_id}")
     suspend fun deleteChapter(
         @Path("chapter_id") chapter_id : String
-    ) : Response<ResponseBody>
+    ) : BaseResponse<Any>
 
     //챕터 수정
     @PATCH("/v1/api/chapter/{chapter_id}")
