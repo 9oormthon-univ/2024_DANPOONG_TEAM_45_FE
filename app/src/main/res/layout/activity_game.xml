@@ -154,8 +154,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="48dp"
-            android:layout_marginLeft="90dp"
-            android:visibility="gone"/>
+            android:layout_marginLeft="90dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iv_game_hint_txt"
+            android:text=""
+            android:textSize="12sp"
+            android:textColor="@color/gray5"
+            android:src="@drawable/iv_game_hintbox"
+            android:scaleType="fitCenter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="58dp"
+            />
+
 
         <!--        <TextView-->
         <!--            android:layout_width="wrap_content"-->
