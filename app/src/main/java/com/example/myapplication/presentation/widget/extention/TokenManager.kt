@@ -29,6 +29,8 @@ class TokenManager @Inject constructor(
         private val USER_KEY = stringPreferencesKey("user_id")
         private val DATE_KEY = stringPreferencesKey("date")
         private val COUNT_KEY = stringPreferencesKey("count")
+        private val TUTORIAL_1 = stringPreferencesKey("tut1")
+        private val TUTORIAL_2 = stringPreferencesKey("tut2")
     }
 
     val getAccessToken: Flow<String?> = dataStore.data
@@ -47,7 +49,6 @@ class TokenManager @Inject constructor(
             preferences[ACCESS_TOKEN_KEY] = ""
         }
     }
-
 
     val getUserProfile: Flow<String?> = dataStore.data
         .map { preferences ->
@@ -90,6 +91,13 @@ class TokenManager @Inject constructor(
     suspend fun saveCharacterId(id: String) {
         dataStore.edit { preferences ->
             preferences[CHARACTER_KEY] = id
+        }
+    }
+
+    suspend fun deleteHome() {
+        dataStore.edit { preferences ->
+            preferences[USER_KEY] = ""
+            preferences[CHARACTER_KEY] = ""
         }
     }
 
@@ -143,6 +151,28 @@ class TokenManager @Inject constructor(
     val getCountToken : Flow<String?> = dataStore.data
         .map { preferences ->
             preferences[COUNT_KEY]
+        }
+
+    suspend fun saveTut1(token: String) {
+        dataStore.edit { preferences ->
+            preferences[TUTORIAL_1] = token
+        }
+    }
+
+    val getTut1 : Flow<String?> = dataStore.data
+        .map { preferences ->
+            preferences[TUTORIAL_1]
+        }
+
+    suspend fun saveTut2(token: String) {
+        dataStore.edit { preferences ->
+            preferences[TUTORIAL_2] = token
+        }
+    }
+
+    val getTut2 : Flow<String?> = dataStore.data
+        .map { preferences ->
+            preferences[TUTORIAL_2]
         }
 
 }
