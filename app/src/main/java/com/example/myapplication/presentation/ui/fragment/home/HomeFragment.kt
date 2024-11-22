@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -51,6 +52,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         lifecycleScope.launch {
             try {
                 stateManage(tokenManager.getCountToken.first().toString().toInt())
+                Log.d("결과","${tokenManager.getCountToken.first().toString()}")
             }catch (e : Exception){
                 stateManage(0)
             }
@@ -61,10 +63,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private fun initCount() {
         lifecycleScope.launch {
             val today = LocalDateTime.now().toString()
+            val formattedToday = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
             val prepareDay = tokenManager.getDateToken.first().toString()
-            if (today != prepareDay) {
+            if (formattedToday != prepareDay) {
+                Log.d("결과","${formattedToday} ,${prepareDay}")
                 tokenManager.saveCountToken("0")
-                tokenManager.saveDateToken(today)
+                tokenManager.saveDateToken(formattedToday)
             }
         }
     }
@@ -93,7 +98,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                                     }"
                                 )
                                 fragmentHomeCactusStateProgressPb.progress =
-                                    character.activityPoints
+                                    character.activityPoints/100
+                                fragmentHomeCactusStatePercentageTv.text = (character.activityPoints%100).toString() + "%"
                             }
                         }
                     }
@@ -182,5 +188,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             findNavController().navigate(R.id.questFragment)
         }
     }
+
 
 }
