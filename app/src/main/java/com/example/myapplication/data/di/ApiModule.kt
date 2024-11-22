@@ -2,6 +2,7 @@ package com.example.myapplication.data.di
 
 import com.example.myapplication.data.repository.remote.api.ChapterApi
 import com.example.myapplication.data.repository.remote.api.CharacterApi
+import com.example.myapplication.data.repository.remote.api.DifficultyApi
 import com.example.myapplication.data.repository.remote.api.HomeApi
 import com.example.myapplication.data.repository.remote.api.LoginApi
 import com.example.myapplication.data.repository.remote.api.QuizApi
@@ -44,5 +45,11 @@ object ApiModule {
     fun provideChapterServer(
         @MainRetrofit retrofit: Retrofit
     ): ChapterApi = retrofit.create(ChapterApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideDifficultyServer(
+        @MainRetrofit retrofit: Retrofit
+    ): DifficultyApi = retrofit.create(DifficultyApi::class.java)
 
 }
