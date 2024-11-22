@@ -4,5 +4,5 @@ data class DistinctChapterResponse(
     val id: Int,
     val name: String,
     val isCleared: Boolean,
-    val quizzes: Quizzes
+    val quizzes: List<QuizResponse>
 )
