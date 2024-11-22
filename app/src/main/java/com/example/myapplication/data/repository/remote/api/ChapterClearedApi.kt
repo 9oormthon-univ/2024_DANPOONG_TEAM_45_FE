@@ -16,8 +16,7 @@ interface ChapterClearedApi {
     //챕터 완료 여부 등록
     @POST("/v1/api/chapterclear")
     suspend fun postChapterCleared(
-        @Query("chapterId") chapterId: Int,
-        @Query("user_id") user_id: Int
+        @Query("chapterId") chapterId: Int
     ): BaseResponse<Any>
 
     //챕터 완료 여부 단 건 조회

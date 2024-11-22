@@ -13,10 +13,9 @@ data class ChapterClearedRepositoryImpl @Inject constructor(
     private val isChapterClearedDataSource: IsChapterClearedDataSource
 ) : ChapterClearedRepository {
     override suspend fun postChapterCleared(
-        chapterId: Int,
-        user_id: Int
+        chapterId: Int
     ): Flow<BaseResponse<Any>> =
-        isChapterClearedDataSource.postChapterCleared(chapterId,user_id)
+        isChapterClearedDataSource.postChapterCleared(chapterId)
 
     override suspend fun getChapterDistinct(isChapterCleared_id: Int): Flow<Response<ClearChapterStateResponse>> =
         isChapterClearedDataSource.getChapterDistinct(isChapterCleared_id)

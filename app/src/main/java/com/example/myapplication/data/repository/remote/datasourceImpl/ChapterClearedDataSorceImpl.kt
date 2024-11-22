@@ -18,10 +18,9 @@ class ChapterClearedDataSorceImpl @Inject constructor(
 ) : IsChapterClearedDataSource {
 
     override suspend fun postChapterCleared(
-        chapterId: Int,
-        user_id: Int
+        chapterId: Int
     ): Flow<BaseResponse<Any>> = flow {
-        val result = chapterClearedApi.postChapterCleared(chapterId,user_id)
+        val result = chapterClearedApi.postChapterCleared(chapterId)
         emit(result)
     }.catch { e ->
         Log.e("getQuizDistinct 에러", e.message.toString())

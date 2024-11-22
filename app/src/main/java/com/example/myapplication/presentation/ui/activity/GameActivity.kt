@@ -862,6 +862,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         var success : Boolean
         if (successCnt == correctBlockOrder.size) success = true
         else success = false
+        //********
         if (success) {
             isDialogShown = true
             // 성공 다이얼로그 출력
@@ -935,6 +936,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 finish()
             }
 
+            //****
             nextBtn.setOnClickListener {
                 isDialogShown = false
                 isFirstStage = false

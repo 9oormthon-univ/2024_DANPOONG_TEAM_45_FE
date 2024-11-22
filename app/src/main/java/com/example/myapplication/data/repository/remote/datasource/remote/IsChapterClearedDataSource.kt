@@ -8,7 +8,7 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 
 interface IsChapterClearedDataSource {
-    suspend fun postChapterCleared(chapterId: Int, user_id: Int): Flow<BaseResponse<Any>>
+    suspend fun postChapterCleared(chapterId: Int): Flow<BaseResponse<Any>>
     suspend fun getChapterDistinct(isChapterCleared_id: Int): Flow<Response<ClearChapterStateResponse>>
     suspend fun putChapterCleared(
         isChapterCleared_id: Int,

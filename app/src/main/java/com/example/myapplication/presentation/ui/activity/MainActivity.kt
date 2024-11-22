@@ -48,6 +48,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         chapterViewModel = ViewModelProvider(this)[ChapterViewModel::class.java]
         quizVieModel = ViewModelProvider(this)[QuizViewModel::class.java]
         difficultyViewModel = ViewModelProvider(this)[DifficultyViewModel::class.java]
+//        quizVieModel.quizDistinct(0)
 //        quizVieModel.postCreateQuiz(
 //            QuizDto(
 //                title = "무무가 가야할 방향은\n" +
