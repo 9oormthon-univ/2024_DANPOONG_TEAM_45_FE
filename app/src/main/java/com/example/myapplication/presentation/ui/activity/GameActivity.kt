@@ -17,6 +17,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.DRAG_FLAG_GLOBAL
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -57,7 +58,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
     private var moveXCnt = 0
     private var moveYCnt = 0
-    private var moveWay = mutableListOf<Int>()
+    private var moveWay = mutableListOf(-1, -1, -1, -1, -1, -1, -1, -1)
 
     private var isRepeat = false
     private var repeatIdx: Int = -1
@@ -171,7 +172,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         // 캐릭터 관련
         moveXCnt = 0
         moveYCnt = 0
-        moveWay.clear()
+        moveWay = mutableListOf(-1, -1, -1, -1, -1, -1, -1, -1)
 //        if (curGameId != 2 && isNextGame) gameId += 1
 //        Log.d("game id test", gameId.toString())
         initCharacter(curGameId)
@@ -240,7 +241,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             targetImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.shape_square_rounded_16dp))
 
             // 기존에 있던 TextView를 제거하고 새로 추가
-            if (target.childCount > 1) {
+            if (target.childCount >= 1) {
                 target.removeViewAt(1)
             }
             val overlayTextView = TextView(this).apply {
@@ -389,8 +390,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                     )
-                    id = repeatBlockId
-                    repeatBlockId += 1
                 }
 
                 val imageView1 = ImageView(this).apply {
@@ -464,6 +463,8 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         binding.linearLayoutBlockList.removeAllViews()
     }
 
+
+
     private fun gameFunction() {
         // 각종 버튼들 처리
         Log.d("Debug", "isFirstStage: $isFirstStage, isNextGame: $isNextGame, before: $curGameId")
@@ -478,23 +479,24 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             if (repeatIdx != -1 && isRepeat) {
                 Log.d("repeat index", repeatIdx.toString())
                 val repeatEditText = dropTargets[repeatIdx]?.getTag(R.id.ib_gameplay_btn) as? EditText
-                var tempStr = when (draggedTextView?.text.toString()) { // null 체크
+                val targetTextView = dropTargets[repeatIdx].getTag(R.id.ib_game_state_done) as? TextView
+                var tempStr = when (targetTextView?.text.toString()) { // null 체크
                     resources.getString(R.string.game_move_straight) -> R.string.game_move_straight
                     resources.getString(R.string.game_move_up) -> R.string.game_move_up
                     resources.getString(R.string.game_move_down) -> R.string.game_move_down
-                    else -> R.string.game_fanning
+                    else -> R.string.game_repeat // 일단 부채질 반복은 ,, 고려하지 않았음
                 }
 
                 if (repeatEditText?.text.toString().toInt() > 0) {
-                    for (i in 1..< repeatEditText?.text.toString().toInt()) {
-                        moveWay.add(i, tempStr)
+                    for (i in 0..<repeatEditText?.text.toString().toInt() - 1) {
+                        moveWay.add(repeatIdx, tempStr)
                     }
                 }
                 isRepeat = false
             }
             blockVisibility(binding.ibGamestopBtn, binding.ibGameplayBtn)
 
-            if (moveWay.isEmpty()) {
+            if (moveWay.contains(R.string.game_wave) || moveWay.contains(R.string.game_wake) || moveWay.contains(R.string.game_breakfast) || moveWay.contains(R.string.game_wash) || moveWay.contains(R.string.game_practice)) {
                 checkSuccess()
             } else {
                 characterMove()
@@ -609,7 +611,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             resources.getString(R.string.block_type_normal) -> {
                 // 드래그된 View (FrameLayout)에서 ImageView와 TextView를 가져옴
                 val draggedImageView = draggedBlock.getChildAt(0) as ImageView
-                draggedTextView = draggedBlock.getChildAt(1) as TextView
+                val draggedTextView = draggedBlock.getChildAt(1) as TextView
 
                 if (target is FrameLayout) {
                     // 기존에 "repeat" 블록이 있는지 확인
@@ -628,6 +630,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                             setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
                             setPadding(45, 90, 0, 0)
                         }
+                        target.setTag(R.id.ib_game_state_done, overlayTextView)
                         target.addView(overlayTextView, 1)
                         overlayTextView.bringToFront()
                         overlayTextView.invalidate()
@@ -746,22 +749,51 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             }
 
         }
+        val repeatImageView = target.getTag(R.id.ib_gamestop_btn) as? ImageView
+//        if (repeatImageView != null && repeatIdx > 0) {
+//            moveWay[dropId - 1] = R.string
+//        }
+        var newdropId: Int
+        if (repeatIdx == dropId) {
+            newdropId = dropId + 1
+        } else {
+            newdropId = dropId
+        }
+//        val draggedTextView = draggedBlock.getChildAt(1) as TextView
         when (blockMove) {
             resources.getString(R.string.game_move_straight) -> {
-                moveWay.add(R.string.game_move_straight)
+                moveWay[newdropId] = R.string.game_move_straight
             }
             resources.getString(R.string.game_move_up) -> {
-                moveWay.add(R.string.game_move_up)
+                moveWay[newdropId] = R.string.game_move_up
             }
             resources.getString(R.string.game_move_down) -> {
-                moveWay.add(R.string.game_move_down)
+                moveWay[newdropId] = R.string.game_move_down
             }
             resources.getString(R.string.game_repeat) -> {
-                moveWay.add(R.string.game_repeat)
-                repeatIdx = moveWay.size - 1
+                moveWay[dropId] = R.string.game_repeat
+                repeatIdx = dropId
             }
             resources.getString(R.string.game_fanning) -> {
-                moveWay.add(R.string.game_fanning)
+                moveWay[newdropId] = R.string.game_fanning
+            }
+            resources.getString(R.string.game_wake) -> {
+                moveWay[newdropId] = R.string.game_wake
+            }
+            resources.getString(R.string.game_wash) -> {
+                moveWay[newdropId] = R.string.game_wash
+            }
+            resources.getString(R.string.game_practice) -> {
+                moveWay[newdropId] = R.string.game_practice
+            }
+            resources.getString(R.string.game_breakfast) -> {
+                moveWay[newdropId] = R.string.game_breakfast
+            }
+            resources.getString(R.string.game_wave) -> {
+                moveWay[newdropId] = R.string.game_wave
+            }
+            else -> {
+                moveWay[newdropId] = -1
             }
         }
     }
@@ -777,23 +809,31 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             2 -> {
                 if (isFirstStage) {
                     var successCnt = 0
-                    correctBlockOrder = listOf(1, 2, 3, 0)
-                    for (i: Int in 0..3) {
-                        if (targetBlockMap[i] == correctBlockOrder[i]) {
-                            successCnt += 1
+                    correctBlockOrder = listOf(R.string.game_wake, R.string.game_wash, R.string.game_breakfast, R.string.game_practice)
+                    if (moveWay.size >= 4) {
+                        for (i: Int in 0..3) {
+                            Log.d("fdfdfdffd", moveWay[i].toString())
+                            Log.d("correc", correctBlockOrder[i].toString())
+                            if (moveWay[i] == correctBlockOrder[i]) {
+                                successCnt += 1
+                            }
                         }
                     }
                     if (successCnt == 4) success = true
                     else success = false
                 }
                 else {
-//                    if (targetBlockMap[0] == 0 && targetBlockMap[1] == 1){
-//                        success = true
-//                    }
-//                    else
-//                        success = false
-                }
+                    var successCnt = 0
+                    correctBlockOrder = listOf(R.string.game_repeat, R.string.game_wave, R.string.game_wave, R.string.game_wave)
+                    for (i: Int in 0..3) {
+                        if (moveWay[i] == correctBlockOrder[i]) {
+                            successCnt += 1
+                        }
 
+                    }
+                    if (successCnt == 4) success = true
+                    else success = false
+                }
             }
             3 -> {
                 correctBlockOrder = listOf(R.string.game_move_straight)
@@ -1004,6 +1044,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         var currentY = 0f // 현재 Y 위치
 
         // 재귀적으로 이동 실행
+        for (mov in moveWay) {
+            Log.d("move way test", mov.toString())
+        }
         fun moveStep(index: Int) {
             if (index >= moveWay.size) {
                 checkSuccess() // 모든 이동이 끝난 후 성공 여부 확인
@@ -1047,6 +1090,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 else -> {
                     deltaX = 0f
                     deltaY = 0f
+                    moveStep(index + 1) // 아무 블록이 놓여있지 않을 경우 다음 블록 처리
                 }
             }
 

@@ -16,4 +16,8 @@
     <string name="game_fanning">부채질 하기</string>
     <string name="game_repeat">번 반복하기</string>
     <string name="game_wave">파도 소리 재생</string>
+    <string name="game_breakfast">아침먹기</string>
+    <string name="game_wash">세수하기</string>
+    <string name="game_practice">준비하기</string>
+    <string name="game_wake">일어나기</string>
 </resources>
