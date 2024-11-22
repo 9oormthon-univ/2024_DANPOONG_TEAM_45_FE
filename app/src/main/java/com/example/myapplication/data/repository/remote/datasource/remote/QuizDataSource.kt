@@ -10,9 +10,9 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 
 interface QuizDataSource {
-    suspend fun postCreateQuiz(quizDto: QuizDto): Flow<Response<ResponseBody>>
+    suspend fun postCreateQuiz(quizDto: QuizDto): Flow<BaseResponse<Any>>
     suspend fun patchModifyQuiz(editQuizDto: EditQuizDto): Flow<Response<ResponseBody>>
-    suspend fun deleteQuiz(quiz_id: Int): Flow<Response<ResponseBody>>
+    suspend fun deleteQuiz(quiz_id: Int): Flow<BaseResponse<Any>>
     suspend fun getDistinctQuiz(quiz_id: Int): Flow<BaseResponse<DistinctQuizResponse>>
     suspend fun getQuizAll(): Flow<BaseResponse<AllQuizResponse>>
 }

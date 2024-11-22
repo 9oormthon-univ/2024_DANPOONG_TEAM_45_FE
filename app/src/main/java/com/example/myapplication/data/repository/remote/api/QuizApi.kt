@@ -21,7 +21,7 @@ interface QuizApi {
     @POST("/v1/api/quiz")
     suspend fun postCreateQuiz(
         @Body quizDto: QuizDto
-    ): Response<ResponseBody>
+    ): BaseResponse<Any>
 
     //퀴즈 수정
     @PATCH("/v1/api/quiz")
@@ -33,7 +33,7 @@ interface QuizApi {
     @DELETE("/v1/api/quiz/{quiz_id}")
     suspend fun deleteQuiz(
         @Path("quiz_id") quiz_id: Int
-    ): Response<ResponseBody>
+    ): BaseResponse<Any>
 
     //퀴즈 단 건 조회
     @GET("/v1/api/quiz/{quiz_id}")

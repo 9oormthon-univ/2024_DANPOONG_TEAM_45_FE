@@ -6,7 +6,9 @@ import com.example.myapplication.R
 import com.example.myapplication.databinding.ItemCharacterMoveBinding
 import com.example.myapplication.presentation.ui.activity.QuizActivity
 import com.example.myapplication.presentation.widget.extention.loadCropRoundedSquareImage
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class Quiz1Fragment : BaseFragment<ItemCharacterMoveBinding>(R.layout.item_character_move) {
     override fun setLayout() {
         checkButtonState()

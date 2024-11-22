@@ -14,7 +14,7 @@ import javax.inject.Inject
 data class QuizRepositoryImpl @Inject constructor(
     private val quizDataSource: QuizDataSource
 ) : QuizRepository {
-    override suspend fun postCreateQuiz(quizDto: QuizDto): Flow<Response<ResponseBody>> =
+    override suspend fun postCreateQuiz(quizDto: QuizDto):Flow<BaseResponse<Any>> =
         quizDataSource.postCreateQuiz(quizDto)
 
 
@@ -22,7 +22,7 @@ data class QuizRepositoryImpl @Inject constructor(
         quizDataSource.patchModifyQuiz(editQuizDto)
 
 
-    override suspend fun deleteQuiz(quiz_id: Int): Flow<Response<ResponseBody>> =
+    override suspend fun deleteQuiz(quiz_id: Int): Flow<BaseResponse<Any>> =
         quizDataSource.deleteQuiz(quiz_id)
 
 
