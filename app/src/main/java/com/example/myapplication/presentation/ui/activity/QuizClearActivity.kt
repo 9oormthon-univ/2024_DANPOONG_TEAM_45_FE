@@ -36,6 +36,7 @@ class QuizClearActivity : BaseActivity<ActivityQuizClearBinding>(R.layout.activi
     }
 
     private fun initView(){
+        Log.d("game2 activity intent", intent.getBooleanExtra("game2Activity", false).toString())
         lifecycleScope.launch {
             cid = tokenManager.getCharacterId.first().toString()
         }
