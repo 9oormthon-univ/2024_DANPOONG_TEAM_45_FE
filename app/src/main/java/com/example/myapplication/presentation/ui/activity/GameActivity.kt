@@ -271,6 +271,18 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
         dropTargets.forEach { target ->
             // 기존 ImageView 리셋
+            val removeTarget1 = target.getTag(R.id.ib_biginner_game1_space1) as? ImageView
+            val removeTarget2 = target.getTag(R.id.ib_biginner_game1_space2) as? ImageView
+            val removeTarget3 = target.getTag(R.id.ib_gamestop_btn) as? ImageView
+            val removeTarget4 = target.getTag(R.id.ib_gameplay_btn) as? EditText
+            val removeTarget5 = target.getTag(R.id.ib_game_state_done) as? TextView
+
+            removeTarget1?.visibility = View.GONE
+            removeTarget2?.visibility = View.GONE
+            removeTarget3?.visibility = View.GONE
+            removeTarget4?.visibility = View.GONE
+            removeTarget5?.visibility = View.GONE
+
             val targetImageView = target.getChildAt(0) as ImageView
             targetImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.shape_square_rounded_16dp))
 
@@ -722,6 +734,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                         setImageDrawable(draggedImageView1.drawable)
                     }
                     target.addView(newImageView1)
+                    target.setTag(R.id.ib_biginner_game1_space1, newImageView1)
 
                     // newImageView2 추가
                     val newImageView2 = ImageView(this).apply {
@@ -735,6 +748,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                         alpha = 0.9f
                     }
                     target.addView(newImageView2)
+                    target.setTag(R.id.ib_biginner_game1_space2, newImageView2)
 
                     // newImageView3 추가
                     val newImageView3 = ImageView(this).apply {
