@@ -1,5 +1,6 @@
 package com.example.myapplication.data.repository.remote.api
 
+import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.difficulty.DifficultyLevelList
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -12,16 +13,16 @@ import retrofit2.http.Query
 interface DifficultyApi {
 
     //난이도 등록
-    @POST("/difficulty")
+    @POST("/v1/api/difficulty")
     suspend fun postDifficultyLevel(
         @Query("level") level: String
-    ): Response<ResponseBody>
+    ): BaseResponse<Any>
 
     //난이도 삭제
-    @DELETE("/difficulty")
+    @DELETE("/v1/api/difficulty")
     suspend fun deleteDifficultyLevel(
-        @Query("difficulty_id ") difficulty_id: String
-    ): Response<ResponseBody>
+        @Query("difficulty_id") difficulty_id: String
+    ): BaseResponse<Any>
 
     //난이도 수정
     @PATCH("/difficulty")
