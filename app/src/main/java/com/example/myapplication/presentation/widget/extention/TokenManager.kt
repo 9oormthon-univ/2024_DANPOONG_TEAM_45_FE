@@ -22,6 +22,8 @@ class TokenManager @Inject constructor(
         private val LIST_KEY = stringPreferencesKey("list_key")
         private val USER_NICKNAME_KEY = stringPreferencesKey("nickname_key")
         private val USER_PROFILE_KEY = stringPreferencesKey("profile_key")
+        private val CHARACTER_KEY = stringPreferencesKey("character_id")
+        private val USER_KEY = stringPreferencesKey("user_id")
     }
 
     val getAccessToken: Flow<String?> = dataStore.data
@@ -61,6 +63,28 @@ class TokenManager @Inject constructor(
     suspend fun saveUserNickname(nickname: String) {
         dataStore.edit { preferences ->
             preferences[USER_NICKNAME_KEY] = nickname
+        }
+    }
+
+    val getUserId: Flow<String?> = dataStore.data
+        .map { preferences ->
+            preferences[USER_KEY]
+        }
+
+    suspend fun saveUserId(id: String) {
+        dataStore.edit { preferences ->
+            preferences[USER_KEY] = id
+        }
+    }
+
+    val getCharacterId: Flow<String?> = dataStore.data
+        .map { preferences ->
+            preferences[CHARACTER_KEY]
+        }
+
+    suspend fun saveCharacterId(id: String) {
+        dataStore.edit { preferences ->
+            preferences[CHARACTER_KEY] = id
         }
     }
 
