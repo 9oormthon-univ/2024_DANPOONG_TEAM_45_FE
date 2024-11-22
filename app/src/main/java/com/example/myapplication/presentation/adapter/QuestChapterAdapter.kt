@@ -13,7 +13,7 @@ import com.example.myapplication.presentation.widget.extention.loadCropRoundedSq
 
 class QuestChapterAdapter (
     private val context: Context,
-    private val questGameList: MutableList<QuestDto>
+    private var questGameList: MutableList<QuestDto>
 ) : RecyclerView.Adapter<QuestChapterAdapter.ViewHolder>() {
 
     interface OnItemClickListener {
@@ -56,6 +56,13 @@ class QuestChapterAdapter (
                 }
             }
         }
+    }
+
+    fun itemSetChange(pos : Int, set : Int){
+        val list = questGameList
+        list[pos].gameState = set
+        questGameList = list
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
