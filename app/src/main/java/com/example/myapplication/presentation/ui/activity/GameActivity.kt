@@ -54,7 +54,13 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             }
         }
 
-    private var isFirstStage = false
+    private var isFirstStage = true
+        set(value) {
+            if (field != value) { // 값이 변경된 경우에만 업데이트
+                field = value
+                setLayout() // 레이아웃 초기화 호출
+            }
+        }
 
     private var moveXCnt = 0
     private var moveYCnt = 0
@@ -110,19 +116,15 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
         when(curGameId) {
             2 -> {
-                if (!isFirstStage) {
+                if (isFirstStage) {
                     addBlock(BlockDTO(resources.getString(R.string.block_type_normal), "준비하기", 0))
                     addBlock(BlockDTO(resources.getString(R.string.block_type_normal), "일어나기", 0))
                     addBlock(BlockDTO(resources.getString(R.string.block_type_normal), "세수하기", 0))
                     addBlock(BlockDTO(resources.getString(R.string.block_type_normal), "아침먹기", 0))
-
-                    isFirstStage = true
                 }
                 else {
                     addBlock(BlockDTO(resources.getString(R.string.block_type_repeat), resources.getString(R.string.game_repeat), 3))
                     addBlock(BlockDTO(resources.getString(R.string.block_type_normal), "파도 소리 재생", 0))
-
-                    isFirstStage = false
                 }
             }
             3 -> {
@@ -313,7 +315,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 val candy = binding.ivGameCandy
                 runOnUiThread {
                     candy.translationX = 280f
-                    candy.translationY = 200f
+                    candy.translationY = 0f
                 }
 
                 val fan = binding.ivGameFan
@@ -463,8 +465,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         binding.linearLayoutBlockList.removeAllViews()
     }
 
-
-
     private fun gameFunction() {
         // 각종 버튼들 처리
         Log.d("Debug", "isFirstStage: $isFirstStage, isNextGame: $isNextGame, before: $curGameId")
@@ -484,6 +484,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                     resources.getString(R.string.game_move_straight) -> R.string.game_move_straight
                     resources.getString(R.string.game_move_up) -> R.string.game_move_up
                     resources.getString(R.string.game_move_down) -> R.string.game_move_down
+                    resources.getString(R.string.game_wave) -> R.string.game_wave
                     else -> R.string.game_repeat // 일단 부채질 반복은 ,, 고려하지 않았음
                 }
 
@@ -802,6 +803,10 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
     private fun checkSuccess() {
         if (isDialogShown) return
 
+        for (mv in moveWay) {
+            Log.d("dfdfd", mv.toString())
+        }
+
         var correctBlockOrder = listOf(0)
         var successCnt = 0
         when (curGameId) {
@@ -810,7 +815,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                     correctBlockOrder = listOf(R.string.game_wake, R.string.game_wash, R.string.game_breakfast, R.string.game_practice)
                 }
                 else {
-                    correctBlockOrder = listOf(R.string.game_repeat, R.string.game_wave, R.string.game_wave, R.string.game_wave)
+                    correctBlockOrder = listOf(R.string.game_wave, R.string.game_wave, R.string.game_repeat, R.string.game_wave)
                 }
             }
             3 -> correctBlockOrder = listOf(R.string.game_move_straight)
@@ -903,13 +908,13 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
         else {
             if (gameId == 2) {
-                if (!isNextGame) {
-                    title.text = successDialogComment[0].first
-                    subTitle.text = successDialogComment[0].second
+                if (isFirstStage) {
+                    title.text = successDialogComment[gameId - 2].first
+                    subTitle.text = successDialogComment[gameId - 2].second
                 }
                 else {
-                    title.text = successDialogComment[1].first
-                    subTitle.text = successDialogComment[1].second
+                    title.text = successDialogComment[gameId - 1].first
+                    subTitle.text = successDialogComment[gameId - 1].second
                 }
             } else {
                 if (!isNextGame) {
@@ -930,6 +935,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
             nextBtn.setOnClickListener {
                 isDialogShown = false
+                isFirstStage = false
                 dialog.dismiss()
                 initGame()
             }
@@ -958,8 +964,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
         failTitle.text = "앗 다시 한 번 도전해볼래?"
         failSubTitle.text = "조금만 더 힘을 내봐!"
-
-        isFirstStage = false
         isNextGame = false
 
         retryBtn.setOnClickListener {
