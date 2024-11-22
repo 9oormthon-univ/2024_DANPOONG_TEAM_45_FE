@@ -28,19 +28,19 @@ class ChapterViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _postCreateChapter = MutableStateFlow(BaseResponse<Any>())
-    val postCreateChapter: StateFlow<BaseResponse<Any>> = _postCreateChapter
+    val postCreateChapter : StateFlow<BaseResponse<Any>> = _postCreateChapter
 
     private val _getDistinctChapter = MutableStateFlow(BaseResponse<DistinctChapterResponse>())
     val getDistinctChapter: StateFlow<BaseResponse<DistinctChapterResponse>> = _getDistinctChapter
 
     private val _getAllChapter = MutableStateFlow(BaseResponse<AllChapterResponse>())
-    val getAllChapter: StateFlow<BaseResponse<AllChapterResponse>> = _getAllChapter
+    val getAllChapter : StateFlow<BaseResponse<AllChapterResponse>> = _getAllChapter
 
     private val _deleteChapter = MutableStateFlow(BaseResponse<Any>())
-    val deleteChapter: StateFlow<BaseResponse<Any>> = _deleteChapter
+    val deleteChapter : StateFlow<BaseResponse<Any>> = _deleteChapter
 
     private val _chapterClear = MutableStateFlow(BaseResponse<Any>())
-    val chapterClear: StateFlow<BaseResponse<Any>> = _chapterClear
+    val chapterClear : StateFlow<BaseResponse<Any>> = _chapterClear
 
 
     fun getDistinctChapter(chapter_id: Int) {

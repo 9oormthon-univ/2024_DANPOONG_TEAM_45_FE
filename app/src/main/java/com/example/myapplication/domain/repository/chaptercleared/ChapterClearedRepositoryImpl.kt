@@ -28,5 +28,4 @@ data class ChapterClearedRepositoryImpl @Inject constructor(
 
     override suspend fun getChapterAll(): Flow<Response<ClearChapterStateListResponse>> =
         isChapterClearedDataSource.getChapterAll()
-
 }

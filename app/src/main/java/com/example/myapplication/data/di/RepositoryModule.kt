@@ -1,25 +1,33 @@
 package com.example.myapplication.data.di
 
 import com.example.myapplication.data.repository.remote.api.ChapterApi
+import com.example.myapplication.data.repository.remote.api.ChapterClearedApi
 import com.example.myapplication.data.repository.remote.api.CharacterApi
 import com.example.myapplication.data.repository.remote.api.DifficultyApi
 import com.example.myapplication.data.repository.remote.api.HomeApi
 import com.example.myapplication.data.repository.remote.api.LoginApi
 import com.example.myapplication.data.repository.remote.api.QuizApi
+import com.example.myapplication.data.repository.remote.api.QuizClearedApi
 import com.example.myapplication.data.repository.remote.datasource.remote.ChapterDataSource
 import com.example.myapplication.data.repository.remote.datasource.remote.CharacterDataSource
 import com.example.myapplication.data.repository.remote.datasource.remote.DifficultyDatasourceDataSource
 import com.example.myapplication.data.repository.remote.datasource.remote.HomeDataSource
+import com.example.myapplication.data.repository.remote.datasource.remote.IsChapterClearedDataSource
+import com.example.myapplication.data.repository.remote.datasource.remote.IsQuizClearedDataSource
 import com.example.myapplication.data.repository.remote.datasource.remote.LogInDataSource
 import com.example.myapplication.data.repository.remote.datasource.remote.QuizDataSource
+import com.example.myapplication.data.repository.remote.datasourceImpl.ChapterClearedDataSorceImpl
 import com.example.myapplication.data.repository.remote.datasourceImpl.ChapterDataSorceImpl
 import com.example.myapplication.data.repository.remote.datasourceImpl.CharacterDataSourceImpl
 import com.example.myapplication.data.repository.remote.datasourceImpl.DifficultySorceImpl
 import com.example.myapplication.data.repository.remote.datasourceImpl.HomeDataSourceImpl
 import com.example.myapplication.data.repository.remote.datasourceImpl.LogInDataSourceImpl
+import com.example.myapplication.data.repository.remote.datasourceImpl.QuizClearedDataSorceImpl
 import com.example.myapplication.data.repository.remote.datasourceImpl.QuizDataSorceImpl
 import com.example.myapplication.domain.repository.chapter.ChapterRepository
 import com.example.myapplication.domain.repository.chapter.ChapterRepositoryImpl
+import com.example.myapplication.domain.repository.chaptercleared.ChapterClearedRepository
+import com.example.myapplication.domain.repository.chaptercleared.ChapterClearedRepositoryImpl
 import com.example.myapplication.domain.repository.character.CharacterRepository
 import com.example.myapplication.domain.repository.character.CharacterRepositoryImpl
 import com.example.myapplication.domain.repository.difficulty.DifficultyRepository
@@ -30,6 +38,8 @@ import com.example.myapplication.domain.repository.login.LoginRepository
 import com.example.myapplication.domain.repository.login.LoginRepositoryImpl
 import com.example.myapplication.domain.repository.quiz.QuizRepository
 import com.example.myapplication.domain.repository.quiz.QuizRepositoryImpl
+import com.example.myapplication.domain.repository.quizcleared.IsQuizClearedRepository
+import com.example.myapplication.domain.repository.quizcleared.IsQuizClearedRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -117,4 +127,30 @@ object RepositoryModule {
     @Provides
     fun provideDifficultyRepository(difficultyDatasourceDataSource: DifficultyDatasourceDataSource): DifficultyRepository =
         DifficultyRepositoryImpl(difficultyDatasourceDataSource)
+
+    @Provides
+    @Singleton
+    fun provideChapterClearDataSource(
+        chapterClearedApi: ChapterClearedApi
+    ): IsChapterClearedDataSource {
+        return ChapterClearedDataSorceImpl(chapterClearedApi)
+    }
+
+    @Singleton
+    @Provides
+    fun provideChapterClearRepository(isChapterClearedDataSource: IsChapterClearedDataSource): ChapterClearedRepository =
+        ChapterClearedRepositoryImpl(isChapterClearedDataSource)
+
+    @Provides
+    @Singleton
+    fun provideQuizClearDataSource(
+        quizClearedApi: QuizClearedApi
+    ): IsQuizClearedDataSource {
+        return QuizClearedDataSorceImpl(quizClearedApi)
+    }
+
+    @Singleton
+    @Provides
+    fun provideQuizClearRepository(isQuizClearedDataSource: IsQuizClearedDataSource): IsQuizClearedRepository =
+        IsQuizClearedRepositoryImpl(isQuizClearedDataSource)
 }
