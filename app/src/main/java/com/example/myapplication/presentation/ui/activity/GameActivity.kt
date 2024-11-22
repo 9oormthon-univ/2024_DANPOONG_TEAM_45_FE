@@ -103,8 +103,34 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         )
     }
 
+    private val moomooMessage by lazy {
+        listOf(
+            "무무가 아침 일정을 잘 마치도록 도와줘\n일어나기 > 세수하기 > 아침먹기 > 준비하기\n순서로 부탁할게! 해줄 수 있지?",
+            "바다에서 파도 소리를 듣고 싶어! 파도는 \n일정한 주기로 밀려왔다가 사라진대 파도소리가 \n+3번 들리게 만들어줄 수 있어?",
+            "사탕을 먹고 싶어! \n사탕을 먹을 수 있게 도와줄 수 있니?",
+            "이번엔 사탕을 찾기가 더 어렵네 ㅠ\n사탕까지 갈 수 있게 도와줘!",
+            "길 위에 끈적한 껌이 있어!\n껌을 밟지 않고 사탕을 얻을 수 있게 도와줘ㅠ",
+            "이런... 사탕의 섬에 불이 났잖아!\n사탕이 다 녹기 전에 불을 끄고 사탕을 얻어야 해",
+            "헉! 큰일이야... 사탕의 섬에 큰 불이 난 것 같아ㅠ\n불을 진압하고 사탕의 섬을 빠져나오자!"
+        )
+    }
+
+    private val hintComment by lazy {
+        listOf(
+            "",
+            "",
+            "앞으로 가기 블럭을 한 번만 사용하세요",
+            "앞으로 가기 블럭을 여러번 사용하세요",
+            "앞으로 가기 블럭과 위/아래로 가기 \n블럭의 순서를 잘 조합해 껌을 피해보세요",
+            "미션블럭을 활용해보세요\n부채질 하기 블럭을 사용할 수 있어요",
+            "0번 반복하기 블럭을 사용해\n앞으로 나아가세요"
+        )
+    }
+
     override fun setLayout() {
         curGameId = intent.getIntExtra("game id", -1)
+//        binding.ivGameHintTxt.text = hintComment[curGameId - 2]
+//        binding.ibGamestoryMsgTxt.text = moomooMessage[curGameId - 2]
         initBlock()
         initGame()
         gameFunction()
@@ -168,6 +194,12 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
     }
 
     private fun initGame() {
+        if (!isFirstStage && isNextGame) {
+            curGameId += 1
+            Log.d("Debug", "After: curGameId = $curGameId")
+            isNextGame = false
+            initBlock()
+        }
         binding.ivGameCharacter.bringToFront() // 게임 캐릭터가 무조건 최상단에 오도록
 
         isExit = false
@@ -241,6 +273,18 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
         dropTargets.forEach { target ->
             // 기존 ImageView 리셋
+            val removeTarget1 = target.getTag(R.id.ib_biginner_game1_space1) as? ImageView
+            val removeTarget2 = target.getTag(R.id.ib_biginner_game1_space2) as? ImageView
+            val removeTarget3 = target.getTag(R.id.ib_gamestop_btn) as? ImageView
+            val removeTarget4 = target.getTag(R.id.ib_gameplay_btn) as? EditText
+            val removeTarget5 = target.getTag(R.id.ib_game_state_done) as? TextView
+
+            removeTarget1?.visibility = View.GONE
+            removeTarget2?.visibility = View.GONE
+            removeTarget3?.visibility = View.GONE
+            removeTarget4?.visibility = View.GONE
+            removeTarget5?.visibility = View.GONE
+
             val targetImageView = target.getChildAt(0) as ImageView
             targetImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.shape_square_rounded_16dp))
 
@@ -470,13 +514,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
     private fun gameFunction() {
         // 각종 버튼들 처리
         Log.d("Debug", "isFirstStage: $isFirstStage, isNextGame: $isNextGame, before: $curGameId")
-        if (!isFirstStage && isNextGame) {
-            curGameId += 1
-            Log.d("Debug", "After: curGameId = $curGameId")
-            isNextGame = false
-            initBlock()
-            initGame()
-        }
         binding.ibGameplayBtn.setOnClickListener {
             if (repeatIdx != -1 && isRepeat) {
                 Log.d("repeat index", repeatIdx.toString())
@@ -519,8 +556,10 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             if (binding.ibBulbBtn.isSelected) {
                 // 힌트 보여주기
                 binding.ivGameHint.visibility = View.VISIBLE
+                binding.ivGameHintTxt.visibility = View.VISIBLE
             } else {
                 binding.ivGameHint.visibility = View.GONE
+                binding.ivGameHintTxt.visibility = View.GONE
             }
         }
 
@@ -697,6 +736,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                         setImageDrawable(draggedImageView1.drawable)
                     }
                     target.addView(newImageView1)
+                    target.setTag(R.id.ib_biginner_game1_space1, newImageView1)
 
                     // newImageView2 추가
                     val newImageView2 = ImageView(this).apply {
@@ -710,6 +750,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                         alpha = 0.9f
                     }
                     target.addView(newImageView2)
+                    target.setTag(R.id.ib_biginner_game1_space2, newImageView2)
 
                     // newImageView3 추가
                     val newImageView3 = ImageView(this).apply {
@@ -940,6 +981,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             nextBtn.setOnClickListener {
                 isDialogShown = false
                 isFirstStage = false
+                isNextGame = true
                 dialog.dismiss()
                 initGame()
             }
