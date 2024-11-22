@@ -9,8 +9,11 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.myapplication.R
+import com.example.myapplication.data.repository.remote.request.character.CharacterDTO
 import com.example.myapplication.databinding.ActivityMainBinding
 import com.example.myapplication.presentation.base.BaseActivity
+import com.example.myapplication.presentation.viewmodel.ChapterViewModel
+import com.example.myapplication.presentation.viewmodel.CharacterViewModel
 import com.example.myapplication.presentation.viewmodel.EduViewModel
 import com.example.myapplication.presentation.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,9 +22,13 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
+
     private lateinit var navController: NavController
     private lateinit var eduViewModel: EduViewModel
     private lateinit var homeViewModel: HomeViewModel
+    private lateinit var characterViewModel: CharacterViewModel
+    private lateinit var chapterViewModel: ChapterViewModel
+
     override fun setLayout() {
         initViewModel()
         setBottomNavigation()
@@ -31,9 +38,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private fun initViewModel() {
         eduViewModel = ViewModelProvider(this)[EduViewModel::class.java]
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
-        //eduViewModel.getAllQuiz()
-        //eduViewModel.getDistinctQuiz(1)
-        homeViewModel.getAllHome()
+        characterViewModel = ViewModelProvider(this)[CharacterViewModel::class.java]
+        chapterViewModel = ViewModelProvider(this)[ChapterViewModel::class.java]
     }
 
     //바텀 네비게이션 세팅
@@ -45,6 +51,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     private fun observeLifeCycle() {
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 eduViewModel.getAllQuiz.collectLatest {
@@ -68,5 +75,31 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 }
             }
         }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                characterViewModel.postCharacter.collectLatest {
+                    Log.d("값 도착", it.toString())
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED){
+                chapterViewModel.getDistinctChapter.collectLatest {
+                    Log.d("값 도착",it.toString())
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED){
+                chapterViewModel.getAllChapter.collectLatest {
+                    Log.d("값 도착",it.toString())
+                }
+            }
+        }
+
     }
+
 }
