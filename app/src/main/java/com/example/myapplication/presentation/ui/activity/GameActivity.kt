@@ -58,7 +58,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
     private var moveXCnt = 0
     private var moveYCnt = 0
-    private var moveWay = mutableListOf(-1, -1, -1, -1, -1, -1, -1, -1)
+    private var moveWay = mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
     private var isRepeat = false
     private var repeatIdx: Int = -1
@@ -172,7 +172,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         // 캐릭터 관련
         moveXCnt = 0
         moveYCnt = 0
-        moveWay = mutableListOf(-1, -1, -1, -1, -1, -1, -1, -1)
+        moveWay = mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 //        if (curGameId != 2 && isNextGame) gameId += 1
 //        Log.d("game id test", gameId.toString())
         initCharacter(curGameId)
@@ -801,83 +801,69 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
     // check success ------------------------------------------------
     private fun checkSuccess() {
         if (isDialogShown) return
-        initCharacter(curGameId)
 
-        var correctBlockOrder: List<Int>
-        var success = true
+        var correctBlockOrder = listOf(0)
+        var successCnt = 0
         when (curGameId) {
             2 -> {
                 if (isFirstStage) {
-                    var successCnt = 0
                     correctBlockOrder = listOf(R.string.game_wake, R.string.game_wash, R.string.game_breakfast, R.string.game_practice)
-                    if (moveWay.size >= 4) {
-                        for (i: Int in 0..3) {
-                            Log.d("fdfdfdffd", moveWay[i].toString())
-                            Log.d("correc", correctBlockOrder[i].toString())
-                            if (moveWay[i] == correctBlockOrder[i]) {
-                                successCnt += 1
-                            }
-                        }
-                    }
-                    if (successCnt == 4) success = true
-                    else success = false
                 }
                 else {
-                    var successCnt = 0
                     correctBlockOrder = listOf(R.string.game_repeat, R.string.game_wave, R.string.game_wave, R.string.game_wave)
-                    for (i: Int in 0..3) {
-                        if (moveWay[i] == correctBlockOrder[i]) {
-                            successCnt += 1
-                        }
-
-                    }
-                    if (successCnt == 4) success = true
-                    else success = false
                 }
             }
-            3 -> {
-                correctBlockOrder = listOf(R.string.game_move_straight)
-                if (moveWay != correctBlockOrder) {
-                    success = false
-                }
-            }
-            4 -> {
-                correctBlockOrder = listOf(R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_straight)
-                if (moveWay != correctBlockOrder) {
-                    success = false
-                }
-            }
-            5 -> {
-                correctBlockOrder = listOf(R.string.game_move_straight, R.string.game_move_down, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_up, R.string.game_move_straight)
-                if (moveWay != correctBlockOrder) {
-                    success = false
-                }
-            }
-
-            6 -> {
-                correctBlockOrder = listOf(R.string.game_move_straight, R.string.game_move_up, R.string.game_move_straight, R.string.game_fanning, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_down)
-                if (moveWay != correctBlockOrder) {
-                    success = false
-                }
-            }
-            7 -> {
-                correctBlockOrder = listOf(R.string.game_fanning, R.string.game_move_down, R.string.game_repeat, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_down)
-                if (moveWay != correctBlockOrder) {
-                    success = false
-                }
-            }
+            3 -> correctBlockOrder = listOf(R.string.game_move_straight)
+            4 -> correctBlockOrder = listOf(
+                R.string.game_move_straight,
+                R.string.game_move_straight,
+                R.string.game_move_straight,
+                R.string.game_move_straight)
+            5 -> correctBlockOrder = listOf(
+                R.string.game_move_straight,
+                R.string.game_move_down,
+                R.string.game_move_straight,
+                R.string.game_move_straight,
+                R.string.game_move_up,
+                R.string.game_move_straight)
+            6 -> correctBlockOrder = listOf(
+                R.string.game_move_straight,
+                R.string.game_move_up,
+                R.string.game_move_straight,
+                R.string.game_fanning,
+                R.string.game_move_straight,
+                R.string.game_move_straight,
+                R.string.game_move_down)
+            7 -> correctBlockOrder = listOf(
+                R.string.game_fanning,
+                R.string.game_move_down,
+                R.string.game_move_straight,
+                R.string.game_move_straight,
+                R.string.game_move_straight,
+                R.string.game_move_straight,
+                R.string.game_repeat,
+                R.string.game_move_straight
+            )
         }
+
+        for (i: Int in correctBlockOrder.indices) {
+            if (moveWay[i] == correctBlockOrder[i]) {
+                successCnt += 1
+            }
+
+        }
+        var success : Boolean
+        if (successCnt == correctBlockOrder.size) success = true
+        else success = false
         if (success) {
             isDialogShown = true
             // 성공 다이얼로그 출력
             showSuccessDialog(false)
-            isNextGame = true
         } else {
             // 실패 다이얼로그 출력
             if (!isFailDialogShown) { // 실패 다이얼로그가 이미 표시되지 않았으면
                 showFailDialog()
                 isFailDialogShown = true
-                if (!isNextGame) isNextGame = false
             }
         }
     }
@@ -1043,10 +1029,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         var currentX = 0f // 현재 X 위치
         var currentY = 0f // 현재 Y 위치
 
-        // 재귀적으로 이동 실행
-        for (mov in moveWay) {
-            Log.d("move way test", mov.toString())
-        }
         fun moveStep(index: Int) {
             if (index >= moveWay.size) {
                 checkSuccess() // 모든 이동이 끝난 후 성공 여부 확인
@@ -1055,6 +1037,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
             // 현재 이동 방향
             val move = moveWay[index]
+            Log.d("move way test", move.toString())
             val deltaX: Float
             val deltaY: Float
 
