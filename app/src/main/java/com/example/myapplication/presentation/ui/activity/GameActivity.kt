@@ -27,6 +27,7 @@ import android.widget.TextView
 import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
 import androidx.core.view.DragStartHelper
+import androidx.core.view.forEach
 import androidx.draganddrop.DropHelper
 import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.presentation.widget.extention.loadCropImage
@@ -42,6 +43,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
     private val dragSources = mutableListOf<View>()
     private var basicBlockId = 1 // 생성되는 블록 아이디 - 블록 색 지정을 위해 만든 변수
     private var repeatBlockId = 1 // 생성되는 블록 아이디
+    private var curGameId = 2
 
     private var isNextGame: Boolean = false // 다음 게임 넘어가는지 여부 판단
         set(value) {
@@ -50,10 +52,16 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 setLayout() // 레이아웃 초기화 호출
             }
         }
+
+    private var isFirstStage = false
+
     private var moveXCnt = 0
     private var moveYCnt = 0
     private var moveWay = mutableListOf<Int>()
 
+    private var isRepeat = false
+    private var repeatIdx: Int = -1
+    private var draggedTextView: TextView? = null
     private val dropTargets by lazy {
         mutableListOf(
             binding.ibBiginnerGame1Space1,
@@ -61,7 +69,8 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             binding.ibBiginnerGame1Space3,
             binding.ibBiginnerGame1Space4,
             binding.ibBiginnerGame1Space5,
-            binding.ibBiginnerGame1Space6
+            binding.ibBiginnerGame1Space6,
+            binding.ibBiginnerGame1Space7
         )
     }
 
@@ -81,10 +90,12 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             Pair("우와 또 사탕이다!", "너무 맛있다 ㅎㅎ  도와줘서 고마워 :)"),
             Pair("휴~ 무사히 껌을 피했어!", "도와줘서 고마워 :)"),
             Pair("우와 불이 무사히 꺼졌어!", "도와줘서 고마워 :)"),
+            Pair("우와 불이 무사히 꺼졌어!", "도와줘서 고마워 :)"),
         )
     }
 
     override fun setLayout() {
+        curGameId = intent.getIntExtra("game id", -1)
         initBlock()
         initGame()
         gameFunction()
@@ -95,27 +106,26 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
     // init ---------------------------------------------------------
     private fun initBlock() {
         clearBlocks()
-        var gameId = intent.getIntExtra("game id", -1)
-        Log.d("game id test", gameId.toString())
-        if (gameId != 2 && isNextGame) gameId += 1 // 다음 게임으로 전환되도록
 
-        when(gameId) {
+        when(curGameId) {
             2 -> {
-                if (!isNextGame) {
+                if (!isFirstStage) {
                     addBlock(BlockDTO(resources.getString(R.string.block_type_normal), "준비하기", 0))
                     addBlock(BlockDTO(resources.getString(R.string.block_type_normal), "일어나기", 0))
                     addBlock(BlockDTO(resources.getString(R.string.block_type_normal), "세수하기", 0))
                     addBlock(BlockDTO(resources.getString(R.string.block_type_normal), "아침먹기", 0))
+
+                    isFirstStage = true
                 }
                 else {
-                    addBlock(BlockDTO(resources.getString(R.string.block_type_repeat), "번 반복하기", 3))
+                    addBlock(BlockDTO(resources.getString(R.string.block_type_repeat), resources.getString(R.string.game_repeat), 3))
                     addBlock(BlockDTO(resources.getString(R.string.block_type_normal), "파도 소리 재생", 0))
+
+                    isFirstStage = false
                 }
             }
             3 -> {
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
-//                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_up), 0))
-//                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_down), 0))
             }
             4 -> {
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
@@ -131,19 +141,30 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
                 addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_down), 0))
             }
+
+            6 -> {
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_up), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_fanning), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_down), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
+            }
+            7 -> {
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_up), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_down), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_down), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_fanning), 0))
+                addBlock(BlockDTO(resources.getString(R.string.block_type_repeat), resources.getString(R.string.game_repeat), 0))
+            }
         }
-//        val blockCnt = dragSources.count()
-//
-//        // dropTargets에서 blockCnt만큼 남기고 뒤에서부터 제거
-//        while (dropTargets.size > blockCnt) {
-//            dropTargets.removeAt(dropTargets.size - 1)
-//        }
     }
 
     private fun initGame() {
         binding.ivGameCharacter.bringToFront() // 게임 캐릭터가 무조건 최상단에 오도록
 
-        var gameId = intent.getIntExtra("game id", -1)
         isExit = false
         isDialogShown = false
 
@@ -151,14 +172,14 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         moveXCnt = 0
         moveYCnt = 0
         moveWay.clear()
-        if (gameId != 2 && isNextGame) gameId += 1
-        Log.d("game id test", gameId.toString())
-        initCharacter(gameId)
+//        if (curGameId != 2 && isNextGame) gameId += 1
+//        Log.d("game id test", gameId.toString())
+        initCharacter(curGameId)
 
         // 배경 설정
-        if (gameId == 2) {
+        if (curGameId == 2) {
             // 초심자의 섬
-            if (!isNextGame) backgroundVisibility(backgroundImg[0])
+            if (isFirstStage) backgroundVisibility(backgroundImg[0])
             else backgroundVisibility(backgroundImg[1])
 
             binding.ivGameCharacter.visibility = View.GONE
@@ -167,16 +188,44 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
             binding.ivGameWay2.visibility = View.GONE
             binding.ivGameGum.visibility = View.GONE
+            binding.ivGameWay3.visibility = View.GONE
+            binding.ivGameFire.visibility = View.GONE
+            binding.ivGameWay4.visibility = View.GONE
         } else {
             // 사탕의 섬
             backgroundVisibility(backgroundImg[2])
-            if (gameId == 3 || gameId == 4) {
+            if (curGameId == 3 || curGameId == 4) {
                 binding.ivGameWay2.visibility = View.GONE
                 binding.ivGameGum.visibility = View.GONE
+                binding.ivGameWay3.visibility = View.GONE
+                binding.ivGameFire.visibility = View.GONE
+                binding.ivGameWay4.visibility = View.GONE
             }
-            else {
+            else if (curGameId == 5) {
                 binding.ivGameWay2.visibility = View.VISIBLE
                 binding.ivGameGum.visibility = View.VISIBLE
+                binding.ivGameWay3.visibility = View.GONE
+                binding.ivGameFire.visibility = View.GONE
+                binding.ivGameWay4.visibility = View.GONE
+            }
+            else if (curGameId == 6){
+                binding.ivGameWay.visibility = View.GONE
+                binding.ivGameWay2.visibility = View.GONE
+                binding.ivGameGum.visibility = View.GONE
+
+                binding.ivGameWay3.visibility = View.VISIBLE
+                binding.ivGameFire.visibility = View.VISIBLE
+                binding.ivGameFan.visibility = View.GONE
+                binding.ivGameWay4.visibility = View.GONE
+            }
+            else {
+                binding.ivGameWay.visibility = View.GONE
+                binding.ivGameWay2.visibility = View.GONE
+                binding.ivGameGum.visibility = View.GONE
+                binding.ivGameWay3.visibility = View.GONE
+
+                binding.ivGameWay4.visibility = View.VISIBLE
+                binding.ivGameFire.visibility = View.VISIBLE
             }
         }
 
@@ -231,6 +280,45 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 runOnUiThread {
                     candy.translationX = 200f
                     candy.translationY = 0f
+                }
+            }
+
+            6 -> {
+                val character = binding.ivGameCharacter
+                runOnUiThread {
+                    character.translationX = -280f
+                    character.translationY = 0f
+                }
+
+                val candy = binding.ivGameCandy
+                runOnUiThread {
+                    candy.translationX = 200f
+                    candy.translationY = 0f
+                }
+            }
+            7 -> {
+                val character = binding.ivGameCharacter
+                runOnUiThread {
+                    character.translationX = -360f
+                    character.translationY = -180f
+                }
+
+                val fire = binding.ivGameFire
+                runOnUiThread {
+                    fire.translationX = -580f
+                    fire.translationY = 180f
+                }
+
+                val candy = binding.ivGameCandy
+                runOnUiThread {
+                    candy.translationX = 280f
+                    candy.translationY = 200f
+                }
+
+                val fan = binding.ivGameFan
+                runOnUiThread {
+                    fan.translationX = -540f
+                    fan.translationY = 0f
                 }
             }
         }
@@ -348,7 +436,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                         gravity = Gravity.CENTER_HORIZONTAL
                         setMargins(12.dpToPx(), 30.dpToPx(), 0, 0)
                     }
-                    setImageResource(R.drawable.ib_gamplay2_sound) // 원하는 이미지 설정
+                    setImageResource(R.drawable.iv_gameblock_basic_type2) // 원하는 이미지 설정
                 }
 
                 newBlock.addView(imageView1)
@@ -378,7 +466,32 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
     private fun gameFunction() {
         // 각종 버튼들 처리
+        Log.d("Debug", "isFirstStage: $isFirstStage, isNextGame: $isNextGame, before: $curGameId")
+        if (!isFirstStage && isNextGame) {
+            curGameId += 1
+            Log.d("Debug", "After: curGameId = $curGameId")
+            isNextGame = false
+            initBlock()
+            initGame()
+        }
         binding.ibGameplayBtn.setOnClickListener {
+            if (repeatIdx != -1 && isRepeat) {
+                Log.d("repeat index", repeatIdx.toString())
+                val repeatEditText = dropTargets[repeatIdx]?.getTag(R.id.ib_gameplay_btn) as? EditText
+                var tempStr = when (draggedTextView?.text.toString()) { // null 체크
+                    resources.getString(R.string.game_move_straight) -> R.string.game_move_straight
+                    resources.getString(R.string.game_move_up) -> R.string.game_move_up
+                    resources.getString(R.string.game_move_down) -> R.string.game_move_down
+                    else -> R.string.game_fanning
+                }
+
+                if (repeatEditText?.text.toString().toInt() > 0) {
+                    for (i in 1..< repeatEditText?.text.toString().toInt()) {
+                        moveWay.add(i, tempStr)
+                    }
+                }
+                isRepeat = false
+            }
             blockVisibility(binding.ibGamestopBtn, binding.ibGameplayBtn)
 
             if (moveWay.isEmpty()) {
@@ -456,13 +569,22 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 val item = payload.clip.getItemAt(0)
                 val imageResId = item.text.toString().toIntOrNull()
                 if (imageResId != null) {
-                    var dropTargetId = dropTargets.indexOf(target)
+                    val dropTargetId = dropTargets.indexOf(target)
 
-                    if (targetBlockMap.contains(dropTargetId) && targetBlockMap[dropTargetId] != imageResId) {
-                        // 블록 중복해서 놓을 경우 : 블록을 다시 원래 자리로 갖다 놓기
-                        dragSources[targetBlockMap[dropTargetId]!!].visibility = View.VISIBLE
-                    }
-                    Log.d("test drop target id", dropTargets.indexOf(target).toString())
+//                    // 현재 타겟에 이미 블록이 놓여 있는 경우 - 다시 제자리에 갖다놓기
+//                    val previousBlockId = targetBlockMap[dropTargetId]
+//                    if (previousBlockId != null) {
+//                        val previousBlock = dragSources[previousBlockId]
+//                        val previousBlockDTO = previousBlock.tag as? BlockDTO
+//                        val previousBlockType = previousBlockDTO?.blockType
+//
+//                        // 이전에 놓인 블록이 repeat이면 제외
+//                        if (previousBlockType != getString(R.string.block_type_repeat)) {
+//                            dragSources[previousBlockId].visibility = View.VISIBLE
+//                            removeBlockFromMoveWay(previousBlockId)
+//                        }
+//                    }
+
                     handleImageDrop(view, imageResId, dropTargetId)
                 } else {
                     Log.e(TAG, "Failed to retrieve imageResId from ClipData")
@@ -478,45 +600,68 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         targetBlockMap[dropId] = dragId
         dragSources[dragId].visibility = View.GONE
 
-        // 드래그된 View (FrameLayout)에서 ImageView와 TextView를 가져옴
         val draggedBlock = dragSources[dragId] as FrameLayout
-        val BlockDTO = draggedBlock.tag as? BlockDTO
-        val blockType = BlockDTO?.blockType
-        val blockMove = BlockDTO?.blockDescript
+        val blockDTO = draggedBlock.tag as? BlockDTO
+        val blockType = blockDTO?.blockType
+        val blockMove = blockDTO?.blockDescript
 
         when (blockType) {
             resources.getString(R.string.block_type_normal) -> {
                 // 드래그된 View (FrameLayout)에서 ImageView와 TextView를 가져옴
                 val draggedImageView = draggedBlock.getChildAt(0) as ImageView
-                val draggedTextView = draggedBlock.getChildAt(1) as TextView
+                draggedTextView = draggedBlock.getChildAt(1) as TextView
 
                 if (target is FrameLayout) {
-                    // 기존 ImageView를 target에 덮어씌우기
-                    val targetImageView = target.getChildAt(0) as ImageView
-                    targetImageView.setImageDrawable(draggedImageView.drawable)
+                    // 기존에 "repeat" 블록이 있는지 확인
+                    val repeatImageView = target.getTag(R.id.ib_gamestop_btn) as? ImageView
+                    if (repeatImageView != null) {
+                        // repeat 블록이 이미 존재하면 newImageView3의 visibility를 VISIBLE로 변경
+                        repeatIdx = dropId
+                        repeatImageView.visibility = View.VISIBLE
+                        if (target.childCount > 1) {
+                            target.removeViewAt(1)
+                        }
+                        // TextView를 target에 새로 추가
+                        val overlayTextView = TextView(this).apply {
+                            text = draggedTextView!!.text
+                            textSize = 12f
+                            setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
+                            setPadding(45, 90, 0, 0)
+                        }
+                        target.addView(overlayTextView, 1)
+                        overlayTextView.bringToFront()
+                        overlayTextView.invalidate()
+                        target.requestLayout()
+                    } else {
+                        // 기존 ImageView를 target에 덮어씌우기
+                        val targetImageView = target.getChildAt(0) as ImageView
+                        targetImageView.setImageDrawable(draggedImageView.drawable)
 
-                    // 기존 TextView가 있다면 제거
-                    if (target.childCount > 1) {
-                        target.removeViewAt(1)
+                        // 기존 TextView가 있다면 제거
+                        if (target.childCount > 1) {
+                            target.removeViewAt(1)
+                        }
+
+                        // TextView를 target에 새로 추가
+                        val overlayTextView = TextView(this).apply {
+                            text = draggedTextView!!.text
+                            textSize = 12f
+                            setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
+                            setPadding(20, 25, 0, 0)
+                        }
+                        target.addView(overlayTextView, 1)
                     }
-
-                    // TextView를 target에 새로 추가
-                    val overlayTextView = TextView(this).apply {
-                        text = draggedTextView.text
-                        textSize = 12f
-                        setTextColor(ContextCompat.getColor(context, R.color.white)) // 텍스트 색상
-                        setPadding(20, 25, 0, 0)
-                    }
-
-                    target.addView(overlayTextView, 1)
                 }
             }
 
             resources.getString(R.string.block_type_repeat) -> {
+                isRepeat = true
+
                 target.layoutParams = target.layoutParams.apply {
                     height = dragSources[dragId].height
                     width = dragSources[dragId].width
                 }
+
                 for (dropTarget in dropTargets) {
                     if (dropTarget != dropTargets[dropId] && dragId == 0) {
                         dropTarget.visibility = View.VISIBLE
@@ -525,41 +670,82 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
                 // REPEAT 블록 처리 (드래그된 블록의 ImageView 및 EditText 처리)
                 val draggedImageView1 = draggedBlock.getChildAt(0) as ImageView
-//                val draggedImageView2 = draggedBlock.getChildAt(1) as ImageView
-//                val draggedImageView3 = draggedBlock.getChildAt(2) as ImageView
-//                val draggedEditText = draggedBlock.getChildAt(3) as EditText
+                val draggedImageView2 = draggedBlock.getChildAt(1) as ImageView
+                val draggedImageView3 = draggedBlock.getChildAt(2) as ImageView
+                val draggedEditText = draggedBlock.getChildAt(3) as EditText
 
                 if (target is FrameLayout) {
-                    // 기존 ImageView들을 target에 덮어씌우기
-                    val targetImageView1 = target.getChildAt(0) as ImageView
-                    targetImageView1.setImageDrawable(draggedImageView1.drawable)
-//                    val targetImageView2 = target.getChildAt(0) as ImageView
-//                    targetImageView1.setImageDrawable(draggedImageView2.drawable)
-//                    val targetImageView3 = target.getChildAt(0) as ImageView
-//                    targetImageView3.setImageDrawable(draggedImageView3.drawable)
-
                     // 기존 EditText가 있다면 제거
                     if (target.childCount > 2) {
                         target.removeViewAt(2)
                     }
 
-//                    // EditText를 target에 새로 추가
-//                    val overlayEditText = EditText(this).apply {
-//                        setText(draggedEditText.text)
-//                        setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
-//                        textSize = 10.51f
-//                        setPadding(20, 25, 0, 0)
-//                    }
-//
-//                    target.addView(overlayEditText, 3)
+                    // newImageView1 추가
+                    val newImageView1 = ImageView(this).apply {
+                        layoutParams = FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.WRAP_CONTENT,
+                            FrameLayout.LayoutParams.WRAP_CONTENT
+                        ).apply {
+                            setMargins(0, 0, 0, 0)
+                        }
+                        setImageDrawable(draggedImageView1.drawable)
+                    }
+                    target.addView(newImageView1)
+
+                    // newImageView2 추가
+                    val newImageView2 = ImageView(this).apply {
+                        layoutParams = FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.WRAP_CONTENT,
+                            FrameLayout.LayoutParams.WRAP_CONTENT
+                        ).apply {
+                            setMargins(35, 15, 0, 0)
+                        }
+                        setImageDrawable(draggedImageView2.drawable)
+                        alpha = 0.9f
+                    }
+                    target.addView(newImageView2)
+
+                    // newImageView3 추가
+                    val newImageView3 = ImageView(this).apply {
+                        layoutParams = FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.WRAP_CONTENT,
+                            FrameLayout.LayoutParams.WRAP_CONTENT
+                        ).apply {
+                            setMargins(35, 75, 0, 0)
+                        }
+                        setImageDrawable(draggedImageView3.drawable)
+                        alpha = 0.8f
+                        visibility = View.GONE // 기본값을 GONE으로 설정
+                    }
+                    target.addView(newImageView3)
+                    target.setTag(R.id.ib_gamestop_btn, newImageView3) // newImageView3를 tag로 저장
+
+                    // EditText 추가
+                    val newEditText = EditText(this).apply {
+                        setText(draggedEditText.text)
+                        setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
+                        inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+                        textSize = 10.51f
+                        layoutParams = FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.WRAP_CONTENT,
+                            FrameLayout.LayoutParams.WRAP_CONTENT
+                        ).apply {
+                            setMargins(30, 0, 0, 0)
+                        }
+                        setPadding(30, 0, 0, 0)
+                    }
+                    target.addView(newEditText)
+                    target.setTag(R.id.ib_gameplay_btn, newEditText)
                 }
+
             }
 
             else -> {
                 // 블록 타입이 정의되지 않았을 경우 처리
+                Log.e("block type error", "블록 타입이 정해지지 않았습니다.")
             }
-        }
 
+        }
         when (blockMove) {
             resources.getString(R.string.game_move_straight) -> {
                 moveWay.add(R.string.game_move_straight)
@@ -570,32 +756,44 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             resources.getString(R.string.game_move_down) -> {
                 moveWay.add(R.string.game_move_down)
             }
+            resources.getString(R.string.game_repeat) -> {
+                moveWay.add(R.string.game_repeat)
+                repeatIdx = moveWay.size - 1
+            }
+            resources.getString(R.string.game_fanning) -> {
+                moveWay.add(R.string.game_fanning)
+            }
         }
     }
 
     // check success ------------------------------------------------
     private fun checkSuccess() {
         if (isDialogShown) return
-        var gameId = intent.getIntExtra("game id", -1)
-        if (isNextGame) gameId += 1
-        initCharacter(gameId)
+        initCharacter(curGameId)
 
         var correctBlockOrder: List<Int>
         var success = true
-        when (gameId) {
+        when (curGameId) {
             2 -> {
-                correctBlockOrder = listOf(1, 2, 3, 0)
-                dropTargets.forEachIndexed { index, target ->
-                    // 올바른 블록이 각 dropTarget에 들어왔는지 확인
-                    val droppedBlock = targetBlockMap[index]
-                    if (droppedBlock == null) {
-                        Log.d(TAG, "타겟 ${index + 1}에 블록이 드롭되지 않았습니다.")
-                        success = false
-                    } else if (droppedBlock != correctBlockOrder[index]) {
-                        Log.d(TAG, "타겟 ${index + 1}에 잘못된 블록이 드롭되었습니다. 예상: ${correctBlockOrder[index]}, 실제: $droppedBlock")
-                        success = false
+                if (isFirstStage) {
+                    var successCnt = 0
+                    correctBlockOrder = listOf(1, 2, 3, 0)
+                    for (i: Int in 0..3) {
+                        if (targetBlockMap[i] == correctBlockOrder[i]) {
+                            successCnt += 1
+                        }
                     }
+                    if (successCnt == 4) success = true
+                    else success = false
                 }
+                else {
+//                    if (targetBlockMap[0] == 0 && targetBlockMap[1] == 1){
+//                        success = true
+//                    }
+//                    else
+//                        success = false
+                }
+
             }
             3 -> {
                 correctBlockOrder = listOf(R.string.game_move_straight)
@@ -609,8 +807,21 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                     success = false
                 }
             }
-            else -> {
+            5 -> {
                 correctBlockOrder = listOf(R.string.game_move_straight, R.string.game_move_down, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_up, R.string.game_move_straight)
+                if (moveWay != correctBlockOrder) {
+                    success = false
+                }
+            }
+
+            6 -> {
+                correctBlockOrder = listOf(R.string.game_move_straight, R.string.game_move_up, R.string.game_move_straight, R.string.game_fanning, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_down)
+                if (moveWay != correctBlockOrder) {
+                    success = false
+                }
+            }
+            7 -> {
+                correctBlockOrder = listOf(R.string.game_fanning, R.string.game_move_down, R.string.game_repeat, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_straight, R.string.game_move_down)
                 if (moveWay != correctBlockOrder) {
                     success = false
                 }
@@ -722,6 +933,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         failTitle.text = "앗 다시 한 번 도전해볼래?"
         failSubTitle.text = "조금만 더 힘을 내봐!"
 
+        isFirstStage = false
+        isNextGame = false
+
         retryBtn.setOnClickListener {
             initGame()
             dialog.dismiss()  // 다이얼로그 닫기
@@ -814,6 +1028,22 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                     deltaX = 0f
                     deltaY = 1f
                 }
+                R.string.game_repeat -> {
+                    deltaX = 0f
+                    deltaY = 0f
+                    moveStep(index + 1)
+                }
+                R.string.game_fanning -> {
+                    deltaX = 0f
+                    deltaY = 0f
+                    if (isFireCondition()) {
+                        handleFireCondition()
+                    }
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        binding.ivGameFan.visibility = View.GONE
+                        moveStep(index + 1)
+                    }, 1000)
+                }
                 else -> {
                     deltaX = 0f
                     deltaY = 0f
@@ -825,6 +1055,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
                 // 현재 위치 업데이트
                 currentX += deltaX
                 currentY += deltaY
+
                 moveStep(index + 1) // 다음 이동 실행
             }
         }
@@ -836,6 +1067,37 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
     // 배경 지정
     private fun backgroundVisibility(background: Int) {
         binding.ivGameBackground.loadCropImage(background)
+    }
+
+    private fun isFireCondition(): Boolean {
+        // Fire가 발생할 조건을 정의
+        if (curGameId == 6) {
+            val fanBlockOrder = listOf(
+                R.string.game_move_straight,
+                R.string.game_move_up,
+                R.string.game_move_straight,
+                R.string.game_fanning
+            )
+            if (moveWay.size >= 4) {
+                for (i: Int in 0..3) {
+                    if (fanBlockOrder[i] != moveWay[i])
+                        return false
+                }
+                return true
+            } else {
+                return false
+            }
+        }
+        else {
+            return (R.string.game_fanning == moveWay[0])
+        }
+
+    }
+
+    private fun handleFireCondition() {
+        // Fire 처리 로직
+        binding.ivGameFire.visibility = View.GONE
+        binding.ivGameFan.visibility = View.VISIBLE
     }
 }
 
