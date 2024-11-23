@@ -1,95 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="20dp"
-    android:layout_marginEnd="20dp"
-    android:layout_marginBottom="16dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="5dp">
-
-    <FrameLayout
+<layout>
+    <data>
+        <variable
+            name="itemRecycler"
+            type="com.example.myapplication.presentation.ui.fragment.quest.QuestDto" />
+    </data>
+    
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="5dp">
 
-        <ImageView
-            android:id="@+id/ib_rv_game_pic"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="240dp"
-            android:layout_gravity="top|center_horizontal"
-            android:adjustViewBounds="true"
-            android:background="@drawable/shape_square_rounded_16dp_gray8" />
+            android:layout_height="wrap_content">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:layout_gravity="bottom|center_horizontal"
-            android:adjustViewBounds="true"
-            android:background="@drawable/shape_square_rounded_16dp_half"
-            android:scaleType="fitCenter">
+            <ImageView
+                android:id="@+id/ib_rv_game_pic"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:layout_gravity="top|center_horizontal"
+                android:adjustViewBounds="true"
+                android:background="@drawable/shape_square_rounded_16dp_gray8" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline2"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:layout_gravity="bottom|center_horizontal"
+                android:adjustViewBounds="true"
+                android:background="@drawable/shape_square_rounded_16dp_half"
+                android:scaleType="fitCenter">
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent="0.5" />
+
+                <TextView
+                    android:id="@+id/tv_rv_game_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginBottom="2dp"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:text="@{itemRecycler.gameName}"
+                    android:textColor="@color/gray2"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toTopOf="@+id/guideline2"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_rv_game_descript"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:text="뜨거운 태양에 고통받는 00이를 구해주세요!"
+                    android:textColor="@color/gray6"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="@+id/tv_rv_game_name"
+                    app:layout_constraintTop_toTopOf="@+id/guideline2" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/ib_game_state_before"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.5" />
+                android:layout_gravity="right|top"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/ib_game_state_before" />
 
-            <TextView
-                android:id="@+id/tv_rv_game_name"
+            <ImageView
+                android:id="@+id/ib_game_state_ing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginBottom="2dp"
-                android:fontFamily="@font/pretendard_semibold"
-                android:text="태양을 피해라"
-                android:textColor="@color/gray2"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toTopOf="@+id/guideline2"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:layout_gravity="right|top"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/ib_game_state_ing"
+                android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/tv_rv_game_descript"
+            <ImageView
+                android:id="@+id/ib_game_state_done"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:fontFamily="@font/pretendard_regular"
-                android:text="뜨거운 태양에 고통받는 00이를 구해주세요!"
-                android:textColor="@color/gray6"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="@+id/tv_rv_game_name"
-                app:layout_constraintTop_toTopOf="@+id/guideline2" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_gravity="right|top"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/ib_game_state_done"
+                android:visibility="gone" />
 
-        <ImageView
-            android:id="@+id/ib_game_state_before"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|top"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="15dp"
-            android:src="@drawable/ib_game_state_before" />
-
-        <ImageView
-            android:id="@+id/ib_game_state_ing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|top"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="15dp"
-            android:src="@drawable/ib_game_state_ing"
-            android:visibility="gone" />
-
-        <ImageView
-            android:id="@+id/ib_game_state_done"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|top"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="15dp"
-            android:src="@drawable/ib_game_state_done"
-            android:visibility="gone" />
-
-    </FrameLayout>
-</androidx.cardview.widget.CardView>
+        </FrameLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

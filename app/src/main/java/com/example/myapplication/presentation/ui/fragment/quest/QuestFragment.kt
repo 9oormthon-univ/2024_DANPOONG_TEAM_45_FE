@@ -63,14 +63,22 @@ class QuestFragment : BaseFragment<FragmentQuestBinding>(R.layout.fragment_quest
 
     override fun click(item: Any) {
         var name = ""
+        var id = 0
         when (item) {
-            is IslandDto.IslandLeft -> name = item.name
-            is IslandDto.IslandRight -> name = item.name
+            is IslandDto.IslandLeft -> {
+                name = item.name
+                id = item.id
+            }
+            is IslandDto.IslandRight -> {
+                name = item.name
+                id = item.id
+            }
         }
 
         findNavController().navigate(R.id.action_questFragment_to_questProblemFragment,
             Bundle().apply {
                 putString("island name", name)
+                putString("selectId", "$id")
             }
         )
     }
