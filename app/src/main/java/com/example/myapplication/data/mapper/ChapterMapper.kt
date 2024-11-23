@@ -56,7 +56,7 @@ fun locked(isCleared: Boolean, number: Int): Int {
 
 fun QuizResponse.toDomain(): QuestDto {
     val item = QuestDto(
-        gameName = this.title,
+        gameName = titles[this.quizId-1],
         gameType = decideType(this.quizId),
         gameImg = images[this.quizId - 1],
         gameState = decideClear(this.isCleared),
