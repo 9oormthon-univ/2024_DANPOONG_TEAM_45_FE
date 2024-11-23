@@ -43,7 +43,6 @@ class QuestIntroActivity :
         val toolbar = binding.tbActivityQuestIntro
         setSupportActionBar(toolbar)
 
-
         binding.btnQuestIntroStart.setOnClickListener {
             if (islandName == resources.getString(R.string.biginner_island) && gameId == 1) {
                 val intent = Intent(this, QuizActivity::class.java)

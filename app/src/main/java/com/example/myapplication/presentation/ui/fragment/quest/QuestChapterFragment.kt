@@ -18,7 +18,6 @@ import com.example.myapplication.presentation.widget.extention.TokenManager
 import com.example.myapplication.presentation.widget.extention.loadCropImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -83,11 +82,21 @@ class QuestChapterFragment :
                 chapterViewModel.getDistinctChapter.collectLatest {
                     when (it.result.code) {
                         200 -> {
-                            Log.d("okhttp","${ it.payload?.quizzes}")
-                            val list = it.payload?.quizzes?.map { item -> item.toDomain() }
+                            Log.d("okhttp", "${it.payload?.quizzes}")
+                            var count = 0
+                            val responseList = it.payload?.quizzes
+                            val list = it.payload?.quizzes?.map {
+                                item -> item.toDomain()
+                            }
+                            responseList?.forEach { it ->
+                                if(it.isCleared) {
+                                    count++
+                                }
+                            }
                             binding.rvBiginnerIsland.adapter = adapter
                             adapter.submitList(list)
                             loginViewModel.getTraining()
+                            binding.ivQuestMoomoo.text = "무무의 퀘스트 (${count}/${responseList?.size})"
                         }
                     }
                 }
@@ -109,14 +118,14 @@ class QuestChapterFragment :
     override fun click(item: Any) {
         item as QuestDto
         val intent = Intent(requireActivity(), QuestIntroActivity::class.java).apply {
-            val islandName = when(item.id) {
+            val islandName = when (item.id) {
                 1, 2 -> getString(R.string.biginner_island)  // "초심자의 섬"
                 in 3..7 -> getString(R.string.candy_island)  // "사탕의 섬"
                 else -> getString(R.string.lake_island)  // "호수의 섬"
             }
             putExtra("island name", islandName)
-            putExtra("game id", item.id )
-            Log.d("아이디","${item.id} $islandName")
+            putExtra("game id", item.id)
+            Log.d("아이디", "${item.id} $islandName")
         }
         startActivity(intent)
     }

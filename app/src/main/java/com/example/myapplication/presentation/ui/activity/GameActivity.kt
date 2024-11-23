@@ -247,7 +247,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
             binding.ivGameCharacter.visibility = View.GONE
             binding.ivGameWay.visibility = View.GONE
             binding.ivGameCandy.visibility = View.GONE
-
             binding.ivGameWay2.visibility = View.GONE
             binding.ivGameGum.visibility = View.GONE
             binding.ivGameWay3.visibility = View.GONE
@@ -1213,7 +1212,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         else {
             return (R.string.game_fanning == moveWay[0])
         }
-
     }
 
      override fun handleFireCondition() {
