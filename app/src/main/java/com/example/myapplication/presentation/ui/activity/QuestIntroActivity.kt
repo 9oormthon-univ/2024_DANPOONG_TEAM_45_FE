@@ -1,6 +1,7 @@
 package com.example.myapplication.presentation.ui.activity
 
 import android.content.Intent
+import android.util.Log
 import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityQuestIntroBinding
@@ -16,6 +17,7 @@ class QuestIntroActivity :
 
         val islandName = intent.getStringExtra("island name")
         val gameId = intent.getIntExtra("game id", -1)
+        Log.d("아이디 ㄴ","${gameId} ${islandName}")
 
         when (islandName) {
             resources.getString(R.string.biginner_island) -> {
