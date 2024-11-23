@@ -2,7 +2,9 @@ package com.example.myapplication.data.mapper
 
 import com.example.myapplication.R
 import com.example.myapplication.data.repository.remote.response.chapter.AllChapterResponse
+import com.example.myapplication.data.repository.remote.response.chapter.QuizResponse
 import com.example.myapplication.presentation.ui.fragment.quest.IslandDto
+import com.example.myapplication.presentation.ui.fragment.quest.QuestDto
 
 fun AllChapterResponse.toDomain(): List<IslandDto> {
     val item = this.result.mapIndexed { index, it ->
@@ -51,3 +53,69 @@ fun locked(isCleared: Boolean, number: Int): Int {
         }
     }
 }
+
+fun QuizResponse.toDomain(): QuestDto {
+    val item = QuestDto(
+        gameName = this.title,
+        gameType = decideType(this.quizId),
+        gameImg = images[this.quizId - 1],
+        gameState = decideClear(this.isCleared),
+        gameDescript = subtitles[this.quizId - 1],
+        id = this.quizId
+    )
+    return item
+}
+
+
+fun decideType(id: Int): String {
+    return if (id == 1) {
+        "NORMAL"
+    } else {
+        "BLOCK"
+    }
+}
+
+fun decideClear(isCleared: Boolean): Int {
+    return if (isCleared) {
+        2
+    } else {
+        0
+    }
+}
+
+val titles = mutableListOf(
+    "기초 훈련하기",
+    "모험 준비하기",
+    "달콤한 첫 걸음",
+    "사탕을 찾아가자!",
+    "껌을 피하는 법",
+    "불 진압하기",
+    "사탕의 섬을 구해라!",
+    "바위점프!",
+    "모험 준비하기",
+    "모험의 끝으로"
+)
+
+val subtitles = mutableListOf(
+    "초보 모험가를 위한 기초 훈련!",
+    "본격적으로 모험을 준비해봐요!",
+    "사탕의 섬에서의 첫 퀘스트!",
+    "무무가 사탕을 찾도록 도와주세요",
+    "무무가 껌을 밟지 않도록 도와주세요",
+    "사탕의 섬에 불이 났어요!",
+    "사탕의 섬이 녹아내리고 있어요",
+    "초보 모험가를 위한 기초 훈련!",
+    "본격적으로 모험을 준비해봐요!"
+)
+
+val images = mutableListOf(
+    R.drawable.iv_background_biginner_game1,
+    R.drawable.iv_background_biginner_game2,
+    R.drawable.iv_candy_background_game1,
+    R.drawable.iv_candy_background_game2,
+    R.drawable.iv_candy_background_game3,
+    R.drawable.iv_candy_background_game4,
+    R.drawable.iv_candy_background_game5,
+    R.drawable.iv_background_lake_game1,
+    R.drawable.iv_background_lake_game2
+)
