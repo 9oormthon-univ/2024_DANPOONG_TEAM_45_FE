@@ -11,6 +11,7 @@ import androidx.core.content.FileProvider
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentEncyclopediaBinding
 import com.example.myapplication.presentation.base.BaseFragment
+import com.kakao.sdk.share.ShareClient
 import com.kakao.sdk.template.model.Link
 import com.kakao.sdk.template.model.TextTemplate
 import java.io.File
@@ -23,7 +24,7 @@ class EncyclopediaFragament : BaseFragment<FragmentEncyclopediaBinding>(R.layout
         }
 
         binding.fragmentShareCardBt.setOnClickListener {
-            shareViewAsImage(requireContext(), binding.framelayoutMyCactusCard)
+            shareToKakaoWithImage()
         }
     }
 
@@ -46,36 +47,54 @@ class EncyclopediaFragament : BaseFragment<FragmentEncyclopediaBinding>(R.layout
         return file
     }
 
-    private fun shareViewAsImage(context: Context, view: FrameLayout) {
-        // FrameLayout을 Bitmap으로 변환
-        val bitmap = captureViewToBitmap(view)
+    private fun shareToKakaoWithImage() {
+        // FrameLayout -> Bitmap 변환
+        val bitmap = captureViewToBitmap(binding.framelayoutMyCactusCard)
 
-        // Bitmap을 파일로 저장
-        val imageFile = saveBitmapToFile(bitmap, context)
+        // Bitmap을 캐시 파일로 저장
+        val file = saveBitmapToFile(bitmap, requireContext())
 
-        // FileProvider로 URI 가져오기
-        val uri = FileProvider.getUriForFile(
-            context,
-            "${context.packageName}.fileprovider",
-            imageFile
-        )
+        // 카카오 이미지 업로드
+        ShareClient.instance.uploadImage(file) { imageResult, error ->
+            if (error != null) {
+                Log.e("카카오 이미지 업로드", "이미지 업로드 실패", error)
+            } else if (imageResult != null) {
+                val imageUrl = imageResult.infos.original.url // 업로드된 이미지 URL
 
-        // 공유 Intent 생성
-        val shareIntent = Intent(Intent.ACTION_SEND).apply {
-            type = "image/*"
-            putExtra(Intent.EXTRA_STREAM, uri) // 공유할 이미지 URI
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION) // 권한 부여
-        }
+                // FeedTemplate 생성 (이미지와 텍스트 포함)
+                val feedTemplate = com.kakao.sdk.template.model.FeedTemplate(
+                    content = com.kakao.sdk.template.model.Content(
+                        title = "코딩 랜드로 떠나 보아요! 🌵",
+                        description = "무무와 함께 코딩 랜드 모험을 즐기세요!",
+                        imageUrl = imageUrl, // 업로드된 이미지 URL
+                        link = com.kakao.sdk.template.model.Link(
+                            webUrl = "https://www.naver.com",
+                            mobileWebUrl = "https://www.naver.com"
+                        )
+                    ),
+                    buttons = listOf(
+                        com.kakao.sdk.template.model.Button(
+                            title = "더 알아보기",
+                            link = com.kakao.sdk.template.model.Link(
+                                webUrl = "https://www.naver.com",
+                                mobileWebUrl = "https://www.naver.com"
+                            )
+                        )
+                    )
+                )
 
-        try {
-            // 카카오톡으로 공유 실행
-            context.startActivity(
-                Intent.createChooser(shareIntent, "카카오톡으로 공유하기")
-            )
-        } catch (e: ActivityNotFoundException) {
-            // 카카오톡이 없을 때 예외 처리
-            Log.e("ShareView", "카카오톡이 설치되어 있지 않습니다.")
+                // 카카오톡으로 메시지 전송
+                ShareClient.instance.shareDefault(
+                    requireContext(),
+                    feedTemplate
+                ) { result, error ->
+                    if (error != null) {
+                        Log.e("카카오톡 공유", "공유 실패", error)
+                    } else if (result != null) {
+                        startActivity(result.intent) // 카카오톡 실행
+                    }
+                }
+            }
         }
     }
-
 }
