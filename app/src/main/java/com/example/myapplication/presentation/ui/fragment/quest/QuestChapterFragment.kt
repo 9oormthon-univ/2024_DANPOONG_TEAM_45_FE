@@ -13,10 +13,12 @@ import com.example.myapplication.presentation.adapter.QuestChapterAdapter
 import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.presentation.ui.activity.QuestIntroActivity
 import com.example.myapplication.presentation.viewmodel.LoginViewModel
+import com.example.myapplication.presentation.widget.extention.TokenManager
 import com.example.myapplication.presentation.widget.extention.loadCropImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class QuestChapterFragment :
@@ -194,12 +196,16 @@ class QuestChapterFragment :
         println("아이템 수: ${questItem.size}") // 아이템 수 확인용 로그
     }
 
-    private fun observeLifeCycle(){
+
+    @Inject
+    lateinit var tokenManager: TokenManager
+    private fun observeLifeCycle() {
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 loginViewModel.training.collectLatest {
                     when (it.result.code) {
                         200 -> {
+                            questItem.clear()
                             if (it.payload!!) {
                                 questItem.add(
                                     QuestDto(
