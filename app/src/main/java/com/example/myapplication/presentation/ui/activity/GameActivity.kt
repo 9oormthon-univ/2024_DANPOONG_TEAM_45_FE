@@ -126,7 +126,12 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         if (curGameId <= 2) {
             // 초심자의 섬
             chapterId = 1
-        } else chapterId = 2 // 사탕의 섬
+            isFirstStage = true
+        } else {
+            // 사탕의 섬
+            chapterId = 2
+            isFirstStage = false
+        }
         observeLifeCycle()
         initViewModel()
 
@@ -219,12 +224,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     }
 
     override fun initGame() {
-        if (!isFirstStage && isNextGame) {
-            curGameId += 1
-            Log.d("Debug", "After: curGameId = $curGameId")
-            isNextGame = false
-            initBlock()
-        }
         binding.ivGameCharacter.bringToFront() // 게임 캐릭터가 무조건 최상단에 오도록
 
         isExit = false
