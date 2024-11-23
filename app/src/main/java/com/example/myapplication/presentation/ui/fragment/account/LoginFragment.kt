@@ -3,6 +3,7 @@ package com.example.myapplication.presentation.ui.fragment.account
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +16,7 @@ import com.example.myapplication.databinding.FragmentLoginBinding
 import com.example.myapplication.presentation.adapter.LoginBannerViewPagerAdapter
 import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.presentation.ui.activity.MainActivity
+import com.example.myapplication.presentation.viewmodel.HomeViewModel
 import com.example.myapplication.presentation.viewmodel.LoginViewModel
 import com.example.myapplication.presentation.widget.extention.TokenManager
 import com.kakao.sdk.user.UserApiClient
@@ -22,6 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -83,11 +86,19 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
             findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
         }
     }
-
+private val homeViewModel : HomeViewModel by viewModels()
     //잔여 토큰 초기화
     private fun initRemainToken() {
         lifecycleScope.launch {
+            runBlocking {
+                val hd = tokenManager.getUserId.first().toString()
+                //tokenManager.deleteHome()
+                //homeViewModel.deleteHomeId(hd)
+                //tokenManager.saveTut1("")
+                //tokenManager.saveTut2("")
+            }
             tokenManager.deleteAccessToken()
+            //tokenManager.saveCountToken("0")
         }
     }
 
@@ -127,7 +138,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                     if (it.result.code == 200) {
                         with(it.payload) {
                             saveToken(accessToken, refreshToken, picture, nickname)
-                            if(tokenManager.getCharacterId.first() == null){
+                            if(tokenManager.getCharacterId.first().isNullOrBlank()){
                                 findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
                             }
                             else {
