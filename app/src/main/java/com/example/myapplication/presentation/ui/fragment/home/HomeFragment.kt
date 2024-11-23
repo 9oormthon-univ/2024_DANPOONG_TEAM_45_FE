@@ -84,7 +84,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                         saveId(it)
                         when (it.result.code) {
                             200 -> {
-                                fragmentHomeTitleTv.text = "반가워요\n저는 ${character!!.name}무무에요!"
+                                fragmentHomeTitleTv.text = "반가워요\n저는 ${character!!.name}무무예요!"
                                 fragmentHomeCactusStateLevelTv.text =
                                     "LV.${character.level}"
                                 fragmentHomeCharacterIv.loadCropImage(

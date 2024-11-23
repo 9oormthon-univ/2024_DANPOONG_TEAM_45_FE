@@ -30,7 +30,7 @@
                 android:layout_marginRight="40dp"
                 android:layout_marginBottom="12dp"
                 android:adjustViewBounds="true"
-                android:background="@drawable/selector_bulb"
+                android:background="@drawable/iv_bulb_gray"
                 android:scaleType="fitCenter" />
 
             <ImageView
