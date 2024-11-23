@@ -6,6 +6,7 @@ import com.example.myapplication.data.repository.remote.api.ChapterClearedApi
 import com.example.myapplication.data.repository.remote.datasource.remote.AiDataSource
 import com.example.myapplication.data.repository.remote.datasource.remote.IsChapterClearedDataSource
 import com.example.myapplication.data.repository.remote.request.ai.AiDTO
+import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.chaptercleared.ClearChapterStateListResponse
 import com.example.myapplication.data.repository.remote.response.chaptercleared.ClearChapterStateResponse
 import kotlinx.coroutines.flow.Flow
@@ -18,9 +19,8 @@ import javax.inject.Inject
 class AiDataSourceImpl @Inject constructor(
     private val aiApi: AiApi
 ) : AiDataSource {
-
-    override suspend fun postAi(aiDTO: AiDTO): Flow<Response<ResponseBody>> = flow {
-        val result = aiApi.postAi(aiDTO)
+    override suspend fun postAi(keyword : String): Flow<BaseResponse<String>> = flow {
+        val result = aiApi.postAi(keyword)
         emit(result)
     }.catch { e ->
         Log.e("getChapterAll 에러", e.message.toString())

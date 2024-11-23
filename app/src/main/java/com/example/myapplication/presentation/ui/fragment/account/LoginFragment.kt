@@ -34,11 +34,15 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var onBoardingViewPagerAdapter: LoginBannerViewPagerAdapter
 
+    private val homeViewModel: HomeViewModel by viewModels()
+
     //화면 진입 시 토큰 초기화
     override fun onStart() {
         super.onStart()
         initRemainToken()
     }
+
+    lateinit var userName: String
 
     override fun setLayout() {
         onClickBtn()
@@ -68,7 +72,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
             }
 
             // ViewPager2의 페이지 변경 리스너
-            binding.activityAccountViewVp.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            binding.activityAccountViewVp.registerOnPageChangeCallback(object :
+                ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
                     // 실제 포지션으로 인디케이터 업데이트
@@ -86,7 +91,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
             findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
         }
     }
-    private val homeViewModel : HomeViewModel by viewModels()
+
     //잔여 토큰 초기화
     private fun initRemainToken() {
         lifecycleScope.launch {
@@ -130,28 +135,61 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         }
     }
 
+    var checkOaboarding = false
+
     //토큰 수령 시 다음 화면으로 넘어감
     private fun observeLifeCycle() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-                loginViewModel.kakaoLogin.collectLatest {
-                    if (it.result.code == 200) {
-                        with(it.payload) {
-                            saveToken(accessToken, refreshToken, picture, nickname)
-//                            if(tokenManager.getCharacterId.first().isNullOrBlank()){
-//                                findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
-//                            }
-//                            else {
-                            startActivity(Intent(requireActivity(), MainActivity::class.java))
-//                            }
+                homeViewModel.getDistinctHome.collectLatest {
+                    when (it.result.code) {
+                        200 -> {
+                            startActivity(
+                                Intent(
+                                    requireActivity(),
+                                    MainActivity::class.java
+                                )
+                            )
+                        }
+                        404 -> {
+                            findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
+                        }
+                        500 -> {
+                            findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
+                        }
+                        3000 -> {
+                            findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
                         }
                     }
                 }
             }
         }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                loginViewModel.kakaoLogin.collectLatest {
+                    when (it.result.code) {
+                        200 -> {
+                            with(it.payload) {
+                                saveToken(accessToken, refreshToken, picture, nickname)
+                                homeViewModel.getDistinctHome()
+                                startActivity(
+                                    Intent(
+                                        requireActivity(),
+                                        MainActivity::class.java
+                                    )
+                                )
+                            }
+
+                        }
+                    }
+                }
+            }
+
+        }
     }
 
-    private fun saveToken(
+    fun saveToken(
         accessToken: String,
         refreshToken: String,
         userProfile: String,
@@ -159,7 +197,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     ) {
         lifecycleScope.launch {
             with(tokenManager) {
-                tokenManager.saveChapterIsCleared("")
                 saveAccessToken(accessToken)
                 saveRefreshToken(refreshToken)
                 saveUserProfile(userProfile)

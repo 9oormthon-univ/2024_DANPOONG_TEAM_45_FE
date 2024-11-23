@@ -57,6 +57,7 @@ class FriendFragment : BaseFragment<FragmentFriendBinding>(R.layout.fragment_fri
                     val recycleItem : MutableList<FriendsEntity> = mutableListOf()
                     for(i in item.indices){
                         if(i >= 3){
+                            item[i].rank = "${i+1}"
                             recycleItem.add(item[i])
                         }
                     }

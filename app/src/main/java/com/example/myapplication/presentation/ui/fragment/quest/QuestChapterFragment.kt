@@ -89,6 +89,7 @@ class QuestChapterFragment :
                 chapterViewModel.getDistinctChapter.collectLatest {
                     when (it.result.code) {
                         200 -> {
+                            if(it.payload.isRewardButtonActive)
                             Log.d("okhttp", "${it.payload?.quizzes}")
                             var count = 0
                             val responseList = it.payload?.quizzes
