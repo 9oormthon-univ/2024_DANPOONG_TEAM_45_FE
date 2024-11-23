@@ -42,8 +42,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         onClickBtn()
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         initCount()
         initHome()
     }
@@ -52,7 +52,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         lifecycleScope.launch {
             try {
                 stateManage(tokenManager.getCountToken.first().toString().toInt())
-                Log.d("결과","${tokenManager.getCountToken.first().toString()}")
+                Log.d("결과", tokenManager.getCountToken.first().toString())
             }catch (e : Exception){
                 stateManage(0)
             }
@@ -62,18 +62,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private fun initCount() {
         lifecycleScope.launch {
-            val today = LocalDateTime.now().toString()
-            val formattedToday = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-
+            val today = getOnlyDate()
             val prepareDay = tokenManager.getDateToken.first().toString()
-            if (formattedToday != prepareDay) {
-                Log.d("결과","${formattedToday} ,${prepareDay}")
+            if (today != prepareDay) {
+                Log.d("결과","$today ,${prepareDay}")
                 tokenManager.saveCountToken("0")
-                tokenManager.saveDateToken(formattedToday)
+                tokenManager.saveDateToken(today)
             }
         }
     }
-
+    private fun getOnlyDate(): String {
+        val today = LocalDateTime.now()
+        return today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+    }
     private fun observeLifeCycle() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
@@ -97,8 +98,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                                         )
                                     }"
                                 )
-                                fragmentHomeCactusStateProgressPb.progress =
-                                    character.activityPoints/100
+                                fragmentHomeCactusStateProgressPb.progress = character.activityPoints%100
                                 fragmentHomeCactusStatePercentageTv.text = (character.activityPoints%100).toString() + "%"
                             }
                         }
@@ -120,7 +120,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun stringToEnum(value: String): CharacterType {
-        return when (value.lowercase()) { // 서버에서 온 값을 소문자로 변환
+        return when (value) { // 서버에서 온 값을 소문자로 변환
             "LEVEL_LOW" -> CharacterType.LEVEL_LOW
             "LEVEL_MEDIUM" -> CharacterType.LEVEL_MEDIUM
             "LEVEL_HIGH" -> CharacterType.LEVEL_HIGH
@@ -139,6 +139,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private fun stateManage(count: Int) {
         when (count) {
             0-> {
+                binding.fragmentHomeTodayTakeRewordBt.visibility = View.GONE
                 binding.fragmentHomeTodayMissionStamp1Iv.isSelected = false
                 binding.fragmentHomeTodayMissionStamp2Iv.isSelected = false
             }
@@ -151,6 +152,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 binding.fragmentHomeTodayMissionStamp2Iv.isSelected = true
             }
             else -> {
+                binding.fragmentHomeTodayTakeRewordBt.visibility = View.VISIBLE
+                binding.fragmentHomeTodayTakeRewordBt.isSelected = false
                 binding.fragmentHomeTodayMissionStamp1Iv.isSelected = false
                 binding.fragmentHomeTodayMissionStamp2Iv.isSelected = false
             }
@@ -177,7 +180,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private fun onClickBtn() {
         binding.fragmentHomeTodayTakeRewordBt.setOnClickListener {
             if (it.isSelected) {
-                startActivity(Intent(requireContext(), PotionMysteryActivity::class.java))
+                val intent = Intent(requireContext(), PotionMysteryActivity::class.java).apply {
+                    putExtra("potion",2)
+                    lifecycleScope.launch {
+                        tokenManager.saveCountToken("3")
+                    }
+                }
+                startActivity(intent)
             }
         }
         binding.activityMainSettingIv.setOnClickListener {

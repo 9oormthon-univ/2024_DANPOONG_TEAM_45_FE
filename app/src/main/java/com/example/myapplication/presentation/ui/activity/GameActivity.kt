@@ -996,6 +996,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                     val intent = Intent(this, QuizClearActivity::class.java)
                     intent.putExtra("game2Activity", true)
                     startActivity(intent)
+                    finish()
                 }
                 isDialogShown = false
                 isFirstStage = false

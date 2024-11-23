@@ -1,6 +1,7 @@
 package com.example.myapplication.presentation.ui.fragment.quest
 
 import android.content.Intent
+import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -8,15 +9,19 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
+import com.example.myapplication.data.mapper.toDomain
 import com.example.myapplication.databinding.FragmentQuestChapterBinding
 import com.example.myapplication.presentation.adapter.QuestChapterAdapter
 import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.presentation.ui.activity.QuestIntroActivity
+import com.example.myapplication.presentation.viewmodel.ChapterViewModel
 import com.example.myapplication.presentation.viewmodel.LoginViewModel
+import com.example.myapplication.presentation.widget.extention.TokenManager
 import com.example.myapplication.presentation.widget.extention.loadCropImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class QuestChapterFragment :
@@ -26,12 +31,14 @@ class QuestChapterFragment :
     val questItem = mutableListOf<QuestDto>()
 
     val loginViewModel: LoginViewModel by viewModels()
+    private val chapterViewModel: ChapterViewModel by viewModels()
 
     override fun setLayout() {
         initBiginnerItem()
         observeLifeCycle()
     }
 
+    //이미지 바인딩
     private fun initBiginnerItem() {
         val islandName = arguments?.getString("island name")
         if (arguments != null) {
@@ -54,6 +61,7 @@ class QuestChapterFragment :
         }
 
         addItem()
+
         adapter = QuestChapterAdapter(requireContext(), questItem)
 
         binding.rvBiginnerIsland.apply {
@@ -61,15 +69,18 @@ class QuestChapterFragment :
             adapter = this@QuestChapterFragment.adapter
         }
 
-        // Adapter의 아이템 클릭 리스너 설정
+        // Adapter의 아이템 클릭 리스너 설정 (게임 상태 진행중,
         adapter.itemClickListener = object : QuestChapterAdapter.OnItemClickListener {
             override fun OnItemClick(id: Int) {
+                //아이템 찾아서
                 val item = questItem.find { it.id == id }
+
+                //게임상태 진행중으로 변경
                 item?.let {
                     it.gameState = 1
                     adapter.notifyDataSetChanged() // 어댑터에 변경사항 알림
                 }
-
+                //화면 넘어가기 (인트로), 아이디, 섬이름 (초심자 섬 1(3문제 튜토리얼), 2(블럭 튜토리얼), 게임엑티비티 3,4,5,6,7,
                 val intent = Intent(requireActivity(), QuestIntroActivity::class.java).apply {
                     putExtra("island name", islandName)
                     putExtra("game id", item?.id)
@@ -194,12 +205,30 @@ class QuestChapterFragment :
         println("아이템 수: ${questItem.size}") // 아이템 수 확인용 로그
     }
 
-    private fun observeLifeCycle(){
+
+    @Inject
+    lateinit var tokenManager: TokenManager
+    private fun observeLifeCycle() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
+                chapterViewModel.getAllChapter.collectLatest {
+                    val islandList = it.payload?.toDomain()
+                    Log.d("okhttp", "$islandList")
+                    Log.d("okhttp", "${it.payload}")
+                    when (it.result.code) {
+                        200 -> {
+
+                        }
+                    }
+                }
+            }
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 loginViewModel.training.collectLatest {
                     when (it.result.code) {
                         200 -> {
+                            questItem.clear()
                             if (it.payload!!) {
                                 questItem.add(
                                     QuestDto(

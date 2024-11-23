@@ -1,5 +1,6 @@
 package com.example.myapplication.presentation.ui.activity
 
+import android.content.Intent
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.myapplication.R
@@ -28,6 +29,8 @@ class PotionMysteryActivity :
     private fun setBtnClick() {
         binding.activityAccountKakaoLoginBt.setOnClickListener {
             characterViewModel.postIncreaseActivity(cid.toInt(),50)
+            startActivity(Intent(this@PotionMysteryActivity, MainActivity::class.java))
+            finish()
         }
     }
 
