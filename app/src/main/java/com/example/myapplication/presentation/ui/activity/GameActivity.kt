@@ -31,12 +31,21 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.DragStartHelper
 import androidx.core.view.forEach
 import androidx.draganddrop.DropHelper
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.example.myapplication.data.mapper.toDomain
 import com.example.myapplication.presentation.base.BaseActivity
+import com.example.myapplication.presentation.viewmodel.ChapterViewModel
 import com.example.myapplication.presentation.viewmodel.QuizViewModel
+import com.example.myapplication.presentation.widget.extention.TokenManager
 import com.example.myapplication.presentation.widget.extention.loadCropImage
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.w3c.dom.Text
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), GameInterface {
@@ -50,8 +59,12 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     private var basicBlockId = 1 // 생성되는 블록 아이디 - 블록 색 지정을 위해 만든 변수
     private var repeatBlockId = 1 // 생성되는 블록 아이디
     private var curGameId = 2
+    private var chapterId = 1
 
     private lateinit var isQuizClearedViewModel: QuizViewModel
+    private lateinit var isChapterClearedViewModel: ChapterViewModel
+    private var hint = ""
+    private var moomooMsg = ""
 
     private var isNextGame: Boolean = false // 다음 게임 넘어가는지 여부 판단
         set(value) {
@@ -108,44 +121,46 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         )
     }
 
-    private val moomooMessage by lazy {
-        listOf(
-            "무무가 아침 일정을 잘 마치도록 도와줘\n일어나기 > 세수하기 > 아침먹기 > 준비하기\n순서로 부탁할게! 해줄 수 있지?",
-            "바다에서 파도 소리를 듣고 싶어! 파도는 \n일정한 주기로 밀려왔다가 사라진대 파도소리가 \n+3번 들리게 만들어줄 수 있어?",
-            "사탕을 먹고 싶어! \n사탕을 먹을 수 있게 도와줄 수 있니?",
-            "이번엔 사탕을 찾기가 더 어렵네 ㅠ\n사탕까지 갈 수 있게 도와줘!",
-            "길 위에 끈적한 껌이 있어!\n껌을 밟지 않고 사탕을 얻을 수 있게 도와줘ㅠ",
-            "이런... 사탕의 섬에 불이 났잖아!\n사탕이 다 녹기 전에 불을 끄고 사탕을 얻어야 해",
-            "헉! 큰일이야... 사탕의 섬에 큰 불이 난 것 같아ㅠ\n불을 진압하고 사탕의 섬을 빠져나오자!"
-        )
-    }
-
-    private val hintComment by lazy {
-        listOf(
-            "",
-            "",
-            "앞으로 가기 블럭을 한 번만 사용하세요",
-            "앞으로 가기 블럭을 여러번 사용하세요",
-            "앞으로 가기 블럭과 위/아래로 가기 \n블럭의 순서를 잘 조합해 껌을 피해보세요",
-            "미션블럭을 활용해보세요\n부채질 하기 블럭을 사용할 수 있어요",
-            "0번 반복하기 블럭을 사용해\n앞으로 나아가세요"
-        )
-    }
-
     override fun setLayout() {
-        curGameId = intent.getIntExtra("game id", -1)
-//        binding.ivGameHintTxt.text = hintComment[curGameId - 2]
-//        binding.ibGamestoryMsgTxt.text = moomooMessage[curGameId - 2]
+        curGameId = intent.getIntExtra("game id", -1) // game id == quiz id, 챕터아이디1~2 퀴즈1~7
+        if (curGameId <= 2) {
+            // 초심자의 섬
+            chapterId = 1
+        } else chapterId = 2 // 사탕의 섬
+        observeLifeCycle()
         initViewModel()
+
         initBlock()
         initGame()
         gameFunction()
         setupDragSources()
         setupDropTargets()
+
+        isQuizClearedViewModel.quizDistinct(curGameId)
     }
 
     override fun initViewModel() {
         isQuizClearedViewModel = ViewModelProvider(this)[QuizViewModel::class.java]
+        isChapterClearedViewModel = ViewModelProvider(this)[ChapterViewModel::class.java]
+    }
+
+    private fun observeLifeCycle() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                isQuizClearedViewModel.quizDistinct.collectLatest {
+                    when (it.result.code) {
+                        200 -> {
+                            hint = it.payload?.hint.toString()
+                            moomooMsg = it.payload?.message.toString()
+
+                            binding.ivGameHintTxt.text = hint
+                            binding.ibGamestoryMsgTxt.text = moomooMsg
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     // init ---------------------------------------------------------
@@ -297,6 +312,12 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
             val targetImageView = target.getChildAt(0) as ImageView
             targetImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.shape_square_rounded_16dp))
+            FrameLayout(this).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+            }
 
             // 기존에 있던 TextView를 제거하고 새로 추가
             if (target.childCount >= 1) {
@@ -917,7 +938,12 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         if (success) {
             isDialogShown = true
             Log.d("cur id testtest", curGameId.toString())
-//            isQuizClearedViewModel.postQuizClear(curGameId)
+            if (!isFirstStage) {
+                isQuizClearedViewModel.postQuizClear(curGameId)
+                if (curGameId == 2 || curGameId == 7) {
+                    isChapterClearedViewModel.postChapterClear(chapterId)
+                }
+            }
 
             // 성공 다이얼로그 출력
             showSuccessDialog(false)
