@@ -57,7 +57,7 @@ class QuestIntroActivity :
             }
         }
         binding.ivActivityQuestIntroExit.setOnClickListener {
-            this.onBackPressed()
+            finish()
         }
     }
 
