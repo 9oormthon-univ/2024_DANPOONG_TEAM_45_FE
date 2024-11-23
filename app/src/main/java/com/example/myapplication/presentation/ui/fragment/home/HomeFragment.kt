@@ -32,6 +32,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private val homeViewModel: HomeViewModel by activityViewModels()
 
+    
+
     @Inject
     lateinit var tokenManager: TokenManager
 

@@ -28,6 +28,7 @@ class TokenManager @Inject constructor(
         private val COUNT_KEY = stringPreferencesKey("count")
         private val TUTORIAL_1 = stringPreferencesKey("tut1")
         private val TUTORIAL_2 = stringPreferencesKey("tut2")
+        private val COMPLETE = stringPreferencesKey("complete")
     }
 
     suspend fun deleteHome() {
@@ -171,6 +172,17 @@ class TokenManager @Inject constructor(
     val getTut2: Flow<String?> = dataStore.data
         .map { preferences ->
             preferences[TUTORIAL_2]
+        }
+
+    suspend fun saveComplete(token: String) {
+        dataStore.edit { preferences ->
+            preferences[COMPLETE] = token
+        }
+    }
+
+    val getComplete: Flow<String?> = dataStore.data
+        .map { preferences ->
+            preferences[COMPLETE]
         }
 
 }

@@ -122,14 +122,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     }
 
     override fun setLayout() {
-        curGameId = intent.getIntExtra("game id", -1) // game id == quiz id, 챕터아이디1~2 퀴즈1~7
-        if (curGameId <= 2) {
-            // 초심자의 섬
-            chapterId = 1
-        } else chapterId = 2 // 사탕의 섬
+        initChapterId()
         observeLifeCycle()
         initViewModel()
-
         initBlock()
         initGame()
         gameFunction()
@@ -137,6 +132,14 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         setupDropTargets()
 
         isQuizClearedViewModel.quizDistinct(curGameId)
+    }
+
+    private fun initChapterId(){
+        curGameId = intent.getIntExtra("game id", -1) // game id == quiz id, 챕터아이디1~2 퀴즈1~7
+        if (curGameId <= 2) {
+            // 초심자의 섬
+            chapterId = 1
+        } else chapterId = 2 // 사탕의 섬
     }
 
     override fun initViewModel() {
@@ -152,9 +155,19 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                         200 -> {
                             hint = it.payload?.hint.toString()
                             moomooMsg = it.payload?.message.toString()
-
                             binding.ivGameHintTxt.text = hint
                             binding.ibGamestoryMsgTxt.text = moomooMsg
+                        }
+                    }
+                }
+            }
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                isQuizClearedViewModel.quizClear.collectLatest {
+                    when (it.result.code) {
+                        200 -> {
+                            finish()
                         }
                     }
                 }
@@ -166,7 +179,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     // init ---------------------------------------------------------
     override fun initBlock() {
         clearBlocks()
-
+        Log.d("게임","${curGameId}")
         when(curGameId) {
             2 -> {
                 if (isFirstStage) {
@@ -937,7 +950,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         if (success) {
             isDialogShown = true
             Log.d("cur id testtest", curGameId.toString())
+            Log.d("로그","${isFirstStage}")
             if (!isFirstStage) {
+                Log.d("로그","${isFirstStage}")
                 isQuizClearedViewModel.postQuizClear(curGameId)
                 if (curGameId == 2 || curGameId == 7) {
                     isChapterClearedViewModel.postChapterClear(chapterId)

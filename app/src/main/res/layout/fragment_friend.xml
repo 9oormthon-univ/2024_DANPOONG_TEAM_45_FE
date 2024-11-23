@@ -11,14 +11,14 @@
 
 
         <androidx.appcompat.widget.Toolbar
-            android:layout_marginStart="20dp"
-            app:contentInsetStart="0dp"
-            app:contentInsetStartWithNavigation="0dp"
-            android:layout_marginEnd="20dp"
             android:id="@+id/fragment_friends_tb"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             android:background="@android:color/transparent"
+            app:contentInsetStart="0dp"
+            app:contentInsetStartWithNavigation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -86,7 +86,7 @@
                 app:layout_constraintTop_toBottomOf="@id/fragment_friends_crown_1st_iv" />
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/fragment_friends_achieve_1_tv"
                 style="@style/pretandard_regular.10sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -132,7 +132,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/fragment_friends_crown_2nd_iv" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/fragment_friends_achieve_2_tv"
                 style="@style/pretandard_regular.10sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -180,6 +180,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/fragment_friends_crown_2nd_iv" />
 
             <TextView
+                android:id="@+id/fragment_friends_achieve_3_tv"
                 style="@style/pretandard_regular.10sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
