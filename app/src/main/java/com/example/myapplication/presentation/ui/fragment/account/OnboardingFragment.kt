@@ -53,8 +53,6 @@ class OnboardingFragment : BaseFragment<FragmentOnboardingBinding>(R.layout.frag
             if (it.isSelected) {
                 runBlocking {
                     val name = binding.fragmentOnboardingInputNameEt.text.toString()
-                    val character_id = tokenManager.getCharacterId.first()?.toInt()
-                    Log.d("okhttp", "${name} ${character_id}")
                     characterViewModel.postCharacter(CharacterDTO(name))
                 }
             }
