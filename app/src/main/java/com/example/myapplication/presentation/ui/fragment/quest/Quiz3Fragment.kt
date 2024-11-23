@@ -37,8 +37,8 @@ open class Quiz3Fragment :
     private fun btnClick() {
         // 힌트
         binding.ibBiginnerProblem3HintOff.setOnClickListener {
-            toggleVisibility(it)
-            hintSelected(binding.ibBiginnerProblem3HintContent)
+            toggleVisibility(binding.ibBiginnerProblem3HintContent)
+//            hintSelected(binding.ibBiginnerProblem3HintContent)
         }
         // 1번
         binding.btnBiginnerProblem3Answer1Off.setOnClickListener {

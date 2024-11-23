@@ -138,12 +138,12 @@ private val homeViewModel : HomeViewModel by viewModels()
                     if (it.result.code == 200) {
                         with(it.payload) {
                             saveToken(accessToken, refreshToken, picture, nickname)
-                            if(tokenManager.getCharacterId.first().isNullOrBlank()){
-                                findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
-                            }
-                            else {
+//                            if(tokenManager.getCharacterId.first().isNullOrBlank()){
+//                                findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
+//                            }
+//                            else {
                                 startActivity(Intent(requireActivity(), MainActivity::class.java))
-                            }
+//                            }
                         }
                     }
                 }
