@@ -34,11 +34,6 @@ class QuestChapterFragment :
     override fun setLayout() {
         initBiginnerItem()
         observeLifeCycle()
-        gameSetting()
-    }
-
-    private fun gameSetting() {
-        binding.ivQuestMoomoo.text = "무무의 퀘스트 (0/${questItem.size})"
     }
 
     //이미지 바인딩
