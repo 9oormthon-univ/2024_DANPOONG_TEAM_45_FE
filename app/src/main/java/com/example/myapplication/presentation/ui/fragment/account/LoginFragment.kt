@@ -159,6 +159,7 @@ private val homeViewModel : HomeViewModel by viewModels()
     ) {
         lifecycleScope.launch {
             with(tokenManager) {
+                tokenManager.saveChapterIsCleared("")
                 saveAccessToken(accessToken)
                 saveRefreshToken(refreshToken)
                 saveUserProfile(userProfile)

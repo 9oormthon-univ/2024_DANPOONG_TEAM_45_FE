@@ -6,23 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.databinding.ItemReclcyerviewQuestBinding
 import com.example.myapplication.presentation.ui.fragment.quest.QuestDto
-import com.example.myapplication.presentation.viewmodel.ChapterViewModel
 import com.example.myapplication.presentation.viewmodel.CharacterViewModel
-import com.example.myapplication.presentation.widget.extention.TokenManager
 import com.example.myapplication.presentation.widget.extention.loadCropRoundedSquareImage
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class QuestChapterAdapter (
+class QuestChapterAdapter(
     private val context: Context,
     private var questGameList: MutableList<QuestDto>
 ) : RecyclerView.Adapter<QuestChapterAdapter.ViewHolder>() {
@@ -30,8 +20,9 @@ class QuestChapterAdapter (
     interface OnItemClickListener {
         fun OnItemClick(id: Int)
     }
+
     private lateinit var characterViewModel: CharacterViewModel
-    var itemClickListener: OnItemClickListener?= null
+    var itemClickListener: OnItemClickListener? = null
 
     fun blockVisiblity(visibleBlock: ImageView, goneBlock: ImageView, goneBlock2: ImageView) {
         visibleBlock.visibility = View.VISIBLE
@@ -49,11 +40,30 @@ class QuestChapterAdapter (
 //            binding.ibRvGamePic.setImageResource(item.game_img)
 
             // 게임 진행 상태
-            when(item.gameState) {
-                0 -> blockVisiblity(binding.ibGameStateIng, binding.ibGameStateIng, binding.ibGameStateDone)
-                1 -> blockVisiblity(binding.ibGameStateIng, binding.ibGameStateBefore, binding.ibGameStateDone)
-                2 -> blockVisiblity(binding.ibGameStateDone, binding.ibGameStateBefore, binding.ibGameStateIng)
-                else -> blockVisiblity(binding.ibGameStateBefore, binding.ibGameStateIng, binding.ibGameStateDone)
+            when (item.gameState) {
+                0 -> blockVisiblity(
+                    binding.ibGameStateIng,
+                    binding.ibGameStateIng,
+                    binding.ibGameStateDone
+                )
+
+                1 -> blockVisiblity(
+                    binding.ibGameStateIng,
+                    binding.ibGameStateBefore,
+                    binding.ibGameStateDone
+                )
+
+                2 -> blockVisiblity(
+                    binding.ibGameStateDone,
+                    binding.ibGameStateBefore,
+                    binding.ibGameStateIng
+                )
+
+                else -> blockVisiblity(
+                    binding.ibGameStateBefore,
+                    binding.ibGameStateIng,
+                    binding.ibGameStateDone
+                )
 
             }
 
@@ -74,7 +84,8 @@ class QuestChapterAdapter (
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemReclcyerviewQuestBinding.inflate(LayoutInflater.from(context), parent, false)
+        val binding =
+            ItemReclcyerviewQuestBinding.inflate(LayoutInflater.from(context), parent, false)
         return ViewHolder(binding)
     }
 

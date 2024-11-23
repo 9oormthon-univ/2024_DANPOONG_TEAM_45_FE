@@ -76,9 +76,11 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
     private var isFirstStage = true
         set(value) {
-            if (field != value) { // 값이 변경된 경우에만 업데이트
+            Log.d("isFirstStage Debug", "isFirstStage 변경 전: $field, 변경 후: $value")
+            if (field != value) {
                 field = value
-                setLayout() // 레이아웃 초기화 호출
+                Log.d("isFirstStage Debug", "initGame 호출")
+                setLayout()
             }
         }
 
@@ -123,18 +125,16 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
     override fun setLayout() {
         curGameId = intent.getIntExtra("game id", -1) // game id == quiz id, 챕터아이디1~2 퀴즈1~7
-        if (curGameId <= 2) {
+        if (curGameId <= 2 && isFirstStage) {
             // 초심자의 섬
             chapterId = 1
-            isFirstStage = true
-        } else {
+        } else if (curGameId > 2) {
             // 사탕의 섬
             chapterId = 2
             isFirstStage = false
         }
         observeLifeCycle()
         initViewModel()
-
         initBlock()
         initGame()
         gameFunction()
@@ -176,6 +176,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     override fun initBlock() {
         clearBlocks()
 
+        Log.d("로그","$curGameId")
         when(curGameId) {
             2 -> {
                 if (isFirstStage) {
@@ -1025,12 +1026,14 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                     intent.putExtra("game2Activity", true)
                     startActivity(intent)
                     finish()
+                } else {
+                    isDialogShown = false
+                    Log.d("isFirstStage Debug", "isFirstStage를 false로 설정합니다.")
+                    isFirstStage = false  // 값을 명시적으로 업데이트
+                    isNextGame = true
+                    dialog.dismiss()
+                    initGame()  // dismiss 이후 즉시 실행
                 }
-                isDialogShown = false
-                isFirstStage = false
-                isNextGame = true
-                dialog.dismiss()
-                initGame()
             }
         }
         Log.d("game id list", gameId.toString())
