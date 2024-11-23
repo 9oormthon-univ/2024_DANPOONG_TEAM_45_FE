@@ -98,6 +98,9 @@ dependencies {
 
     // coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    //lottie
+    implementation ("com.airbnb.android:lottie:5.0.2")
 }
 
 kapt {
