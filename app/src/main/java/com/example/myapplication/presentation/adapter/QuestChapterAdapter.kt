@@ -65,6 +65,11 @@ class QuestChapterAdapter (
         notifyDataSetChanged()
     }
 
+    fun setList(mutableList: MutableList<QuestDto>){
+        this.questGameList = mutableList
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemReclcyerviewQuestBinding.inflate(LayoutInflater.from(context), parent, false)
         return ViewHolder(binding)
