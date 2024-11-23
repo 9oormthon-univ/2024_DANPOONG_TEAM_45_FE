@@ -97,6 +97,7 @@ class QuestChapterFragment :
                 loginViewModel.training.collectLatest {
                     when (it.result.code) {
                         200 -> {
+
                         }
                     }
                 }
@@ -106,10 +107,15 @@ class QuestChapterFragment :
 
     override fun click(item: Any) {
         item as QuestDto
-        adapter.stateChange(item)
         val intent = Intent(requireActivity(), QuestIntroActivity::class.java).apply {
-            putExtra("island name", item.gameName)
-            putExtra("game id", item.id)
+            val islandName = when(item.id) {
+                1, 2 -> getString(R.string.biginner_island)  // "초심자의 섬"
+                in 3..7 -> getString(R.string.candy_island)  // "사탕의 섬"
+                else -> getString(R.string.lake_island)  // "호수의 섬"
+            }
+            putExtra("island name", islandName)
+            putExtra("game id", item.id )
+            Log.d("아이디","${item.id} $islandName")
         }
         startActivity(intent)
     }
