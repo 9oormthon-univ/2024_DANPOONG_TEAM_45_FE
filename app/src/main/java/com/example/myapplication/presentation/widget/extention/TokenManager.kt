@@ -8,10 +8,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 class TokenManager @Inject constructor(
@@ -31,6 +28,13 @@ class TokenManager @Inject constructor(
         private val COUNT_KEY = stringPreferencesKey("count")
         private val TUTORIAL_1 = stringPreferencesKey("tut1")
         private val TUTORIAL_2 = stringPreferencesKey("tut2")
+    }
+
+    suspend fun deleteHome() {
+        dataStore.edit { preferences ->
+            preferences[USER_KEY] = ""
+            preferences[CHARACTER_KEY] = ""
+        }
     }
 
     val getAccessToken: Flow<String?> = dataStore.data
@@ -94,14 +98,8 @@ class TokenManager @Inject constructor(
         }
     }
 
-    suspend fun deleteHome() {
-        dataStore.edit { preferences ->
-            preferences[USER_KEY] = ""
-            preferences[CHARACTER_KEY] = ""
-        }
-    }
 
-    val getRefreshToken : Flow<String?> = dataStore.data
+    val getRefreshToken: Flow<String?> = dataStore.data
         .map { preferences ->
             preferences[REFRESH_TOKEN_KEY]
         }
@@ -137,7 +135,7 @@ class TokenManager @Inject constructor(
         }
     }
 
-    val getDateToken : Flow<String?> = dataStore.data
+    val getDateToken: Flow<String?> = dataStore.data
         .map { preferences ->
             preferences[DATE_KEY]
         }
@@ -148,7 +146,7 @@ class TokenManager @Inject constructor(
         }
     }
 
-    val getCountToken : Flow<String?> = dataStore.data
+    val getCountToken: Flow<String?> = dataStore.data
         .map { preferences ->
             preferences[COUNT_KEY]
         }
@@ -159,7 +157,7 @@ class TokenManager @Inject constructor(
         }
     }
 
-    val getTut1 : Flow<String?> = dataStore.data
+    val getTut1: Flow<String?> = dataStore.data
         .map { preferences ->
             preferences[TUTORIAL_1]
         }
@@ -170,7 +168,7 @@ class TokenManager @Inject constructor(
         }
     }
 
-    val getTut2 : Flow<String?> = dataStore.data
+    val getTut2: Flow<String?> = dataStore.data
         .map { preferences ->
             preferences[TUTORIAL_2]
         }
