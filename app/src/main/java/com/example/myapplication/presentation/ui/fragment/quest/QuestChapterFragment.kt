@@ -20,6 +20,7 @@ import com.example.myapplication.presentation.widget.extention.TokenManager
 import com.example.myapplication.presentation.widget.extention.loadCropImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,6 +37,11 @@ class QuestChapterFragment :
     override fun setLayout() {
         initBiginnerItem()
         observeLifeCycle()
+        gameSetting()
+    }
+
+    private fun gameSetting() {
+        binding.ivQuestMoomoo.text = "무무의 퀘스트 (0/${questItem.size})"
     }
 
     //이미지 바인딩
