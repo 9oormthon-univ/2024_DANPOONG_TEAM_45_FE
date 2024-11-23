@@ -1,7 +1,6 @@
 package com.example.myapplication.presentation.ui.activity
 
 import android.content.Intent
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
@@ -35,26 +34,29 @@ class QuizClearActivity : BaseActivity<ActivityQuizClearBinding>(R.layout.activi
         observeLifeCycle()
     }
 
-    private fun initView(){
-        Log.d("game2 activity intent", intent.getBooleanExtra("game2Activity", false).toString())
+    private fun initView() {
+        val bool = intent.getBooleanExtra("game2Activity", false)
         lifecycleScope.launch {
             cid = tokenManager.getCharacterId.first().toString()
         }
-        if (intent.getBooleanExtra("game1Activity", true)) {
+        if (!bool) {
             binding.tvNextPracticeMoomoo.text = "무무가 멋지게 성장하고 있어요 :)"
             binding.btnNextstageSeeMoomoo.text = "무무 보러가기"
             runBlocking {
                 tokenManager.saveTut1("running")
                 val score = tokenManager.getCountToken.first().toString().toInt()
-                tokenManager.saveCountToken("${score+1}")
+                tokenManager.saveCountToken("${score + 1}")
             }
             binding.btnNextstageSeeMoomoo.setOnClickListener {
                 characterViewModel.postIncreaseActivity(cid.toInt(), 50)
-
+                val intent = Intent(this, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+                startActivity(intent)
             }
         }
         // 모험 준비하기 클리어
-        else if (intent.getBooleanExtra("game2Activity", true)) {
+        else {
             binding.tvNextPracticeMoomoo.text = "이제 더 큰 도전을 위한 준비가 되었어요"
             binding.btnNextstageSeeMoomoo.text = "보상받으러 가기"
             lifecycleScope.launch {
