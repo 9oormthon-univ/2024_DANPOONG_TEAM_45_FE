@@ -37,10 +37,6 @@ class QuestChapterFragment :
         observeLifeCycle()
     }
 
-    override fun onStart() {
-        super.onStart()
-        chapterCompletedCleared()
-    }
     var islandName = ""
     //이미지 바인딩
     private fun initBiginnerItem() {
@@ -89,6 +85,11 @@ class QuestChapterFragment :
                 chapterViewModel.getDistinctChapter.collectLatest {
                     when (it.result.code) {
                         200 -> {
+                            if(it.payload?.isRewardButtonActive == true){
+                                binding.ibRewardOn.visibility = View.VISIBLE
+                                binding.ibRewardOff.visibility = View.GONE
+                                binding.ibRewardOn.visibility = View.VISIBLE
+                            }
                             Log.d("okhttp", "${it.payload?.quizzes}")
                             var count = 0
                             val responseList = it.payload?.quizzes
@@ -104,18 +105,6 @@ class QuestChapterFragment :
                             adapter.submitList(list)
                             loginViewModel.getTraining()
                             binding.ivQuestMoomoo.text = "무무의 퀘스트 (${count}/${responseList?.size})"
-                            if(count == responseList?.size){
-                                if(tokenManager.getChapterIsCleared.first()=="true"){
-                                    binding.ibRewardOn.visibility = View.GONE
-                                    binding.ibRewardOff.visibility = View.VISIBLE
-                                }else{
-                                    binding.ibRewardOn.visibility = View.VISIBLE
-                                    binding.ibRewardOff.visibility = View.GONE
-                                }
-                            }else{
-                                binding.ibRewardOff.visibility = View.VISIBLE
-                                binding.ibRewardOn.visibility = View.GONE
-                            }
                         }
                     }
                 }
@@ -142,20 +131,6 @@ class QuestChapterFragment :
         }
     }
 
-    private fun chapterCompletedCleared() {
-        lifecycleScope.launch {
-            Log.d("값값ㅂ", tokenManager.getChapterIsCleared.first().toString())
-            if (tokenManager.getChapterIsCleared.first() == "true") {
-                // 보상 주기
-                binding.ibRewardOn.visibility = View.GONE
-                binding.ibRewardOff.visibility = View.VISIBLE
-            }
-            else{
-                binding.ibRewardOn.visibility = View.VISIBLE
-                binding.ibRewardOff.visibility = View.GONE
-            }
-        }
-    }
 
     override fun click(item: Any) {
         item as QuestDto

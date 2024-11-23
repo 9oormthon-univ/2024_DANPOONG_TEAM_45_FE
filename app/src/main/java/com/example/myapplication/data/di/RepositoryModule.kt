@@ -1,5 +1,6 @@
 package com.example.myapplication.data.di
 
+import com.example.myapplication.data.repository.remote.api.AiApi
 import com.example.myapplication.data.repository.remote.api.ChapterApi
 import com.example.myapplication.data.repository.remote.api.ChapterClearedApi
 import com.example.myapplication.data.repository.remote.api.CharacterApi
@@ -8,6 +9,7 @@ import com.example.myapplication.data.repository.remote.api.HomeApi
 import com.example.myapplication.data.repository.remote.api.LoginApi
 import com.example.myapplication.data.repository.remote.api.QuizApi
 import com.example.myapplication.data.repository.remote.api.QuizClearedApi
+import com.example.myapplication.data.repository.remote.datasource.remote.AiDataSource
 import com.example.myapplication.data.repository.remote.datasource.remote.ChapterDataSource
 import com.example.myapplication.data.repository.remote.datasource.remote.CharacterDataSource
 import com.example.myapplication.data.repository.remote.datasource.remote.DifficultyDatasourceDataSource
@@ -16,6 +18,7 @@ import com.example.myapplication.data.repository.remote.datasource.remote.IsChap
 import com.example.myapplication.data.repository.remote.datasource.remote.IsQuizClearedDataSource
 import com.example.myapplication.data.repository.remote.datasource.remote.LogInDataSource
 import com.example.myapplication.data.repository.remote.datasource.remote.QuizDataSource
+import com.example.myapplication.data.repository.remote.datasourceImpl.AiDataSourceImpl
 import com.example.myapplication.data.repository.remote.datasourceImpl.ChapterClearedDataSorceImpl
 import com.example.myapplication.data.repository.remote.datasourceImpl.ChapterDataSorceImpl
 import com.example.myapplication.data.repository.remote.datasourceImpl.CharacterDataSourceImpl
@@ -24,6 +27,8 @@ import com.example.myapplication.data.repository.remote.datasourceImpl.HomeDataS
 import com.example.myapplication.data.repository.remote.datasourceImpl.LogInDataSourceImpl
 import com.example.myapplication.data.repository.remote.datasourceImpl.QuizClearedDataSorceImpl
 import com.example.myapplication.data.repository.remote.datasourceImpl.QuizDataSorceImpl
+import com.example.myapplication.domain.repository.ai.AiRepository
+import com.example.myapplication.domain.repository.ai.AiRepositoryImpl
 import com.example.myapplication.domain.repository.chapter.ChapterRepository
 import com.example.myapplication.domain.repository.chapter.ChapterRepositoryImpl
 import com.example.myapplication.domain.repository.chaptercleared.ChapterClearedRepository
@@ -153,4 +158,17 @@ object RepositoryModule {
     @Provides
     fun provideQuizClearRepository(isQuizClearedDataSource: IsQuizClearedDataSource): IsQuizClearedRepository =
         IsQuizClearedRepositoryImpl(isQuizClearedDataSource)
+
+    @Provides
+    @Singleton
+    fun provideAiDataSource(
+        aiApi: AiApi
+    ): AiDataSource {
+        return AiDataSourceImpl(aiApi)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAiRepository(aiDataSource: AiDataSource): AiRepository =
+        AiRepositoryImpl(aiDataSource)
 }

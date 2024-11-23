@@ -3,42 +3,123 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_home"
         tools:context=".presenter.ui.activity.MainActivity">
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/activity_main_fcv"
-            android:name="androidx.navigation.fragment.NavHostFragment"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@android:color/transparent"
-            app:defaultNavHost="true"
-            app:layout_constraintBottom_toTopOf="@id/activity_main_bnv"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:navGraph="@navigation/nav_main_graph" />
+            android:layout_height="match_parent"
+            android:background="@drawable/background_home"
+            tools:context=".presenter.ui.activity.MainActivity">
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/activity_main_bnv"
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/activity_main_fcv"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@android:color/transparent"
+                app:defaultNavHost="true"
+                app:layout_constraintBottom_toTopOf="@id/activity_main_bnv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:navGraph="@navigation/nav_main_graph" />
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/activity_main_bnv"
+                android:layout_width="match_parent"
+                android:layout_height="87dp"
+                android:background="@color/white"
+                app:itemActiveIndicatorStyle="@android:color/transparent"
+                app:itemBackground="@android:color/transparent"
+                app:itemIconTint="@color/selector_bottom_nav"
+                app:itemPaddingBottom="35dp"
+                app:itemPaddingTop="10dp"
+                app:itemRippleColor="@android:color/transparent"
+                app:itemTextColor="@color/selector_bottom_nav"
+                app:labelVisibilityMode="labeled"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:menu="@menu/menu" />   <!-- Floating Action Button -->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fragment_news_description_ftb"
+                style="@style/fab_3_rounded"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="16dp"
+                android:backgroundTint="@android:color/transparent"
+                android:foreground="@drawable/floating"
+                app:layout_constraintBottom_toBottomOf="@+id/activity_main_fcv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:tint="@null" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Bottom Sheet Layout -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/bottom_sheet_layout"
             android:layout_width="match_parent"
-            android:layout_height="87dp"
-            android:background="@color/white"
-            app:itemActiveIndicatorStyle="@android:color/transparent"
-            app:itemBackground="@android:color/transparent"
-            app:itemIconTint="@color/selector_bottom_nav"
-            app:itemPaddingBottom="35dp"
-            app:itemPaddingTop="10dp"
-            app:itemRippleColor="@android:color/transparent"
-            app:itemTextColor="@color/selector_bottom_nav"
-            app:labelVisibilityMode="labeled"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/menu" />
+            android:layout_height="match_parent"
+            android:background="@drawable/background_bottom_sheet"
+            android:clickable="true"
+            android:focusable="true"
+            app:behavior_hideable="true"
+            app:behavior_peekHeight="0dp"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/layout_chat_bottom_sheet_up_iv"
+                android:layout_width="80dp"
+                android:layout_height="4dp"
+                android:src="@drawable/shape_fill_white_square_rounded_2dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="38dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_chat_bottom_sheet_up_iv" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Input Section -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/main_et"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/layout_chat_bottom_sheet_send_et"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:background="@color/gray9"
+                android:hint="궁금한 점을 물어보세요"
+                android:textColorHint="@color/gray8"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/layout_chat_bottom_sheet_send_bt"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/ic_message_send"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/layout_chat_bottom_sheet_send_et" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

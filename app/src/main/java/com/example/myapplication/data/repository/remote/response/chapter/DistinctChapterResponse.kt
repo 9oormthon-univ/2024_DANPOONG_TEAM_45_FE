@@ -1,8 +1,9 @@
 package com.example.myapplication.data.repository.remote.response.chapter
 
 data class DistinctChapterResponse(
-    val id: Int,
-    val name: String,
-    val isCleared: Boolean,
-    val quizzes: List<QuizResponse>
+    val id: Int = 0,
+    val name: String = "",
+    val isCleared: Boolean = false,
+    val quizzes: List<QuizResponse> = listOf(),
+    val isRewardButtonActive : Boolean = false
 )
