@@ -5,7 +5,11 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.view.LayoutInflater
 import android.widget.Button
+import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
@@ -15,7 +19,10 @@ import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityQuizBinding
 import com.example.myapplication.presentation.ui.fragment.quest.DialogClickListener
 import com.example.myapplication.presentation.viewmodel.ChapterViewModel
+import com.example.myapplication.presentation.viewmodel.QuizViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
@@ -23,7 +30,8 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
     private lateinit var navController: NavController
     private var buttonPosition = 1
     lateinit var customDialog: CustomDialog
-    lateinit var chapterViewModel : ChapterViewModel
+    val chapterViewModel : ChapterViewModel by viewModels()
+    val quizViewModel : QuizViewModel by viewModels()
 
     val titleList = listOf(
         "Q.\n무무가 가야할 방향은\n어디일까요?",
@@ -45,6 +53,7 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
         setViewModel()
         nextFragment()
         moveToolBarLevel()
+        observeLifeCycle()
     }
 
     private fun setViewModel(){
@@ -176,10 +185,24 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
             }
 
             3 -> {
-                intent.putExtra("game1Activity", true)
-                intent.putExtra("button state", 2)
-                startActivity(Intent(this@QuizActivity, QuizClearActivity::class.java))
-                finish() // QuizActivity 종료
+                quizViewModel.postQuizClear(1)
+            }
+        }
+    }
+
+    private fun observeLifeCycle(){
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED){
+                quizViewModel.quizClear.collectLatest {
+                    when(it.result.code){
+                        200 -> {
+                            intent.putExtra("game1Activity", true)
+                            intent.putExtra("button state", 2)
+                            startActivity(Intent(this@QuizActivity, QuizClearActivity::class.java))
+                            finish() // QuizActivity 종료
+                        }
+                    }
+                }
             }
         }
     }

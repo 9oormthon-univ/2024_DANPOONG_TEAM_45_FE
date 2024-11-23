@@ -4,6 +4,7 @@ import android.content.Intent
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -23,7 +24,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -31,8 +31,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
-    private val homeViewModel: HomeViewModel by activityViewModels()
-
+    private val homeViewModel: HomeViewModel by viewModels()
     @Inject
     lateinit var tokenManager: TokenManager
 
@@ -43,8 +42,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         onClickBtn()
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         initCount()
         initHome()
     }
@@ -151,7 +150,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private fun setCharacterDrawable(characterType: CharacterType): Int {
         return when (characterType) {
-            CharacterType.LEVEL_LOW -> R.drawable.ic_cactus_1
+            CharacterType.LEVEL_LOW -> R.drawable.ic_cactus_2
             CharacterType.LEVEL_MEDIUM -> R.drawable.ic_cactus_2
             CharacterType.LEVEL_HIGH -> R.drawable.ic_cactus_3
         }

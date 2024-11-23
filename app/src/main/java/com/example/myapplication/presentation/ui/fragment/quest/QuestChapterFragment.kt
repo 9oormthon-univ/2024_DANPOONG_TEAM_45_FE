@@ -29,7 +29,7 @@ class QuestChapterFragment :
 
     private lateinit var adapter: QuizAdapter
 
-    val loginViewModel: LoginViewModel by viewModels()
+    private val loginViewModel: LoginViewModel by viewModels()
     private val chapterViewModel: ChapterViewModel by viewModels()
 
     override fun setLayout() {
@@ -41,10 +41,10 @@ class QuestChapterFragment :
         super.onStart()
         chapterCompletedCleared()
     }
-
+    var islandName = ""
     //이미지 바인딩
     private fun initBiginnerItem() {
-        val islandName = arguments?.getString("island name")
+         islandName = arguments?.getString("island name").toString()
         if (arguments != null) {
             binding.ivBiginnerFlagTxt.text = islandName
             when (islandName) {
@@ -104,23 +104,31 @@ class QuestChapterFragment :
                             adapter.submitList(list)
                             loginViewModel.getTraining()
                             binding.ivQuestMoomoo.text = "무무의 퀘스트 (${count}/${responseList?.size})"
-
-                            lifecycleScope.launch {
-                                if (count == responseList?.size && tokenManager.getChapterIsCleared.first() != "true") {
-                                    // TODO 보상 주기
+                            if(count == responseList?.size){
+                                if(tokenManager.getChapterIsCleared.first()=="true"){
+                                    binding.ibRewardOn.visibility = View.GONE
+                                    binding.ibRewardOff.visibility = View.VISIBLE
+                                }else{
                                     binding.ibRewardOn.visibility = View.VISIBLE
+                                    binding.ibRewardOff.visibility = View.GONE
                                 }
-                            }
-                            binding.ibRewardOn.setOnClickListener {
-                                lifecycleScope.launch {
-                                    tokenManager.saveChapterIsCleared("true")
-                                }
+                            }else{
+                                binding.ibRewardOff.visibility = View.VISIBLE
+                                binding.ibRewardOn.visibility = View.GONE
                             }
                         }
                     }
                 }
             }
         }
+        binding.ibRewardOn.setOnClickListener {
+            lifecycleScope.launch {
+                tokenManager.saveChapterIsCleared("true")
+                binding.ibRewardOn.visibility = View.GONE
+                binding.ibRewardOff.visibility = View.VISIBLE
+            }
+        }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 loginViewModel.training.collectLatest {
@@ -141,6 +149,10 @@ class QuestChapterFragment :
                 // 보상 주기
                 binding.ibRewardOn.visibility = View.GONE
                 binding.ibRewardOff.visibility = View.VISIBLE
+            }
+            else{
+                binding.ibRewardOn.visibility = View.VISIBLE
+                binding.ibRewardOff.visibility = View.GONE
             }
         }
     }

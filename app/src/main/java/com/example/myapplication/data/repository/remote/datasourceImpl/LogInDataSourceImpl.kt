@@ -5,11 +5,13 @@ import com.example.myapplication.data.repository.remote.request.login.LogInKakao
 import com.example.myapplication.data.repository.remote.api.LoginApi
 import com.example.myapplication.data.repository.remote.datasource.remote.LogInDataSource
 import com.example.myapplication.data.repository.remote.request.login.UserDTO
+import com.example.myapplication.data.repository.remote.request.login.UserListDTO
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.login.LogInKakaoResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import retrofit2.http.GET
 import javax.inject.Inject
 
 class LogInDataSourceImpl @Inject constructor(
@@ -46,6 +48,13 @@ class LogInDataSourceImpl @Inject constructor(
 
     override suspend fun checkTraining(): Flow<BaseResponse<Boolean>> = flow {
         val result = loginApi.checkTraining()
+        emit(result)
+    }.catch { e ->
+        Log.e("LogInDataSource 에러", e.message.toString())
+    }
+
+    override suspend fun getAllUser(): Flow<BaseResponse<UserListDTO>> = flow {
+        val result = loginApi.getAllUser()
         emit(result)
     }.catch { e ->
         Log.e("LogInDataSource 에러", e.message.toString())

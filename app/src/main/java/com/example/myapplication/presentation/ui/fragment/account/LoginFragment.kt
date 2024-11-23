@@ -86,7 +86,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
             findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
         }
     }
-private val homeViewModel : HomeViewModel by viewModels()
+    private val homeViewModel : HomeViewModel by viewModels()
     //잔여 토큰 초기화
     private fun initRemainToken() {
         lifecycleScope.launch {
@@ -142,7 +142,7 @@ private val homeViewModel : HomeViewModel by viewModels()
 //                                findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
 //                            }
 //                            else {
-                                startActivity(Intent(requireActivity(), MainActivity::class.java))
+                            startActivity(Intent(requireActivity(), MainActivity::class.java))
 //                            }
                         }
                     }
@@ -159,6 +159,7 @@ private val homeViewModel : HomeViewModel by viewModels()
     ) {
         lifecycleScope.launch {
             with(tokenManager) {
+                tokenManager.saveChapterIsCleared("")
                 saveAccessToken(accessToken)
                 saveRefreshToken(refreshToken)
                 saveUserProfile(userProfile)

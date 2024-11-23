@@ -3,6 +3,7 @@ package com.example.myapplication.domain.repository.login
 import com.example.myapplication.data.repository.remote.datasource.remote.LogInDataSource
 import com.example.myapplication.data.repository.remote.request.login.LogInKakaoDto
 import com.example.myapplication.data.repository.remote.request.login.UserDTO
+import com.example.myapplication.data.repository.remote.request.login.UserListDTO
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.login.LogInKakaoResponse
 import kotlinx.coroutines.flow.Flow
@@ -25,4 +26,6 @@ data class LoginRepositoryImpl @Inject constructor(
 
     override suspend fun checkTraining(): Flow<BaseResponse<Boolean>> =
         logInDataSource.checkTraining()
+
+    override suspend fun getAllUser(): Flow<BaseResponse<UserListDTO>> = logInDataSource.getAllUser()
 }

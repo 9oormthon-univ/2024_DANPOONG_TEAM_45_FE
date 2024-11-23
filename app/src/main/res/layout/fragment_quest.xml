@@ -23,7 +23,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:navigationIcon="@drawable/ic_quest_logo" />
 
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/fragment_quest_rv"
                 android:layout_width="0dp"
