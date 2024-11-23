@@ -105,8 +105,11 @@ class QuestChapterFragment :
                             loginViewModel.getTraining()
                             binding.ivQuestMoomoo.text = "무무의 퀘스트 (${count}/${responseList?.size})"
 
-                            if (count == responseList?.size) {
-                                binding.ibRewardOn.visibility = View.VISIBLE
+                            lifecycleScope.launch {
+                                if (count == responseList?.size && tokenManager.getChapterIsCleared.first() != "true") {
+                                    // TODO 보상 주기
+                                    binding.ibRewardOn.visibility = View.VISIBLE
+                                }
                             }
                             binding.ibRewardOn.setOnClickListener {
                                 lifecycleScope.launch {
