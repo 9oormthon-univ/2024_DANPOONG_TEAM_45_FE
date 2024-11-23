@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".presenter.ui.fragment.home.encyclopedia">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/fragment_encyclopedia_tb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/fragment_encyclopedia_arrow_back_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_back" />
+
+            <TextView
+                style="@style/pretandard_semi_bold.16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="나의 도감" />
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <ImageView
+            android:layout_width="118dp"
+            android:layout_height="35dp"
+            android:id="@+id/iv_collected_cactus"
+            android:background="@drawable/shape_square_rounded_8dp_gray9"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_encyclopedia_tb"
+            android:layout_marginTop="50dp"/>
+
+        <TextView
+            android:layout_width="118dp"
+            android:layout_height="35dp"
+            android:text="보유 선인장"
+            android:textColor="@color/gray5"
+            android:textSize="16sp"
+            android:fontFamily="@font/pretendard_bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_encyclopedia_tb"
+            android:layout_marginTop="55dp"
+            android:layout_marginStart="20dp"/>
+
+        <TextView
+            android:layout_width="118dp"
+            android:layout_height="35dp"
+            android:text="1"
+            android:textSize="16sp"
+            android:textColor="@color/main0"
+            android:fontFamily="@font/pretendard_bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_encyclopedia_tb"
+            android:layout_marginTop="55dp"
+            android:layout_marginStart="190dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iv_book_card"
+            android:src="@drawable/iv_book_card"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_collected_cactus"
+            android:layout_marginTop="30dp"
+            android:elevation="3dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/fragment_onboarding_start_bt"
+            style="@style/CustomAppButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="64dp"
+            android:textColor="@color/white"
+            android:background="@drawable/shape_square_rounded_75dp"
+            android:text="친구에게 공유하기"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="23dp"
+            android:id="@+id/iv_collected_cactus2"
+            android:background="@drawable/shape_square_rounded_8dp_gray9"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_encyclopedia_tb"
+            android:layout_marginTop="160dp"
+            android:elevation="3dp"/>
+
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="23dp"
+            android:text="레어도 ★"
+            android:fontFamily="@font/pretendard_semibold"
+            android:textColor="@color/main0"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_encyclopedia_tb"
+            android:layout_marginTop="163dp"
+            android:layout_marginStart="15dp"
+            android:elevation="3dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="킹 선인장"
+            android:fontFamily="@font/pretendard_semibold"
+            android:textColor="#006466"
+            android:textSize="28sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_encyclopedia_tb"
+            android:layout_marginTop="190dp"
+            android:elevation="3dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_cactus_3_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_book_card"
+            android:elevation="3dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

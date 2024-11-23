@@ -210,6 +210,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 startActivity(intent)
             }
         }
+        binding.fragmentHomeEncyclopediaLl.setOnClickListener {
+            findNavController().navigate(R.id.EncyclopediaFragment)
+        }
         binding.activityMainSettingIv.setOnClickListener {
             findNavController().navigate(R.id.settingFragment)
         }
