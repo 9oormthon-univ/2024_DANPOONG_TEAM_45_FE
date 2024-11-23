@@ -1,6 +1,7 @@
 package com.example.myapplication.presentation.ui.activity
 
 import android.util.Log
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +21,7 @@ import com.example.myapplication.presentation.viewmodel.QuizViewModel
 import com.example.myapplication.presentation.widget.extention.TokenManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -41,6 +43,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         observeLifeCycle()
     }
 
+    @Inject
+    lateinit var tokenManager: TokenManager
     private fun initViewModel() {
         eduViewModel = ViewModelProvider(this)[EduViewModel::class.java]
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
@@ -136,18 +140,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                     Log.d("값 도착", it.toString())
                 }
             }
-        }
-    }
-
-    @Inject
-    lateinit var tokenManager: TokenManager
-
-    override fun onDestroy() {
-        super.onDestroy()
-        runBlocking {
-            val hd = tokenManager.getUserId.toString()
-            tokenManager.deleteHome()
-            homeViewModel.deleteHomeId(hd)
         }
     }
 
