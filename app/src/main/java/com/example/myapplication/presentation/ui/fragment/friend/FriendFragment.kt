@@ -91,7 +91,7 @@ class FriendFragment : BaseFragment<FragmentFriendBinding>(R.layout.fragment_fri
     private fun sharedKakaoTalk() {
         val defaultText = TextTemplate(
             text = """
-        무무와 함께 코딩 랜드로 떠나 보아요!
+        무무와 함께 코딩 랜드로 떠나 보아요! 🌵
     """.trimIndent(),
             link = Link(
                 webUrl = "https://www.naver.com",

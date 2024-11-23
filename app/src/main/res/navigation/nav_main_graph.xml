@@ -38,6 +38,12 @@
         <action
             android:id="@+id/action_homeFragment_to_questFragment"
             app:destination="@id/questFragment" />
+        <action
+            android:id="@+id/action_homeFragment_self"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_EncyclopediaFragment"
+            app:destination="@id/EncyclopediaFragment" />
     </fragment>
 
     <fragment
@@ -45,5 +51,11 @@
         android:name="com.example.myapplication.presentation.ui.fragment.setting.SettingFragment"
         android:label="SettingFragment"
         tools:layout="@layout/fragment_setting" />
+
+    <fragment
+        android:id="@+id/EncyclopediaFragment"
+        android:name="com.example.myapplication.presentation.ui.fragment.home.EncyclopediaFragament"
+        android:label="EncyclopediaFragment"
+        tools:layout="@layout/fragment_encyclopedia" />
 
 </navigation>
