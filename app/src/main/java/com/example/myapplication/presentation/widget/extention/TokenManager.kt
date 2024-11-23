@@ -2,7 +2,9 @@ package com.example.myapplication.presentation.widget.extention
 
 import android.content.Context
 import android.util.Log
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.preferencesOf
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -23,6 +25,7 @@ class TokenManager @Inject constructor(
         private val USER_NICKNAME_KEY = stringPreferencesKey("nickname_key")
         private val USER_PROFILE_KEY = stringPreferencesKey("profile_key")
         private val CHARACTER_KEY = stringPreferencesKey("character_id")
+        private val CHAPTER_KEY = stringPreferencesKey("chapter_iscleared")
         private val USER_KEY = stringPreferencesKey("user_id")
         private val DATE_KEY = stringPreferencesKey("date")
         private val COUNT_KEY = stringPreferencesKey("count")
@@ -63,6 +66,17 @@ class TokenManager @Inject constructor(
     suspend fun saveUserProfile(profileUrl: String) {
         dataStore.edit { preferences ->
             preferences[USER_PROFILE_KEY] = profileUrl
+        }
+    }
+
+    val getChapterIsCleared: Flow<String?> = dataStore.data
+        .map { preferences ->
+            preferences[CHAPTER_KEY]
+        }
+
+    suspend fun saveChapterIsCleared(isCleared: String) {
+        dataStore.edit { preferences ->
+            preferences[CHAPTER_KEY] = isCleared
         }
     }
 

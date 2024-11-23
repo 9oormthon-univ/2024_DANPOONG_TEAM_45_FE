@@ -6,10 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.databinding.ItemReclcyerviewQuestBinding
 import com.example.myapplication.presentation.ui.fragment.quest.QuestDto
+import com.example.myapplication.presentation.viewmodel.ChapterViewModel
+import com.example.myapplication.presentation.viewmodel.CharacterViewModel
+import com.example.myapplication.presentation.widget.extention.TokenManager
 import com.example.myapplication.presentation.widget.extention.loadCropRoundedSquareImage
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class QuestChapterAdapter (
     private val context: Context,
@@ -19,7 +30,7 @@ class QuestChapterAdapter (
     interface OnItemClickListener {
         fun OnItemClick(id: Int)
     }
-
+    private lateinit var characterViewModel: CharacterViewModel
     var itemClickListener: OnItemClickListener?= null
 
     fun blockVisiblity(visibleBlock: ImageView, goneBlock: ImageView, goneBlock2: ImageView) {
@@ -55,6 +66,10 @@ class QuestChapterAdapter (
                     itemClickListener?.OnItemClick(itemId)  // ID 전달
                 }
             }
+
+//            saveCharacterNickName
+
+            binding.tvRvGameDescript.text = "뜨거운 태양에 고통받는 00이를 구해주세요!"
         }
     }
 

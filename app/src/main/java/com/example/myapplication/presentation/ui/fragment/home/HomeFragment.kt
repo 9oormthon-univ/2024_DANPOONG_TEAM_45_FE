@@ -10,6 +10,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
 import com.example.myapplication.data.repository.remote.response.BaseResponse
+import com.example.myapplication.data.repository.remote.response.chapter.DistinctChapterResponse
 import com.example.myapplication.data.repository.remote.response.home.DistinctHomeIdResponse
 import com.example.myapplication.databinding.FragmentHomeBinding
 import com.example.myapplication.domain.model.home.CharacterType
@@ -116,6 +117,26 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 lifecycleScope.launch {
                     saveUserId(payload?.id.toString())
                     saveCharacterId(payload?.id.toString())
+                }
+            }
+        }
+    }
+
+    private fun saveCharacterNickName(response: BaseResponse<DistinctHomeIdResponse>) {
+        with(tokenManager) {
+            with(response) {
+                lifecycleScope.launch {
+                    saveUserNickname(payload?.character?.name.toString())
+                }
+            }
+        }
+    }
+
+    private fun saveChapterCompleteImage(response: BaseResponse<DistinctChapterResponse>) {
+        with(tokenManager) {
+            with(response) {
+                lifecycleScope.launch {
+                    saveUserNickname(payload?.isCleared.toString())
                 }
             }
         }

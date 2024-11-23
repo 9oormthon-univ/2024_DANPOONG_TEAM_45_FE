@@ -122,9 +122,19 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     }
 
     override fun setLayout() {
-        initChapterId()
+        curGameId = intent.getIntExtra("game id", -1) // game id == quiz id, 챕터아이디1~2 퀴즈1~7
+        if (curGameId <= 2) {
+            // 초심자의 섬
+            chapterId = 1
+            isFirstStage = true
+        } else {
+            // 사탕의 섬
+            chapterId = 2
+            isFirstStage = false
+        }
         observeLifeCycle()
         initViewModel()
+
         initBlock()
         initGame()
         gameFunction()
@@ -132,14 +142,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         setupDropTargets()
 
         isQuizClearedViewModel.quizDistinct(curGameId)
-    }
-
-    private fun initChapterId(){
-        curGameId = intent.getIntExtra("game id", -1) // game id == quiz id, 챕터아이디1~2 퀴즈1~7
-        if (curGameId <= 2) {
-            // 초심자의 섬
-            chapterId = 1
-        } else chapterId = 2 // 사탕의 섬
     }
 
     override fun initViewModel() {
@@ -155,19 +157,13 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                         200 -> {
                             hint = it.payload?.hint.toString()
                             moomooMsg = it.payload?.message.toString()
+
                             binding.ivGameHintTxt.text = hint
                             binding.ibGamestoryMsgTxt.text = moomooMsg
-                        }
-                    }
-                }
-            }
-        }
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                isQuizClearedViewModel.quizClear.collectLatest {
-                    when (it.result.code) {
-                        200 -> {
-                            finish()
+
+                            if (it.payload?.quizId == 2) {
+                                binding.ivGameHintTxt.text = "무무가 아침 일정을 잘 마치도록 도와줘\n일어나기 > 세수하기 > 아침먹기 > 준비하기\n순서로 부탁할게! 해줄 수 있지?"
+                            }
                         }
                     }
                 }
@@ -179,7 +175,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     // init ---------------------------------------------------------
     override fun initBlock() {
         clearBlocks()
-        Log.d("게임","${curGameId}")
+
         when(curGameId) {
             2 -> {
                 if (isFirstStage) {
@@ -232,12 +228,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     }
 
     override fun initGame() {
-        if (!isFirstStage && isNextGame) {
-            curGameId += 1
-            Log.d("Debug", "After: curGameId = $curGameId")
-            isNextGame = false
-            initBlock()
-        }
         binding.ivGameCharacter.bringToFront() // 게임 캐릭터가 무조건 최상단에 오도록
 
         isExit = false
@@ -950,9 +940,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         if (success) {
             isDialogShown = true
             Log.d("cur id testtest", curGameId.toString())
-            Log.d("로그","${isFirstStage}")
             if (!isFirstStage) {
-                Log.d("로그","${isFirstStage}")
                 isQuizClearedViewModel.postQuizClear(curGameId)
                 if (curGameId == 2 || curGameId == 7) {
                     isChapterClearedViewModel.postChapterClear(chapterId)
