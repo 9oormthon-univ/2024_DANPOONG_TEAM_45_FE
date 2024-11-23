@@ -39,7 +39,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.w3c.dom.Text
 
 @AndroidEntryPoint
-class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
+class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), GameInterface {
 
     private var isFailDialogShown = false
     private var targetBlockMap = mutableMapOf<Int, Int?>()
@@ -144,12 +144,12 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         setupDropTargets()
     }
 
-    private fun initViewModel() {
+    override fun initViewModel() {
         isQuizClearedViewModel = ViewModelProvider(this)[QuizViewModel::class.java]
     }
 
     // init ---------------------------------------------------------
-    private fun initBlock() {
+    override fun initBlock() {
         clearBlocks()
 
         when(curGameId) {
@@ -203,7 +203,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         }
     }
 
-    private fun initGame() {
+    override fun initGame() {
         if (!isFirstStage && isNextGame) {
             curGameId += 1
             Log.d("Debug", "After: curGameId = $curGameId")
@@ -319,7 +319,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
     }
 
-    private fun initCharacter(game: Int) {
+    override fun initCharacter(game: Int) {
         // 캐릭터 다시 원래 위치로
         when (game) {
             3 -> {
@@ -383,7 +383,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         }
     }
 
-    private fun addBlock(block: BlockDTO) {
+    override fun addBlock(block: BlockDTO) {
         when (block.blockType) {
             resources.getString(R.string.block_type_normal) -> {
                 // FrameLayout 생성
@@ -512,16 +512,16 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
     }
 
-    private fun blockVisibility(visibleBlock: ImageButton, goneBlock: ImageButton) {
+    override fun blockVisibility(visibleBlock: View, goneBlock: View) {
         visibleBlock.visibility = View.VISIBLE
         goneBlock.visibility = View.GONE
     }
 
-    private fun clearBlocks() {
+    override fun clearBlocks() {
         binding.linearLayoutBlockList.removeAllViews()
     }
 
-    private fun gameFunction() {
+    override fun gameFunction() {
         // 각종 버튼들 처리
         Log.d("Debug", "isFirstStage: $isFirstStage, isNextGame: $isNextGame, before: $curGameId")
         binding.ibGameplayBtn.setOnClickListener {
@@ -587,7 +587,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
     // drag and drop ------------------------------------------------
 
-    private fun setupDragSources() {
+    override fun setupDragSources() {
         dragSources.forEach { source ->
             DragStartHelper(source) { view, _ ->
                 var imageResId = dragSources.indexOf(source)
@@ -610,7 +610,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         }
     }
 
-    private fun setupDropTargets() {
+    override fun setupDropTargets() {
         dropTargets.forEach { target ->
             DropHelper.configureView(
                 this,
@@ -650,7 +650,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         }
     }
 
-    private fun handleImageDrop(target: View, dragId: Int, dropId: Int) {
+     override fun handleImageDrop(target: View, dragId: Int, dropId: Int) {
         targetBlockMap[dropId] = dragId
         dragSources[dragId].visibility = View.GONE
 
@@ -853,7 +853,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
     }
 
     // check success ------------------------------------------------
-    private fun checkSuccess() {
+    override fun checkSuccess() {
         if (isDialogShown) return
 
         for (mv in moveWay) {
@@ -929,7 +929,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
             }
         }
     }
-    private fun showSuccessDialog(exit: Boolean) {
+    override fun showSuccessDialog(exit: Boolean) {
         val gameId = intent.getIntExtra("game id", -1)
         // 다이얼로그 레이아웃을 불러옴
         val dialogView =
@@ -1009,7 +1009,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         dialog.show()
     }
 
-    private fun showFailDialog() {
+     override fun showFailDialog() {
         // 다이얼로그 레이아웃을 불러옴
         val dialogView =
             LayoutInflater.from(this).inflate(R.layout.dialog_fail, null)
@@ -1042,12 +1042,12 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
 
     // dp를 px로 변환하는 확장 함수
-    private fun Int.dpToPx(): Int {
+    override fun Int.dpToPx(): Int {
         val density = resources.displayMetrics.density
         return (this * density).toInt()
     }
 
-    private fun moveAnimation(deltaX: Float, deltaY: Float, onComplete: () -> Unit = {}) {
+    fun moveAnimation(deltaX: Float, deltaY: Float, onComplete: () -> Unit = {}) {
         val view = binding.ivGameCharacter // 이동할 뷰
         val targetX = view.translationX + (180 * deltaX)
         val targetY = view.translationY + (180 * deltaY)
@@ -1093,7 +1093,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
         }
     }
 
-    private fun characterMove() {
+     override fun characterMove() {
         var currentX = 0f // 현재 X 위치
         var currentY = 0f // 현재 Y 위치
 
@@ -1160,11 +1160,11 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
 
     // 배경 지정
-    private fun backgroundVisibility(background: Int) {
+    override fun backgroundVisibility(background: Int) {
         binding.ivGameBackground.loadCropImage(background)
     }
 
-    private fun isFireCondition(): Boolean {
+     override fun isFireCondition(): Boolean {
         // Fire가 발생할 조건을 정의
         if (curGameId == 6) {
             val fanBlockOrder = listOf(
@@ -1189,10 +1189,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game) {
 
     }
 
-    private fun handleFireCondition() {
+     override fun handleFireCondition() {
         // Fire 처리 로직
-        binding.ivGameFire.visibility = View.GONE
-        binding.ivGameFan.visibility = View.VISIBLE
+         blockVisibility(binding.ivGameFan, binding.ivGameFire)
     }
 }
 
