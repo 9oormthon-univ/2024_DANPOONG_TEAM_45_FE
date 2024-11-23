@@ -2,6 +2,7 @@ package com.example.myapplication.presentation.ui.fragment.quest
 
 import android.content.Intent
 import android.util.Log
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -18,6 +19,7 @@ import com.example.myapplication.presentation.widget.extention.TokenManager
 import com.example.myapplication.presentation.widget.extention.loadCropImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,6 +35,11 @@ class QuestChapterFragment :
     override fun setLayout() {
         initBiginnerItem()
         observeLifeCycle()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        chapterCompletedCleared()
     }
 
     //이미지 바인딩
@@ -97,6 +104,15 @@ class QuestChapterFragment :
                             adapter.submitList(list)
                             loginViewModel.getTraining()
                             binding.ivQuestMoomoo.text = "무무의 퀘스트 (${count}/${responseList?.size})"
+
+                            if (count == responseList?.size) {
+                                binding.ibRewardOn.visibility = View.VISIBLE
+                            }
+                            binding.ibRewardOn.setOnClickListener {
+                                lifecycleScope.launch {
+                                    tokenManager.saveChapterIsCleared("true")
+                                }
+                            }
                         }
                     }
                 }
@@ -111,6 +127,17 @@ class QuestChapterFragment :
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun chapterCompletedCleared() {
+        lifecycleScope.launch {
+            Log.d("값값ㅂ", tokenManager.getChapterIsCleared.first().toString())
+            if (tokenManager.getChapterIsCleared.first() == "true") {
+                // 보상 주기
+                binding.ibRewardOn.visibility = View.GONE
+                binding.ibRewardOff.visibility = View.VISIBLE
             }
         }
     }

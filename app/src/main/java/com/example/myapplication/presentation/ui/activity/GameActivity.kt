@@ -160,6 +160,10 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
                             binding.ivGameHintTxt.text = hint
                             binding.ibGamestoryMsgTxt.text = moomooMsg
+
+                            if (it.payload?.quizId == 2) {
+                                binding.ivGameHintTxt.text = "무무가 아침 일정을 잘 마치도록 도와줘\n일어나기 > 세수하기 > 아침먹기 > 준비하기\n순서로 부탁할게! 해줄 수 있지?"
+                            }
                         }
                     }
                 }
