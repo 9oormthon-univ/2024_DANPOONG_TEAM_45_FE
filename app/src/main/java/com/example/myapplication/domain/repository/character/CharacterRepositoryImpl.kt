@@ -4,6 +4,7 @@ import com.example.myapplication.data.repository.remote.datasource.remote.Charac
 import com.example.myapplication.data.repository.remote.request.character.CharacterDTO
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.character.CharacterAllResponse
+import com.example.myapplication.data.repository.remote.response.character.CharacterRandomResponse
 import com.example.myapplication.data.repository.remote.response.character.CharacterResponse
 import com.example.myapplication.data.repository.remote.response.character.CommitCharacterResponse
 import kotlinx.coroutines.flow.Flow
@@ -40,4 +41,8 @@ class CharacterRepositoryImpl @Inject constructor(
         activityPoint: Int
     ): Flow<BaseResponse<Any>> =
         characterDataSource.postDecreaseActivityPoint(character_id, activityPoint)
+
+    override suspend fun getRandomCactus(
+    ): Flow<BaseResponse<CharacterRandomResponse>> =
+        characterDataSource.getRandomCactus()
 }
