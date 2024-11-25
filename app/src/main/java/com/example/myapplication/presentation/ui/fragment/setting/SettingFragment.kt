@@ -7,6 +7,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentSettingBinding
+import com.example.myapplication.presentation.ui.activity.GameActivity
+import com.example.myapplication.presentation.ui.activity.QuestIntroActivity
 import com.example.myapplication.presentation.ui.activity.QuizBlockActivity
 import com.example.myapplication.presentation.widget.extention.TokenManager
 import com.example.myapplication.presentation.widget.extention.loadProfileImage
@@ -27,18 +29,21 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(R.layout.fragment_s
 
     //유저 초기화
     private fun initUser() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                val nickname = tokenManager.getUserNickname.first()
-                val profile = tokenManager.getUserProfile.first()
-                binding.fragmentSettingProfileIv.loadProfileImage(profile!!)
-                binding.fragmentSettingNicknameTv.text = nickname
-            }
-        }
+//        lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.CREATED) {
+//                val nickname = tokenManager.getUserNickname.first()
+//                val profile = tokenManager.getUserProfile.first()
+//                binding.fragmentSettingProfileIv.loadProfileImage(profile!!)
+//                binding.fragmentSettingNicknameTv.text = nickname
+//            }
+//        }
 
         //임시 버튼
         binding.fragmentSettingNotificationTv.setOnClickListener{
-            startActivity(Intent(requireActivity(),QuizBlockActivity::class.java))
+            val intent = Intent(requireContext(), QuestIntroActivity::class.java)
+            intent.putExtra("game id", 2)
+            startActivity(intent)
+
         }
     }
 
