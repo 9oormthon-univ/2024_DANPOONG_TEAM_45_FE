@@ -6,6 +6,7 @@ import com.example.myapplication.data.repository.remote.datasource.remote.Charac
 import com.example.myapplication.data.repository.remote.request.character.CharacterDTO
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.character.CharacterAllResponse
+import com.example.myapplication.data.repository.remote.response.character.CharacterRandomResponse
 import com.example.myapplication.data.repository.remote.response.character.CharacterResponse
 import com.example.myapplication.data.repository.remote.response.character.CommitCharacterResponse
 import kotlinx.coroutines.flow.Flow
@@ -55,6 +56,14 @@ class CharacterDataSourceImpl @Inject constructor(
         }.catch { e ->
             Log.e("putCharacter 에러", e.message.toString())
         }
+
+    override suspend fun getRandomCactus()
+    : Flow<BaseResponse<CharacterRandomResponse>> = flow {
+            val result = characterApi.getRandomCactus()
+            emit(result)
+    }.catch { e ->
+        Log.e("getRandomCactus 에러", e.message.toString())
+    }
 
     override suspend fun postIncreaseActivityPoint(
         character_id: Int,

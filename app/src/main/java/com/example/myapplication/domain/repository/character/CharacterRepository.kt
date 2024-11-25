@@ -3,6 +3,7 @@ package com.example.myapplication.domain.repository.character
 import com.example.myapplication.data.repository.remote.request.character.CharacterDTO
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.character.CharacterAllResponse
+import com.example.myapplication.data.repository.remote.response.character.CharacterRandomResponse
 import com.example.myapplication.data.repository.remote.response.character.CharacterResponse
 import com.example.myapplication.data.repository.remote.response.character.CommitCharacterResponse
 import kotlinx.coroutines.flow.Flow
@@ -45,4 +46,8 @@ interface CharacterRepository {
         character_id : Int,
         activityPoint : Int
     ) : Flow<BaseResponse<Any>>
+
+    // 랜덤 선인장 얻기
+    suspend fun getRandomCactus(
+    ) : Flow<BaseResponse<CharacterRandomResponse>>
 }

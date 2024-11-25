@@ -3,6 +3,7 @@ package com.example.myapplication.data.repository.remote.api
 import com.example.myapplication.data.repository.remote.request.character.CharacterDTO
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.character.CharacterAllResponse
+import com.example.myapplication.data.repository.remote.response.character.CharacterRandomResponse
 import com.example.myapplication.data.repository.remote.response.character.CharacterResponse
 import com.example.myapplication.data.repository.remote.response.character.CommitCharacterResponse
 import okhttp3.ResponseBody
@@ -55,6 +56,9 @@ interface CharacterApi {
     suspend fun getAllCharacter(
     ): CharacterAllResponse
 
+    @GET("/character/pickup/random")
+    suspend fun getRandomCactus(
+    ): BaseResponse<CharacterRandomResponse>
     //캐릭터 삭제
     @DELETE("/character")
     suspend fun deleteCharacter(

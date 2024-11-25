@@ -29,23 +29,19 @@ import android.widget.TextView
 import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
 import androidx.core.view.DragStartHelper
-import androidx.core.view.forEach
 import androidx.draganddrop.DropHelper
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.myapplication.data.mapper.toDomain
 import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.presentation.viewmodel.ChapterViewModel
+import com.example.myapplication.presentation.viewmodel.CharacterViewModel
 import com.example.myapplication.presentation.viewmodel.QuizViewModel
-import com.example.myapplication.presentation.widget.extention.TokenManager
 import com.example.myapplication.presentation.widget.extention.loadCropImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.w3c.dom.Text
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), GameInterface {
@@ -63,6 +59,8 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
     private lateinit var isQuizClearedViewModel: QuizViewModel
     private lateinit var isChapterClearedViewModel: ChapterViewModel
+    private lateinit var getRandomCactusViewModel: CharacterViewModel
+
     private var hint = ""
     private var moomooMsg = ""
 
@@ -147,6 +145,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     override fun initViewModel() {
         isQuizClearedViewModel = ViewModelProvider(this)[QuizViewModel::class.java]
         isChapterClearedViewModel = ViewModelProvider(this)[ChapterViewModel::class.java]
+        getRandomCactusViewModel = ViewModelProvider(this)[CharacterViewModel::class.java]
     }
 
     private fun observeLifeCycle() {
@@ -169,6 +168,18 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                 }
             }
         }
+
+//        lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.CREATED) {
+//                getRandomCactusViewModel.getRandomCactus.collectLatest {
+//                    when (it.result.code) {
+//                        200 -> {
+//                            val randomCactus = it.payload?.cactusType
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
     }
 

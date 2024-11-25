@@ -6,9 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.repository.remote.request.character.CharacterDTO
 import com.example.myapplication.data.repository.remote.request.home.PatchHomeDTO
 import com.example.myapplication.data.repository.remote.response.BaseResponse
+import com.example.myapplication.data.repository.remote.response.character.CharacterRandomResponse
 import com.example.myapplication.data.repository.remote.response.character.CommitCharacterResponse
 import com.example.myapplication.data.repository.remote.response.home.DistinctHomeIdResponse
 import com.example.myapplication.data.repository.remote.response.home.HomeAllList
+import com.example.myapplication.domain.usecase.character.GetRandomCactusUseCase
 import com.example.myapplication.domain.usecase.character.PostCharacterUseCase
 import com.example.myapplication.domain.usecase.character.PostDecreaseActivityPointUseCase
 import com.example.myapplication.domain.usecase.character.PostIncreaseActivityPointUseCase
@@ -22,6 +24,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.lang.Thread.State
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,7 +32,8 @@ class CharacterViewModel @Inject constructor(
     private val postCharacterUseCase: PostCharacterUseCase,
     private val postDecreaseActivityPointUseCase: PostDecreaseActivityPointUseCase,
     private val postIncreaseActivityPointUseCase: PostIncreaseActivityPointUseCase,
-    private val putCharacterUseCase: PutCharacterUseCase
+    private val putCharacterUseCase: PutCharacterUseCase,
+    private val getRandomCactusUseCase: GetRandomCactusUseCase
 ) : ViewModel() {
 
     private val _postCharacter = MutableStateFlow(BaseResponse<CommitCharacterResponse>())
@@ -43,6 +47,9 @@ class CharacterViewModel @Inject constructor(
 
     private val _putCharacter = MutableStateFlow(BaseResponse<Any>())
     val putCharacter: StateFlow<BaseResponse<Any>> = _putCharacter
+
+    private val _getRandomCactus = MutableStateFlow(BaseResponse<CharacterRandomResponse>())
+    val getRandomCactus: StateFlow<BaseResponse<CharacterRandomResponse>> = _getRandomCactus
 
     fun postCharacter(characterDTO : CharacterDTO) {
         viewModelScope.launch {
@@ -85,6 +92,18 @@ class CharacterViewModel @Inject constructor(
             try {
                 putCharacterUseCase(character_id,name).collect {
                     _putCharacter.value = it
+                }
+            } catch (e: Exception) {
+                Log.e("에러", e.message.toString())
+            }
+        }
+    }
+
+    fun getRandomCactus() {
+        viewModelScope.launch {
+            try {
+                getRandomCactusUseCase().collect {
+                    _getRandomCactus.value = it
                 }
             } catch (e: Exception) {
                 Log.e("에러", e.message.toString())

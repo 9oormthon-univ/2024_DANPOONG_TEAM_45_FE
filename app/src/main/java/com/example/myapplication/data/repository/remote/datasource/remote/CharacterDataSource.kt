@@ -6,6 +6,7 @@ import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.chapter.AllChapterResponse
 import com.example.myapplication.data.repository.remote.response.chapter.DistinctChapterResponse
 import com.example.myapplication.data.repository.remote.response.character.CharacterAllResponse
+import com.example.myapplication.data.repository.remote.response.character.CharacterRandomResponse
 import com.example.myapplication.data.repository.remote.response.character.CharacterResponse
 import com.example.myapplication.data.repository.remote.response.character.CommitCharacterResponse
 import kotlinx.coroutines.flow.Flow
@@ -42,6 +43,10 @@ interface CharacterDataSource {
         character_id : Int,
         name : String
     ) : Flow<BaseResponse<Any>>
+
+    // 랜덤 선인장 뽑기
+    suspend fun getRandomCactus(
+    ) : Flow<BaseResponse<CharacterRandomResponse>>
 
     //활동 포인트 증가
     suspend fun postIncreaseActivityPoint(
