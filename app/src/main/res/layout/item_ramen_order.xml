@@ -7,8 +7,6 @@
         android:layout_height="wrap_content"
         android:paddingStart="20dp"
         android:paddingEnd="20dp">
-
-
         <ImageView
             android:id="@+id/item_ramen_order_frame_iv"
             android:layout_width="0dp"

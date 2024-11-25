@@ -3,13 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_marginStart="20sp"
-        android:layout_marginEnd="20dp"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
 
         <ImageView
+            android:layout_marginStart="20sp"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="16dp"
             android:id="@+id/item_character_move_frame_iv"
             android:layout_width="0dp"
