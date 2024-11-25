@@ -115,6 +115,7 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/layout_chat_bottom_sheet_send_bt"
+                android:textColor="@color/black"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:background="@drawable/ic_message_send"

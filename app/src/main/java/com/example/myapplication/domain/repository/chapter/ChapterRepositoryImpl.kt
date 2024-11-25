@@ -27,4 +27,7 @@ data class ChapterRepositoryImpl @Inject constructor(
 
     override suspend fun getAllChapter(): Flow<BaseResponse<AllChapterResponse>> =
         chapterDataSource.getAllChapter()
+
+    override suspend fun rewardSuccess(chapter_id: Int): Flow<BaseResponse<Any>> =
+        chapterDataSource.rewardSuccess(chapter_id)
 }

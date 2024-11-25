@@ -11,6 +11,7 @@ import com.example.myapplication.domain.usecase.chapter.DeleteChapterUseCase
 import com.example.myapplication.domain.usecase.chapter.GetAllChapterUseCase
 import com.example.myapplication.domain.usecase.chapter.GetDistinctChapterUseCase
 import com.example.myapplication.domain.usecase.chapter.PostCreateChapterUseCase
+import com.example.myapplication.domain.usecase.chapter.RewardUseCase
 import com.example.myapplication.domain.usecase.chaptercleared.PostChapterClearedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +25,8 @@ class ChapterViewModel @Inject constructor(
     private val getAllChapterUseCase: GetAllChapterUseCase,
     private val postCreateChapterUseCase: PostCreateChapterUseCase,
     private val deleteChapterUseCase: DeleteChapterUseCase,
-    private val chapterClearedUseCase: PostChapterClearedUseCase
+    private val chapterClearedUseCase: PostChapterClearedUseCase,
+    private val rewardUseCase: RewardUseCase
 ) : ViewModel() {
 
     private val _postCreateChapter = MutableStateFlow(BaseResponse<Any>())
@@ -41,6 +43,9 @@ class ChapterViewModel @Inject constructor(
 
     private val _chapterClear = MutableStateFlow(BaseResponse<Any>())
     val chapterClear : StateFlow<BaseResponse<Any>> = _chapterClear
+
+ private val _reward = MutableStateFlow(BaseResponse<Any>())
+    val reward : StateFlow<BaseResponse<Any>> = _reward
 
 
     fun getDistinctChapter(chapter_id: Int) {
@@ -104,5 +109,19 @@ class ChapterViewModel @Inject constructor(
             }
         }
     }
+
+    //챕터 완료
+    fun reward(chapterId : Int) {
+        viewModelScope.launch {
+            try {
+                rewardUseCase(chapterId).collect {
+                    _postCreateChapter.value = it
+                }
+            } catch (e: Exception) {
+                Log.e("에러", e.message.toString())
+            }
+        }
+    }
+
 
 }

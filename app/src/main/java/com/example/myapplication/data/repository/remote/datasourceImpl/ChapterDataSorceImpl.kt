@@ -54,4 +54,11 @@ class ChapterDataSorceImpl @Inject constructor(
         Log.e("getAllChapter 에러", e.message.toString())
     }
 
+    override suspend fun rewardSuccess(chapter_id: Int): Flow<BaseResponse<Any>> = flow {
+        val result = chapterApi.rewordSuccess(chapter_id)
+        emit(result)
+    }.catch { e ->
+        Log.e("getAllChapter 에러", e.message.toString())
+    }
+
 }

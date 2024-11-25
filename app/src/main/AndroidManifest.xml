@@ -3,9 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <queries>
         <package android:name="com.kakao.talk" />
     </queries>
+
     <application
         android:name=".GlobalApplication"
         android:allowBackup="true"
@@ -18,25 +20,25 @@
         android:theme="@style/Theme.CodingLand"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.ui.activity.QuizBlockActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.ui.activity.MainActivity"
-            android:exported="true"></activity>
-        <!-- 스플래시 액티비티 -->
+            android:exported="true" /> <!-- 스플래시 액티비티 -->
         <activity
             android:name=".presentation.ui.activity.SplashActivity"
             android:exported="true"
             android:theme="@style/AppTheme.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".presentation.ui.activity.AccountActivity"
             android:exported="true"
-            android:theme="@style/AppTheme.SplashScreen">
-
-        </activity>
-
+            android:theme="@style/AppTheme.SplashScreen"></activity>
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
@@ -68,4 +70,5 @@
         <activity android:name=".presentation.ui.activity.PotionMysteryActivity" />
         <activity android:name=".presentation.ui.activity.GameActivity" />
     </application>
+
 </manifest>

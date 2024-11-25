@@ -116,6 +116,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private fun setOnclickBtn() {
         binding.activityAccountKakaoLoginBt.setOnClickListener {
             userKakaoLogin()
+            startActivity(
+                Intent(
+                    requireActivity(),
+                    MainActivity::class.java
+                )
+            )
         }
     }
 

@@ -20,4 +20,6 @@
     <string name="game_wash">세수하기</string>
     <string name="game_practice">준비하기</string>
     <string name="game_wake">일어나기</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

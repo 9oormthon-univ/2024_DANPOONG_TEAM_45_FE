@@ -35,8 +35,9 @@ class QuestChapterFragment :
     override fun setLayout() {
         initBiginnerItem()
         observeLifeCycle()
+        setOnClickBtn()
     }
-
+    var parseId = 0
     var islandName = ""
     //이미지 바인딩
     private fun initBiginnerItem() {
@@ -62,7 +63,7 @@ class QuestChapterFragment :
         addItem()
         adapter = QuizAdapter(this@QuestChapterFragment)
         val id = arguments?.getString("selectId")
-        val parseId = id?.toInt() ?: 0
+        parseId = id?.toInt() ?: 0
         chapterViewModel.getDistinctChapter(parseId)
     }
 
@@ -77,6 +78,14 @@ class QuestChapterFragment :
     }
 
 
+    private fun setOnClickBtn(){
+        binding.ibRewardOn.setOnClickListener{
+            binding.ibRewardOff.visibility = View.VISIBLE
+            binding.ibRewardOn.visibility = View.GONE
+            chapterViewModel.reward(parseId)
+        }
+    }
+
     @Inject
     lateinit var tokenManager: TokenManager
     private fun observeLifeCycle() {
@@ -87,8 +96,9 @@ class QuestChapterFragment :
                         200 -> {
                             if(it.payload?.isRewardButtonActive == true){
                                 binding.ibRewardOn.visibility = View.VISIBLE
-                                binding.ibRewardOff.visibility = View.GONE
-                                binding.ibRewardOn.visibility = View.VISIBLE
+                            }else{
+                                binding.ibRewardOn.visibility = View.GONE
+                                binding.ibRewardOn.visibility = View.GONE
                             }
                             Log.d("okhttp", "${it.payload?.quizzes}")
                             var count = 0
@@ -105,16 +115,12 @@ class QuestChapterFragment :
                             adapter.submitList(list)
                             loginViewModel.getTraining()
                             binding.ivQuestMoomoo.text = "무무의 퀘스트 (${count}/${responseList?.size})"
+                            if(count == responseList?.size){
+                                binding.ibRewardOn.visibility = View.VISIBLE
+                            }
                         }
                     }
                 }
-            }
-        }
-        binding.ibRewardOn.setOnClickListener {
-            lifecycleScope.launch {
-                tokenManager.saveChapterIsCleared("true")
-                binding.ibRewardOn.visibility = View.GONE
-                binding.ibRewardOff.visibility = View.VISIBLE
             }
         }
 
@@ -124,6 +130,16 @@ class QuestChapterFragment :
                     when (it.result.code) {
                         200 -> {
 
+                        }
+                    }
+                }
+            }
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                loginViewModel.training.collectLatest {
+                    when (it.result.code) {
+                        200 -> {
                         }
                     }
                 }

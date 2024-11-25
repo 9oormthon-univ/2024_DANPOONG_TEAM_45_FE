@@ -201,6 +201,7 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
                             startActivity(Intent(this@QuizActivity, QuizClearActivity::class.java))
                             finish() // QuizActivity 종료
                         }
+                        
                     }
                 }
             }

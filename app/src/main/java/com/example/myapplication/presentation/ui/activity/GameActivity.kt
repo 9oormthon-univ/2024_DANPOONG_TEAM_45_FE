@@ -239,6 +239,13 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         }
     }
 
+    //위에 예시를 간소화 한 예시 함수
+    private fun manageAddBlock(blockDTOList: List<BlockDTO>){
+        blockDTOList.map {
+            addBlock(it)
+        }
+    }
+
     override fun initGame() {
         binding.ivGameCharacter.bringToFront() // 게임 캐릭터가 무조건 최상단에 오도록
 
