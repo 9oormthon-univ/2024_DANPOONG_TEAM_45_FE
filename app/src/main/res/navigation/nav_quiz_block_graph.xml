@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_quiz_block_graph"
+    app:startDestination="@id/quizBlock1Fragment">
+
+    <fragment
+        android:id="@+id/quizBlock1Fragment"
+        android:name="com.example.myapplication.presentation.ui.fragment.quest.QuizBlock1Fragment"
+        android:label="QuizBlock1Fragment">
+        <action
+            android:id="@+id/action_quizBlock1Fragment_to_quizBlock2Fragment"
+            app:destination="@id/quizBlock2Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/quizBlock2Fragment"
+        android:name="com.example.myapplication.presentation.ui.fragment.quest.QuizBlock2Fragment"
+        android:label="QuizBlock2Fragment" />
+</navigation>
