@@ -150,7 +150,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private fun setCharacterDrawable(characterType: CharacterType): Int {
         return when (characterType) {
-            CharacterType.LEVEL_LOW -> R.drawable.ic_cactus_2
+            CharacterType.LEVEL_LOW -> R.drawable.ic_cactus_1
             CharacterType.LEVEL_MEDIUM -> R.drawable.ic_cactus_2
             CharacterType.LEVEL_HIGH -> R.drawable.ic_cactus_3
         }

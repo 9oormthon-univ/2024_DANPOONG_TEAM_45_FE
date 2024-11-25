@@ -45,4 +45,10 @@ interface ChapterApi {
     suspend fun getAllChapter(
     ): BaseResponse<AllChapterResponse>
 
+    //등록된 챕터 모두 조회
+    @GET("/v1/api/chapter/{chapter_id}/reward/claim")
+    suspend fun rewordSuccess(
+        @Path("chapter_id") chapter_id : Int
+    ): BaseResponse<Any>
+
 }

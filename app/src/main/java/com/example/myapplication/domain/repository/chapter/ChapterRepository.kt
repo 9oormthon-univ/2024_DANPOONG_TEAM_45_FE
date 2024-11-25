@@ -14,4 +14,5 @@ interface ChapterRepository {
     suspend fun deleteChapter(lchapter_id: String): Flow<BaseResponse<Any>>
     suspend fun modifyChapter(registerChapterDto: RegisterChapterDto): Flow<Response<ResponseBody>>
     suspend fun getAllChapter(): Flow<BaseResponse<AllChapterResponse>>
+    suspend fun rewardSuccess(chapter_id : Int): Flow<BaseResponse<Any>>
 }
