@@ -41,7 +41,6 @@ class OnboardingFragment : BaseFragment<FragmentOnboardingBinding>(R.layout.frag
         characterViewModel = ViewModelProvider(this)[CharacterViewModel::class.java]
         onClickView()
         textChange()
-        observeLifeCycle()
     }
 
     private fun onClickView() {
@@ -55,6 +54,7 @@ class OnboardingFragment : BaseFragment<FragmentOnboardingBinding>(R.layout.frag
                     val name = binding.fragmentOnboardingInputNameEt.text.toString()
                     characterViewModel.postCharacter(CharacterDTO(name))
                 }
+                observeLifeCycle()
             }
         }
     }
