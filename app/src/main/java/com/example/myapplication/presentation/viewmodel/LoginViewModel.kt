@@ -3,6 +3,7 @@ package com.example.myapplication.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.data.base.BaseLoadingState
 import com.example.myapplication.data.repository.remote.request.login.LogInKakaoDto
 import com.example.myapplication.data.repository.remote.request.login.UserListDTO
 import com.example.myapplication.data.repository.remote.response.BaseResponse
@@ -39,11 +40,26 @@ class LoginViewModel @Inject constructor(
     fun postKakaoLogin(logInKakaoDto: LogInKakaoDto) {
         viewModelScope.launch {
             try {
-                postKakaoLoginUseCase(logInKakaoDto).collect {
-                    _kakaoLogin.value = it
+                // 로딩 상태로 초기화
+                _kakaoLogin.value = _kakaoLogin.value.copy(state = BaseLoadingState.LOADING)
+
+                postKakaoLoginUseCase(logInKakaoDto).collect { response ->
+                    when (response.result.code) {
+                        200 -> {
+                            // 성공 상태로 업데이트
+                            _kakaoLogin.value = response.copy(state = BaseLoadingState.SUCCESS)
+                        }
+                        else -> {
+                            // 실패 상태로 업데이트
+                            _kakaoLogin.value = _kakaoLogin.value.copy(state = BaseLoadingState.ERROR)
+                            Log.e("postKakaoLogin", "응답 실패: ${response.result.message}")
+                        }
+                    }
                 }
             } catch (e: Exception) {
-                Log.e("실패", "postKakaoLogin")
+                Log.e("postKakaoLogin", "로그인 실패: ${e.message}", e)
+                // 에러 상태로 업데이트
+                _kakaoLogin.value = _kakaoLogin.value.copy(state = BaseLoadingState.ERROR)
             }
         }
     }
@@ -51,11 +67,15 @@ class LoginViewModel @Inject constructor(
     fun getTraining() {
         viewModelScope.launch {
             try {
-                getTrainingUseCase().collect {
-                    _training.value = it
+                getTrainingUseCase().collect { response ->
+                    _training.value = BaseResponse(
+                        result = response.result,
+                        payload = response.payload,
+                        status = BaseLoadingState.SUCCESS // 상태를 업데이트한 새로운 객체 생성
+                    )
                 }
             } catch (e: Exception) {
-                Log.e("실패", "postKakaoLogin")
+                Log.e("실패", "getTraining", e)
             }
         }
     }
