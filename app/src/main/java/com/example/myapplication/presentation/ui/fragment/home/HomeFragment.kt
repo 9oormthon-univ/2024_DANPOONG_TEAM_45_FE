@@ -9,6 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.airbnb.lottie.LottieAnimationView
 import com.example.myapplication.R
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.chapter.DistinctChapterResponse
@@ -36,6 +37,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     lateinit var tokenManager: TokenManager
 
     override fun setLayout() {
+        setLottieAnimation()
         initCount()
         initHome()
         observeLifeCycle()
@@ -46,6 +48,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         super.onStart()
         initCount()
         initHome()
+    }
+
+    private fun setLottieAnimation(){
+        binding.fragmentHomeCharacterIv.setMaxProgress(0.90f) // 최대 진행도를 99%로 설정, 깜빡임 프레임 드랍 이슈 해결
+        binding.fragmentHomeTitleTv.setRawInputType(R.raw.mini)
+        binding.fragmentHomeCharacterIv.playAnimation() // 애니메이션 시작
     }
 
     private fun initHome() {
@@ -87,9 +95,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                                 fragmentHomeTitleTv.text = "반가워요\n저는 ${character!!.name}무무예요!"
                                 fragmentHomeCactusStateLevelTv.text =
                                     "LV.${character.level}"
-                                fragmentHomeCharacterIv.loadCropImage(
+                                /*fragmentHomeCharacterIv.loadCropImage(
                                     setCharacterDrawable(stringToEnum(character.type))
-                                )
+                                )*/
+                                setLottieAnimation()
                                 Log.d(
                                     "이미지",
                                     "${
