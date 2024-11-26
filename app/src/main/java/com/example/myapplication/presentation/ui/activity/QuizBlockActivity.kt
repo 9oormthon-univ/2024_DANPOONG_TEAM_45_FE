@@ -37,10 +37,20 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
 
     private var levelCorrect = true
 
+    private val dropTargets by lazy {
+        mutableListOf<View>(
+            binding.ibBiginnerGame1Space1,
+            binding.ibBiginnerGame1Space2,
+            binding.ibBiginnerGame1Space3,
+            binding.ibBiginnerGame1Space4
+        )
+    }
+
     override fun setLayout() {
         setNavController()
         storySetting()
         nextFragment()
+        onStoryState(true)
     }
 
     //네비게이션 컨트롤러 세팅
@@ -57,6 +67,7 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
                 R.id.quizBlock1Fragment -> {
                     buttonPosition = 1
                     binding.ivQuizBlockBackground.setImageResource(R.drawable.iv_biginner_game1_image)
+                    binding.linearLayoutBlockList
                     bindingStory(0)
                 }
 
@@ -76,6 +87,7 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
     //버튼 이동
     private fun nextFragment() {
         binding.ibGameplayBtn.setOnClickListener {
+            onGameplayState()
             moveFragment()
         }
     }
@@ -84,9 +96,14 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
         binding.ibGamestoryMsgTxt.text = messageList[index]
     }
 
-    fun onGameplayState(isState: Boolean) {
-        binding.ibGameplayBtn.isSelected = isState
-        binding.ibGamestopBtn.isSelected = !isState
+    fun onGameplayState() {
+        binding.ibGameplayBtn.visibility = View.GONE
+        binding.ibGamestopBtn.visibility = View.VISIBLE
+    }
+
+    fun onGamestopState() {
+        binding.ibGameplayBtn.visibility = View.VISIBLE
+        binding.ibGamestopBtn.visibility = View.GONE
     }
 
     fun onStoryState(isState: Boolean) {
@@ -119,6 +136,7 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
     }
 
     private fun setDialog() {
+        onGamestopState()
         when (buttonPosition) {
             1 -> showCustomTwoDialog(1)
             2 -> showCustomTwoDialog(2)

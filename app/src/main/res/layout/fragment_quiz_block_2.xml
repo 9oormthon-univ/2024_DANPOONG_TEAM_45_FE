@@ -25,8 +25,6 @@
             app:layout_constraintTop_toTopOf="parent">
         </FrameLayout>
 
-
-
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -105,7 +103,7 @@
             app:layout_constraintStart_toStartOf="parent">
             <!-- 왼쪽 FrameLayout -->
             <FrameLayout
-                android:id="@+id/leftFrameLayout"
+                android:id="@+id/leftQuizBlock2FrameLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
@@ -122,7 +120,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/linearLayout_block_list"
+                    android:id="@+id/linearLayout_block2_list"
                     android:orientation="vertical"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="50dp">

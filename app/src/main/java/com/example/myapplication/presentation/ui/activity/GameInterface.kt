@@ -74,7 +74,7 @@ interface GameInterface {
     }
     // drag 아이템 제거
     fun clearDragTargets(binding: ActivityGameBinding) {
-        binding.linearLayoutBlockList.removeAllViews()
+        binding.linearLayoutBlockGameList.removeAllViews()
     }
     fun addBlock(blockDTO: BlockDTO) // drag 아이템 추가
 
@@ -182,12 +182,6 @@ interface GameInterface {
     fun checkSuccess() // 게임 성공인지 판별
     fun showSuccessDialog(exit: Boolean) // 게임 성공 시 성공 다이얼로그 출력, exit : 나가기 버튼 눌렀을 때 다이얼로그
     fun showFailDialog() // 게임 실패 시 실패 다이얼로그 출력
-
-    // 캐릭터 이동
-    fun characterMove()
-    fun backgroundVisibility(background: Int)
-    fun isFireCondition(): Boolean // 불 꺼지는 상황인지 체크
-    fun handleFireCondition() // 불 끄기
 
     // 기타 기능
     fun blockVisibility(visibleBlock: View, goneBlock: View) {

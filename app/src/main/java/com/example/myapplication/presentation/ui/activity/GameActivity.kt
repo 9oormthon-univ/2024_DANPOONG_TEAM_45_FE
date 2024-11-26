@@ -416,7 +416,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                 newBlock.addView(textView)
 
                 // `LinearLayout`에 새 `FrameLayout` 추가
-                binding.linearLayoutBlockList.addView(newBlock)
+                binding.linearLayoutBlockGameList.addView(newBlock)
 
                 dragSources.add(newBlock)
                 newBlock.tag = block  // BlockDTO를 tag로 설정
@@ -484,7 +484,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                 imageView3.visibility = View.GONE
 
                 // `LinearLayout`에 새 `FrameLayout` 추가
-                binding.linearLayoutBlockList.addView(newBlock)
+                binding.linearLayoutBlockGameList.addView(newBlock)
                 dragSources.add(newBlock)
                 newBlock.tag = block  // BlockDTO를 tag로 설정
             }
@@ -533,7 +533,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     // drag and drop ------------------------------------------------
 
 
-     override fun handleImageDrop(target: View, dragId: Int, dropId: Int) {
+    override fun handleImageDrop(target: View, dragId: Int, dropId: Int) {
         targetBlockMap[dropId] = dragId
         dragSources[dragId].visibility = View.GONE
 
@@ -697,9 +697,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
             newdropId = dropId
         }
 //        val draggedTextView = draggedBlock.getChildAt(1) as TextView
-         handleBlockMove(blockMove!!, newdropId, dropId)
+        handleBlockMove(blockMove!!, newdropId, dropId)
 
-     }
+    }
 
     fun handleBlockMove(blockMove: String, newdropId: Int, dropId: Int) {
         val blockMoveMap = mapOf(
@@ -893,7 +893,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         dialog.show()
     }
 
-     override fun showFailDialog() {
+    override fun showFailDialog() {
         // 다이얼로그 레이아웃을 불러옴
         val dialogView =
             LayoutInflater.from(this).inflate(R.layout.dialog_fail, null)
@@ -977,7 +977,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         }
     }
 
-     override fun characterMove() {
+    fun characterMove() {
         var currentX = 0f // 현재 X 위치
         var currentY = 0f // 현재 Y 위치
 
@@ -1044,11 +1044,11 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
 
     // 배경 지정
-    override fun backgroundVisibility(background: Int) {
+    fun backgroundVisibility(background: Int) {
         binding.ivGameBackground.loadCropImage(background)
     }
 
-     override fun isFireCondition(): Boolean {
+    fun isFireCondition(): Boolean {
         // Fire가 발생할 조건을 정의
         if (curGameId == 6) {
             val fanBlockOrder = listOf(
@@ -1072,9 +1072,8 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         }
     }
 
-     override fun handleFireCondition() {
+    fun handleFireCondition() {
         // Fire 처리 로직
-         blockVisibility(binding.ivGameFan, binding.ivGameFire)
+        blockVisibility(binding.ivGameFan, binding.ivGameFire)
     }
 }
-
