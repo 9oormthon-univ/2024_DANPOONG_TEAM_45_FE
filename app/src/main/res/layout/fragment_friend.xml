@@ -80,7 +80,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
-                android:text="김수진"
                 app:layout_constraintEnd_toEndOf="@+id/fragment_friends_crown_1st_iv"
                 app:layout_constraintStart_toStartOf="@+id/fragment_friends_crown_1st_iv"
                 app:layout_constraintTop_toBottomOf="@id/fragment_friends_crown_1st_iv" />
@@ -92,7 +91,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:gravity="center"
-                android:text="킹 선인장 71%"
                 android:textColor="@color/gray5"
                 app:layout_constraintEnd_toEndOf="@+id/fragment_friends_name_1st_title_tv"
                 app:layout_constraintStart_toStartOf="@+id/fragment_friends_name_1st_title_tv"
@@ -126,7 +124,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
-                android:text="김수진"
                 app:layout_constraintEnd_toEndOf="@+id/fragment_friends_crown_2nd_iv"
                 app:layout_constraintStart_toStartOf="@+id/fragment_friends_crown_2nd_iv"
                 app:layout_constraintTop_toBottomOf="@+id/fragment_friends_crown_2nd_iv" />
@@ -139,7 +136,6 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="12dp"
                 android:gravity="center"
-                android:text="킹 선인장 71%"
                 android:textColor="@color/gray5"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/fragment_friends_name_2nd_title_tv"
@@ -174,7 +170,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
-                android:text="김수진"
                 app:layout_constraintEnd_toEndOf="@+id/fragment_friends_crown_3rd_iv"
                 app:layout_constraintStart_toStartOf="@+id/fragment_friends_crown_3rd_iv"
                 app:layout_constraintTop_toBottomOf="@+id/fragment_friends_crown_2nd_iv" />
@@ -187,7 +182,6 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="12dp"
                 android:gravity="center"
-                android:text="킹 선인장 71%"
                 android:textColor="@color/gray5"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/fragment_friends_name_3rd_title_tv"
