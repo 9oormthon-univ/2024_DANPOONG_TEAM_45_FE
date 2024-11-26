@@ -5,5 +5,6 @@ data class DistinctCharacterResponse(
     val name : String = "",
     val level : Int = 0,
     val type : String = "",
+    val cactusType : String = "",
     val activityPoints : Int = 0
 )

@@ -5,5 +5,5 @@ data class DistinctChapterResponse(
     val name: String = "",
     val isCleared: Boolean = false,
     val quizzes: List<QuizResponse> = listOf(),
-    val isRewardButtonActive : Boolean = false
+    val isRewardButtonActive : Boolean = true
 )
