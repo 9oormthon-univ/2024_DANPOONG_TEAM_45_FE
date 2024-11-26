@@ -31,16 +31,6 @@ import com.example.myapplication.presentation.ui.activity.GameInterface
 import com.example.myapplication.presentation.ui.activity.QuizBlockActivity
 
 class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.fragment_quiz_block_1), GameInterface {
-
-    private val dropTargets by lazy {
-        mutableListOf<View>(
-            requireActivity().findViewById(R.id.ib_biginner_game1_space1),
-            requireActivity().findViewById(R.id.ib_biginner_game1_space2),
-            requireActivity().findViewById(R.id.ib_biginner_game1_space3),
-            requireActivity().findViewById(R.id.ib_biginner_game1_space4)
-        )
-    }
-
     private var targetBlockMap = mutableMapOf<Int, Int?>()
     private var isExit = false //나가기 버튼 클릭했는지 여부 판단
     private var isDialogShown = false // 다이얼로그 표시 상태 플래그
@@ -53,9 +43,6 @@ class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.frag
     private var chapterId = 1
 
     private var isState = false
-
-    private var moveXCnt = 0
-    private var moveYCnt = 0
     private var moveWay = mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
     private var isRepeat = false
@@ -64,6 +51,7 @@ class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.frag
 
     override fun setLayout() {
         //블럭 튜토리얼 1번
+        initGame()
         initBlock()
         setupDragSources(dragSources)
     }
@@ -154,6 +142,7 @@ class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.frag
                 container?.addView(newBlock)
 
                 dragSources.add(newBlock)
+                (activity as? QuizBlockActivity)?.handleViewFromFragment(newBlock)
                 newBlock.tag = block  // BlockDTO를 tag로 설정
             }
         }
