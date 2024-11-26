@@ -14,14 +14,12 @@ data class DistinctQuizResponse(
 )
 
 data class Question(
-    val id : Int = 0,
     val type : String = "",
     val msg : String = "",
     val repeat : Int = 0
 )
 
 data class Answer(
-    val id : Int = 0,
     val type : String = "",
     val msg : String = "",
     val repeat : Int = 0

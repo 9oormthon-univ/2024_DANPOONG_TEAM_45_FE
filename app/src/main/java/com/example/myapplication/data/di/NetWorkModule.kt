@@ -69,7 +69,7 @@ object NetworkModule {
         return Retrofit.Builder()
             .addConverterFactory(gsonConverterFactory)
             .client(okHttpClient)
-            .baseUrl("https://codingland.link")
+            .baseUrl("https://codinglandapp.link")
             .build()
     }
 }

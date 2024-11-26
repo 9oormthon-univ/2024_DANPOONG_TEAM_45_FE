@@ -7,10 +7,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.myapplication.R
+import com.example.myapplication.data.repository.remote.response.home.HomePayload
 import com.example.myapplication.databinding.FragmentFriendBinding
 import com.example.myapplication.domain.model.FriendsEntity
-import com.example.myapplication.domain.model.calculatorPoint
-import com.example.myapplication.domain.model.setLevel
 import com.example.myapplication.domain.model.toDomain
 import com.example.myapplication.presentation.adapter.FriendAdapter
 import com.example.myapplication.presentation.base.BaseFragment
@@ -42,44 +41,45 @@ class FriendFragment : BaseFragment<FragmentFriendBinding>(R.layout.fragment_fri
         homeViewModel.getAllHome()
     }
 
-    lateinit var item: List<FriendsEntity>
+    lateinit var item: MutableList<FriendsEntity>
     private fun observeLifeCycle() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-
                 homeViewModel.getAllHome.collectLatest { it ->
-                    item = it.result.mapIndexed { index, result ->
-                        result.character.toDomain().apply {
-                            profile = result.userPicture
-                        }
-                    }.sortedByDescending { it.point } // 거는거
-
-                    val recycleItem : MutableList<FriendsEntity> = mutableListOf()
-                    for(i in item.indices){
-                        if(i >= 3){
-                            item[i].rank = "${i+1}"
-                            recycleItem.add(item[i])
-                        }
-                    }
-
-                    Log.d("로그",item.toString())
-
-                    if (item.isNotEmpty()) {
-                        binding.fragmentFriendsFrame1stIv.loadProfileImage(item[0].profile)
-                        binding.fragmentFriendsAchieve1Tv.text = item[0].achievement
-                        binding.fragmentFriendsName1stTitleTv.text = item[0].name
-
-                        binding.fragmentFriendsFrame2ndIv.loadProfileImage(item[1].profile)
-                        binding.fragmentFriendsAchieve2Tv.text = item[1].achievement
-                        binding.fragmentFriendsName2ndTitleTv.text = item[1].name
-
-                        binding.fragmentFriendsFrame3rdIv.loadProfileImage(item[2].profile)
-                        binding.fragmentFriendsAchieve3Tv.text = item[2].achievement
-                        binding.fragmentFriendsName3rdTitleTv.text = item[2].name
-                    }
-                    friendAdapter.submitList(recycleItem)
+                    item = formatItem(it.result.toMutableList())
+                    settingItem()
                 }
             }
+        }
+    }
+
+    private fun formatItem(list: MutableList<HomePayload>): MutableList<FriendsEntity> {
+        return list.mapIndexed { index, result ->
+            result.character
+                .toDomain()
+                .apply { profile = result.userPicture }
+        }
+            .sortedByDescending { it.point }
+            .toMutableList()// 거는거
+    }
+
+    private fun settingItem() {
+        for (i in item.indices) {
+            if (i < 3) {
+                setProfileTopRank(i)
+                item.removeAt(i)
+            } else {
+                Log.d("아이템", "$item")
+            }
+            friendAdapter.submitList(item)
+        }
+    }
+
+    private fun setProfileTopRank(index: Int) {
+        with(binding) {
+            fragmentFriendsFrame1stIv.loadProfileImage(item[index].profile)
+            fragmentFriendsAchieve1Tv.text = item[index].achievement
+            fragmentFriendsName1stTitleTv.text = item[index].name
         }
     }
 

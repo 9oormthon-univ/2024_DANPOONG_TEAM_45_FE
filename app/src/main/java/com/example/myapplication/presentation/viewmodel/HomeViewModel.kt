@@ -3,6 +3,7 @@ package com.example.myapplication.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.data.base.BaseLoadingState
 import com.example.myapplication.data.repository.remote.request.home.PatchHomeDTO
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.home.DistinctHomeIdResponse
@@ -43,6 +44,8 @@ class HomeViewModel @Inject constructor(
     private val _postHome = MutableStateFlow(BaseResponse<Any>())
     val postHome: StateFlow<BaseResponse<Any>> = _postHome
 
+    private val _loadingState = MutableStateFlow(BaseLoadingState.IDLE)
+    val loadingState: StateFlow<BaseLoadingState> = _loadingState
 
     fun deleteHomeId(home_id: String) {
         viewModelScope.launch {
@@ -70,15 +73,26 @@ class HomeViewModel @Inject constructor(
 
     fun getDistinctHome() {
         viewModelScope.launch {
+            // 로딩 상태로 초기화
+            _getDistinctHome.value = _getDistinctHome.value.copy(status = BaseLoadingState.LOADING)
             try {
-                getDistinctHomeUseCase().collect {
-                    _getDistinctHome.value = it
+                getDistinctHomeUseCase().collect { response ->
+                    // 성공 상태로 업데이트
+                    _getDistinctHome.value = _getDistinctHome.value.copy(
+                        result = response.result,
+                        payload = response.payload,
+                        status = BaseLoadingState.SUCCESS
+                    )
                 }
             } catch (e: Exception) {
-                Log.e("에러", e.message.toString())
+                Log.e("getDistinctHome", "에러: ${e.message}", e)
+                // 에러 상태로 업데이트
+                _getDistinctHome.value =
+                    _getDistinctHome.value.copy(status = BaseLoadingState.ERROR)
             }
         }
     }
+
 
     fun patchHome(
         home_id: String,
@@ -86,7 +100,7 @@ class HomeViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             try {
-                patchHomeEditUseCase(home_id,patchHomeDTO).collect {
+                patchHomeEditUseCase(home_id, patchHomeDTO).collect {
                     _patchHome.value = it
                 }
             } catch (e: Exception) {

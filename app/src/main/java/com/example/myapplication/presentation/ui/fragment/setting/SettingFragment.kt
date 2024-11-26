@@ -7,6 +7,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentSettingBinding
+import com.example.myapplication.presentation.ui.activity.AdminActivity
 import com.example.myapplication.presentation.ui.activity.QuizBlockActivity
 import com.example.myapplication.presentation.widget.extention.TokenManager
 import com.example.myapplication.presentation.widget.extention.loadProfileImage
@@ -39,6 +40,10 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(R.layout.fragment_s
         //임시 버튼
         binding.fragmentSettingNotificationTv.setOnClickListener{
             startActivity(Intent(requireActivity(),QuizBlockActivity::class.java))
+        }
+        // 임시 버튼
+        binding.fragmentQuestionTv.setOnClickListener{
+            startActivity(Intent(requireActivity(),AdminActivity::class.java))
         }
     }
 

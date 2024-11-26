@@ -19,12 +19,6 @@ import com.example.myapplication.presentation.adapter.AdapterItemClickedListener
 import com.example.myapplication.presentation.adapter.ChattingAdapter
 import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.presentation.viewmodel.AiViewModel
-import com.example.myapplication.presentation.viewmodel.ChapterViewModel
-import com.example.myapplication.presentation.viewmodel.CharacterViewModel
-import com.example.myapplication.presentation.viewmodel.DifficultyViewModel
-import com.example.myapplication.presentation.viewmodel.EduViewModel
-import com.example.myapplication.presentation.viewmodel.HomeViewModel
-import com.example.myapplication.presentation.viewmodel.QuizViewModel
 import com.example.myapplication.presentation.widget.extention.TokenManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,18 +29,16 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main),
     AdapterItemClickedListener {
+
+
+    @Inject
+    lateinit var tokenManager: TokenManager
+
     private var chatList: MutableList<ChatMessage> = mutableListOf()
     private lateinit var chattingAdapter: ChattingAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var aiViewModel: AiViewModel
-
     private lateinit var navController: NavController
-    private lateinit var eduViewModel: EduViewModel
-    private lateinit var homeViewModel: HomeViewModel
-    private lateinit var characterViewModel: CharacterViewModel
-    private lateinit var chapterViewModel: ChapterViewModel
-    private lateinit var quizVieModel: QuizViewModel
-    private lateinit var difficultyViewModel: DifficultyViewModel
 
     override fun setLayout() {
         initViewModel()
@@ -66,41 +58,34 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main),
         binding.fragmentNewsDescriptionFtb.visibility = View.VISIBLE
     }
 
-    var CHATTYPE = ChatOwner.RIGHT
-
-
-    fun stateChangeChatType(chatOwner: ChatOwner) {
+    //현재 채팅 타입 변경 (왼쪽, 오른쪽)
+    private fun stateChangeChatType(chatOwner: ChatOwner) {
         CHATTYPE = chatOwner
     }
 
+    //채팅 초기화
     private fun initChat() {
         val initList = chatList
         chattingAdapter.submitList(initList)
         stateChangeChatType(ChatOwner.LEFT)
-
     }
 
+    //리스트 초기화
     private fun initList() {
         val initList = chatList
         chattingAdapter.submitList(initList)
     }
 
-    fun initAdapter() {
+    //어댑터 초기화
+    private fun initAdapter() {
         chattingAdapter = ChattingAdapter(this)
         chatList.clear()
         chattingAdapter.submitList(chatList)
         binding.recyclerView.adapter = chattingAdapter
     }
 
-    @Inject
-    lateinit var tokenManager: TokenManager
+    //뷰모델 초기화
     private fun initViewModel() {
-        eduViewModel = ViewModelProvider(this)[EduViewModel::class.java]
-        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
-        characterViewModel = ViewModelProvider(this)[CharacterViewModel::class.java]
-        chapterViewModel = ViewModelProvider(this)[ChapterViewModel::class.java]
-        quizVieModel = ViewModelProvider(this)[QuizViewModel::class.java]
-        difficultyViewModel = ViewModelProvider(this)[DifficultyViewModel::class.java]
         aiViewModel = ViewModelProvider(this)[AiViewModel::class.java]
     }
 
@@ -112,13 +97,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main),
         binding.activityMainBnv.setupWithNavController(navController)
     }
 
+    //채팅 도착 시 값 수령
     private fun observeLifeCycle() {
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 aiViewModel.ai.collectLatest {
                     if (it.result.code == 200) {
-                        Log.d("페이", "${it.payload.toString()}")
                         when (CHATTYPE) {
                             ChatOwner.RIGHT -> {
                                 chatList.add(ChatMessage.RIGHT(it.payload.toString()))
@@ -127,7 +111,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main),
                             ChatOwner.LEFT -> {
                                 chatList.add(ChatMessage.LEFT(it.payload.toString()))
                             }
-
                         }
                     }
                     initChat()
@@ -135,56 +118,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main),
                 }
             }
         }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                eduViewModel.getAllQuiz.collectLatest {
-                    Log.d("값 도착", it.toString())
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                eduViewModel.getDistinctQuiz.collectLatest {
-                    Log.d("값 도착", it.toString())
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                homeViewModel.getAllHome.collectLatest {
-                    Log.d("값 도착", it.toString())
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                characterViewModel.postCharacter.collectLatest {
-                    Log.d("값 도착", it.toString())
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                chapterViewModel.getDistinctChapter.collectLatest {
-                    Log.d("값 도착", it.toString())
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                chapterViewModel.getAllChapter.collectLatest {
-                    Log.d("값 도착", it.toString())
-                }
-            }
-        }
     }
 
+    //바텀 시트 (챗 봇) 메세지 입력 및 초기화 함수
     private fun initializePersistentBottomSheet() {
         binding.layoutChatBottomSheetSendBt.setOnClickListener {
             val message = binding.layoutChatBottomSheetSendEt.text.toString()
@@ -234,6 +170,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main),
         bottomSheetBehavior.halfExpandedRatio = 0.5f // 기본값, 필요에 따라 조정
     }
 
+    //뒤로가기 클릭 시 바텀 네비 사라짐
     private fun setupBackPressedDispatcher() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -256,11 +193,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main),
         })
     }
 
-
+    //클릭 시 서버로 채팅 전달
     override fun onClick(item: Any) {
         item as ChatMessage.LEFT
         stateChangeChatType(ChatOwner.LEFT)
         aiViewModel.postAi(item.message)
+    }
+
+    //채팅 타입 오른쪽으로 초기화
+    companion object {
+        private var CHATTYPE = ChatOwner.RIGHT
     }
 
 }
