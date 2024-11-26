@@ -2,14 +2,24 @@ package com.example.myapplication.presentation.ui.activity
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipDescription.MIMETYPE_TEXT_PLAIN
+import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.DRAG_FLAG_GLOBAL
 import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.view.DragStartHelper
+import androidx.draganddrop.DropHelper
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -29,6 +39,10 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
     private lateinit var navController: NavController
     private var buttonPosition = 1
     lateinit var customDialog: CustomDialog
+    private var draggedTextView: TextView? = null
+    private val dragSources = mutableListOf<View>()
+    private var moveWay = mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+    private var targetBlockMap = mutableMapOf<Int, Int?>()
 
     val messageList = listOf(
         "무무가 아침 일정을 잘 마치도록 도와줘\n일어나기 > 세수하기 > 아침먹기 > 준비하기\n순서로 부탁할게! 해줄 수 있지?",
@@ -51,6 +65,7 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
         storySetting()
         nextFragment()
         onStoryState(true)
+        setupDropTargets(dropTargets, this)
     }
 
     //네비게이션 컨트롤러 세팅
@@ -111,6 +126,112 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
             binding.ibGamestoryMsgTxt.isSelected = !isState
             binding.ibGamestoryMsg.isSelected = !isState
         }, 10000)  // 10초 후 메시지 사라짐
+    }
+
+    fun setupDragSources(dragSources: List<View>) {
+        dragSources.forEach { source ->
+            DragStartHelper(source) { view, _ ->
+                var imageResId = dragSources.indexOf(source)
+                Log.d("image resource id", imageResId.toString())
+                val dragClipData = ClipData.newPlainText("DragData", imageResId.toString())
+                dragClipData.addItem(ClipData.Item(imageResId.toString()))
+
+                // Set the visual appearance of the drag shadow
+                val dragShadow = View.DragShadowBuilder(view)
+
+                // Start the drag and drop process
+                view.startDragAndDrop(
+                    dragClipData,
+                    dragShadow,
+                    null,
+                    DRAG_FLAG_GLOBAL
+                )
+                true
+            }.attach()
+        }
+    }
+
+    // drop의 target id 찾기
+    fun setupDropTargets(dropTargets: List<View>, context: Context) {
+        val activity = QuizBlockActivity()
+
+        dropTargets.forEach { target ->
+            DropHelper.configureView(
+                activity,
+                target,
+                arrayOf(MIMETYPE_TEXT_PLAIN),
+                DropHelper.Options.Builder()
+                    .setHighlightColor(ContextCompat.getColor(context, R.color.water_color))
+                    .build()
+            ) { view, payload ->
+                val item = payload.clip.getItemAt(0)
+                val imageResId = item.text.toString().toIntOrNull()
+                if (imageResId != null) {
+                    val dropTargetId = dropTargets.indexOf(target)
+                    handleImageDrop(view, imageResId, dropTargetId)
+                } else {
+                    Log.e(TAG, "Failed to retrieve imageResId from ClipData")
+                }
+
+                // 드롭 후 다른 데이터 처리
+                payload.partition { it == item }.second
+            }
+        }
+    }
+
+    fun handleImageDrop(target: View, dragId: Int, dropId: Int) {
+        // target을 Fragment 내에서 적절히 참조
+        targetBlockMap[dropId] = dragId
+        dragSources[dragId].visibility = View.GONE
+
+        val draggedBlock = dragSources[dragId] as FrameLayout
+        val blockDTO = draggedBlock.tag as? BlockDTO
+        val blockMove = blockDTO?.blockDescript
+        val targetView = target as? FrameLayout
+
+        if (targetView != null) {
+            targetView.visibility = View.VISIBLE // target이 보이도록 설정
+
+            // 기존 드래그된 이미지와 텍스트를 업데이트
+            val targetImageView = targetView.getChildAt(0) as ImageView
+            val draggedImageView = draggedBlock.getChildAt(0) as ImageView
+            targetImageView.setImageDrawable(draggedImageView.drawable)
+
+            // 텍스트 뷰 업데이트
+            if (targetView.childCount > 1) {
+                targetView.removeViewAt(1)
+            }
+
+            // 새 텍스트 뷰 추가
+            val overlayTextView = TextView(this).apply {
+                text = draggedTextView?.text
+                textSize = 12f
+                setTextColor(ContextCompat.getColor(this@QuizBlockActivity, R.color.white))
+                setPadding(20, 25, 0, 0)
+            }
+            targetView.addView(overlayTextView, 1)  // 새 텍스트 뷰를 두 번째 위치에 추가
+        } else {
+            Log.e("handleImageDrop", "Target is not a FrameLayout")
+        }
+
+        // 블록 이동 처리
+        handleBlockMove(blockMove!!, dropId)
+    }
+
+    private fun handleBlockMove(blockMove: String, dropId: Int) {
+        val blockMoveMap = mapOf(
+            resources.getString(R.string.game_wake) to R.string.game_wake,
+            resources.getString(R.string.game_wash) to R.string.game_wash,
+            resources.getString(R.string.game_practice) to R.string.game_practice,
+            resources.getString(R.string.game_breakfast) to R.string.game_breakfast,
+        )
+
+        val move = blockMoveMap[blockMove]
+        if (move != null) {
+            moveWay[dropId] = move
+        } else {
+            moveWay[dropId] = -1
+        }
     }
 
     @SuppressLint("InflateParams")

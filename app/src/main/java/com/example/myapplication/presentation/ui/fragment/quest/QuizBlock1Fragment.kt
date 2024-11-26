@@ -66,7 +66,6 @@ class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.frag
         //블럭 튜토리얼 1번
         initBlock()
         setupDragSources(dragSources)
-        setupDropTargets(dropTargets, requireActivity())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -160,71 +159,8 @@ class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.frag
         }
     }
 
-    // drop의 target id 찾기
-    override fun setupDropTargets(dropTargets: List<View>, context: Context) {
-        val activity = QuizBlockActivity()
-
-        dropTargets.forEach { target ->
-            DropHelper.configureView(
-                activity,
-                target,
-                arrayOf(MIMETYPE_TEXT_PLAIN),
-                DropHelper.Options.Builder()
-                    .setHighlightColor(getColor(context, R.color.water_color))
-                    .build()
-            ) { view, payload ->
-                val item = payload.clip.getItemAt(0)
-                val imageResId = item.text.toString().toIntOrNull()
-                if (imageResId != null) {
-                    val dropTargetId = dropTargets.indexOf(target)
-                    handleImageDrop(view, imageResId, dropTargetId)
-                } else {
-                    Log.e(TAG, "Failed to retrieve imageResId from ClipData")
-                }
-
-                // 드롭 후 다른 데이터 처리
-                payload.partition { it == item }.second
-            }
-        }
-    }
-
     override fun handleImageDrop(target: View, dragId: Int, dropId: Int) {
-        // target을 Fragment 내에서 적절히 참조
-        targetBlockMap[dropId] = dragId
-        dragSources[dragId].visibility = View.GONE
-
-        val draggedBlock = dragSources[dragId] as FrameLayout
-        val blockDTO = draggedBlock.tag as? BlockDTO
-        val blockMove = blockDTO?.blockDescript
-        val targetView = target as? FrameLayout
-
-        if (targetView != null) {
-            targetView.visibility = View.VISIBLE // target이 보이도록 설정
-
-            // 기존 드래그된 이미지와 텍스트를 업데이트
-            val targetImageView = targetView.getChildAt(0) as ImageView
-            val draggedImageView = draggedBlock.getChildAt(0) as ImageView
-            targetImageView.setImageDrawable(draggedImageView.drawable)
-
-            // 텍스트 뷰 업데이트
-            if (targetView.childCount > 1) {
-                targetView.removeViewAt(1)
-            }
-
-            // 새 텍스트 뷰 추가
-            val overlayTextView = TextView(requireContext()).apply {
-                text = draggedTextView?.text
-                textSize = 12f
-                setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-                setPadding(20, 25, 0, 0)
-            }
-            targetView.addView(overlayTextView, 1)  // 새 텍스트 뷰를 두 번째 위치에 추가
-        } else {
-            Log.e("handleImageDrop", "Target is not a FrameLayout")
-        }
-
-        // 블록 이동 처리
-        handleBlockMove(blockMove!!, dropId)
+        TODO("Not yet implemented")
     }
 
 
