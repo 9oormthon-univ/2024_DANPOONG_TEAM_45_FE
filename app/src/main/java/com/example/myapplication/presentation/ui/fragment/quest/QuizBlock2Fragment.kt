@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.example.myapplication.R
+import com.example.myapplication.databinding.ActivityGameBinding
 import com.example.myapplication.databinding.FragmentQuizBlock2Binding
 import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.presentation.ui.activity.BlockDTO
@@ -198,6 +199,30 @@ class QuizBlock2Fragment : BaseFragment<FragmentQuizBlock2Binding>(R.layout.frag
 
     override fun handleImageDrop(target: View, dragId: Int, dropId: Int) {
         TODO("Not yet implemented")
+    }
+
+    override fun gameFunction(binding: ActivityGameBinding) {
+        val av = requireActivity() as QuizBlockActivity
+        binding.ibGameplayBtn.setOnClickListener {
+            if (repeatIdx != -1 && isRepeat) {
+                Log.d("repeat index", repeatIdx.toString())
+                val repeatEditText =
+                    av.dropTargets[repeatIdx]?.getTag(R.id.ib_gameplay_btn) as? EditText
+                val targetTextView =
+                    av.dropTargets[repeatIdx].getTag(R.id.ib_game_state_done) as? TextView
+                var tempStr: Int = 0
+                if (targetTextView?.text.toString() == resources.getString(R.string.game_wave)) {
+                    tempStr = R.string.game_wave
+                }
+
+                if (repeatEditText?.text.toString().toInt() > 0) {
+                    for (i in 0 until repeatEditText?.text.toString().toInt() - 1) {
+                        moveWay.add(repeatIdx, tempStr)
+                    }
+                }
+                isRepeat = false
+            }
+        }
     }
 
     override fun checkSuccess() {

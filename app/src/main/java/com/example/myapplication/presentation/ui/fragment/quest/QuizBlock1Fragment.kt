@@ -28,6 +28,7 @@ import com.example.myapplication.databinding.FragmentQuizBlock1Binding
 import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.presentation.ui.activity.BlockDTO
 import com.example.myapplication.presentation.ui.activity.GameInterface
+import com.example.myapplication.presentation.ui.activity.QuizActivity
 import com.example.myapplication.presentation.ui.activity.QuizBlockActivity
 
 class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.fragment_quiz_block_1), GameInterface {
@@ -77,6 +78,7 @@ class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.frag
     }
 
     override fun initGame() {
+        val av = requireActivity() as QuizBlockActivity
         isExit = false
         isDialogShown = false
 
@@ -85,11 +87,11 @@ class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.frag
             dragSource.visibility = View.VISIBLE
         }
         isFailDialogShown = false
-        blockVisibility(requireActivity().findViewById<ImageButton>(R.id.ib_gameplay_btn), requireActivity().findViewById<ImageButton>(R.id.ib_gamestop_btn))
     }
 
     override fun addBlock(block: BlockDTO) {
-        val container = requireActivity().findViewById<LinearLayout>(R.id.linearLayout_block_list)
+        val av = requireActivity() as QuizBlockActivity
+        val container = av.binding.linearLayoutBlockList
 
         when (block.blockType) {
             resources.getString(R.string.block_type_normal) -> {
@@ -169,18 +171,15 @@ class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.frag
         if (successCnt == correctBlockOrder.size) success = true
         else success = false
         //********
+
+        val av = requireActivity() as QuizBlockActivity
         if (success) {
-            isDialogShown = true
-            Log.d("cur id testtest", curGameId.toString())
 //            isQuizClearedViewModel.postQuizClear(curGameId)
             // 성공 다이얼로그 출력
-            showSuccessDialog(false)
+            av.setReplaceLevelState(true)
         } else {
             // 실패 다이얼로그 출력
-            if (!isFailDialogShown) { // 실패 다이얼로그가 이미 표시되지 않았으면
-                showFailDialog()
-                isFailDialogShown = true
-            }
+            av.setReplaceLevelState(false)
         }
     }
 

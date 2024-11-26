@@ -22,6 +22,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.DragStartHelper
+import androidx.core.view.children
 import androidx.draganddrop.DropHelper
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -35,6 +36,8 @@ import com.example.myapplication.databinding.ActivityQuizBinding
 import com.example.myapplication.databinding.ActivityQuizBlockBinding
 import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.presentation.ui.fragment.quest.CustomDialog
+import com.example.myapplication.presentation.ui.fragment.quest.QuizBlock1Fragment
+import com.example.myapplication.presentation.ui.fragment.quest.QuizBlock2Fragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -55,9 +58,9 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
         "바다에서 파도 소리를 듣고 싶어! 파도는\n일정한 주기로 밀려왔다가 사라진대 파도소리가\n3번 들리게 만들어줄 수 있어?"
     )
 
-    private var levelCorrect = true
+    private var levelCorrect = false
 
-    private val dropTargets by lazy {
+    val dropTargets by lazy {
         mutableListOf<View>(
             binding.ibBiginnerGame1Space1,
             binding.ibBiginnerGame1Space2,
@@ -115,53 +118,43 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
         binding.linearLayoutBlockList.removeAllViews()
     }
 
-    fun clearDropTargets() {
-        targetBlockMap = mutableMapOf() // targetBlockMap 초기화
+    private fun clearDropTargets() {
+        targetBlockMap.clear() // Clear mappings
+        dragSources.forEach { it.visibility = View.VISIBLE } // Reset all drag sources visibility
 
-        // 드래그된 소스들을 다시 보이게 설정
-        for (dragSource in dragSources) {
-            dragSource.visibility = View.VISIBLE
-        }
-
-        // 각 Drop Target에 대해 초기화 작업 수행
         dropTargets.forEach { target ->
-            // 각 타겟 뷰에 대해 작업 처리
             if (target is FrameLayout) {
-                // 1. Tag를 안전하게 가져옴
-                val removeTarget1 = target.getTag(R.id.ib_biginner_game1_space1) as? ImageView
-                val removeTarget2 = target.getTag(R.id.ib_biginner_game1_space2) as? ImageView
-                val removeTarget3 = target.getTag(R.id.ib_gamestop_btn) as? ImageView
-                val removeTarget4 = target.getTag(R.id.ib_gameplay_btn) as? EditText
-                val removeTarget5 = target.getTag(R.id.ib_game_state_done) as? TextView
-
-                // 2. 태그가 설정된 뷰들을 제거
-                removeTarget1?.visibility = View.GONE
-                removeTarget2?.visibility = View.GONE
-                removeTarget3?.visibility = View.GONE
-                removeTarget4?.visibility = View.GONE
-                removeTarget5?.visibility = View.GONE
-
-                // 3. 첫 번째 자식 뷰(ImageView) 리셋
-                val targetImageView = target.getChildAt(0) as? ImageView
-                targetImageView?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.shape_square_rounded_16dp))
-
-                // 4. TextView 처리
-                if (target.childCount > 1) {
-                    target.removeViewAt(1) // 기존 텍스트 뷰 제거
-                }
-
-                // 5. 새 텍스트 뷰 추가
-                val overlayTextView = TextView(this).apply {
-                    text = "" // 텍스트 초기화
-                    setTextColor(ContextCompat.getColor(this@QuizBlockActivity, R.color.white))
-                    setPadding(20, 25, 0, 0)
-                }
-                target.addView(overlayTextView, 1) // 두 번째 자리에 텍스트 뷰 추가
+                resetDropTarget(target)
             } else {
-                Log.e("clearDropTargets", "Target is not a FrameLayout")
+                Log.e("clearDropTargets", "Unexpected target type")
             }
         }
     }
+
+    private fun resetDropTarget(target: FrameLayout) {
+        // Remove specific views by tags
+        listOf(
+            R.id.ib_biginner_game1_space1,
+            R.id.ib_biginner_game1_space2,
+            R.id.ib_gamestop_btn,
+            R.id.ib_gameplay_btn,
+            R.id.ib_game_state_done
+        ).forEach { tagId ->
+            val view = target.getTag(tagId) as? View
+            view?.visibility = View.GONE
+        }
+
+        // Reset child views
+        target.children.forEach { child ->
+            when (child) {
+                is ImageView -> child.setImageDrawable(
+                    ContextCompat.getDrawable(this, R.drawable.shape_square_rounded_16dp)
+                )
+                is TextView -> child.text = ""
+            }
+        }
+    }
+
 
     //버튼 이동
     private fun nextFragment() {
@@ -436,7 +429,7 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
     }
 
     @SuppressLint("InflateParams")
-    private fun showCustomDialog() {
+    private fun showCustomDialog(id: Int) {
         // 다이얼로그 레이아웃을 불러옴
         val dialogView =
             LayoutInflater.from(this).inflate(R.layout.dialog_fail, null)
@@ -452,6 +445,11 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
         val confirmButton = dialogView.findViewById<Button>(R.id.btn_dialog_biginner_quiz_fail)
         confirmButton.setOnClickListener {
             dialog.dismiss()
+            clearDropTargets()
+            var fv = if (id == 1) supportFragmentManager.findFragmentByTag("QuizBlock1FragmentTag") as? QuizBlock1Fragment
+            else supportFragmentManager.findFragmentByTag("QuizBlock2FragmentTag") as? QuizBlock2Fragment
+            fv?.initGame()
+            onGamestopState()
         }
         // 다이얼로그 보여주기
         dialog.show()
@@ -469,7 +467,10 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
         if (levelCorrect) {
             setDialog()
         } else {
-            showCustomDialog()
+            when (buttonPosition) {
+                1 -> showCustomDialog(1)
+                2 -> showCustomDialog(2)
+            }
         }
     }
 
