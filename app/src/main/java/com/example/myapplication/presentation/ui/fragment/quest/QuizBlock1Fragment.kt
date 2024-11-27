@@ -23,6 +23,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.DragStartHelper
 import androidx.draganddrop.DropHelper
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentQuizBlock1Binding
 import com.example.myapplication.presentation.base.BaseFragment
@@ -30,12 +32,16 @@ import com.example.myapplication.presentation.ui.activity.BlockDTO
 import com.example.myapplication.presentation.ui.activity.GameInterface
 import com.example.myapplication.presentation.ui.activity.QuizActivity
 import com.example.myapplication.presentation.ui.activity.QuizBlockActivity
+import com.example.myapplication.presentation.viewmodel.QuizViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.fragment_quiz_block_1), GameInterface {
     private var targetBlockMap = mutableMapOf<Int, Int?>()
     private var isExit = false //나가기 버튼 클릭했는지 여부 판단
     private var isDialogShown = false // 다이얼로그 표시 상태 플래그
     private var isFailDialogShown = false
+    private lateinit var viewModel: QuizViewModel
 
     private val dragSources = mutableListOf<View>()
     private var basicBlockId = 1 // 생성되는 블록 아이디 - 블록 색 지정을 위해 만든 변수
@@ -52,19 +58,23 @@ class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.frag
 
     override fun setLayout() {
         //블럭 튜토리얼 1번
+        initViewModel()
         initGame()
         initBlock()
         setupDragSources(dragSources)
+        updateViewModel()
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        // 뷰가 완전히 초기화된 후에 작업
-    }
-
 
     override fun initViewModel() {
-        TODO("Not yet implemented")
+        viewModel = ViewModelProvider(requireActivity())[QuizViewModel::class.java]
+    }
+
+    fun updateViewModel() {
+        viewModel.moveWay.observe(viewLifecycleOwner, Observer { moveWay ->
+            // moveWay 값 변경 시 처리할 로직
+            this.moveWay = moveWay
+            Log.d("moveWay", moveWay.toString())
+        })
     }
 
     override fun initBlock() {
@@ -154,48 +164,8 @@ class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.frag
         TODO("Not yet implemented")
     }
 
-
     override fun checkSuccess() {
-        val av = requireActivity() as QuizBlockActivity
-        var successCnt = 0
-        var correctBlockOrder = listOf(R.string.game_wake, R.string.game_wash, R.string.game_breakfast, R.string.game_practice)
-
-        val moveWay = (activity as QuizBlockActivity).moveWay
-
-        for (i: Int in correctBlockOrder.indices) {
-            if (moveWay[i] == correctBlockOrder[i]) {
-                successCnt += 1
-            }
-        }
-        var success : Boolean
-        if (successCnt == correctBlockOrder.size) success = true
-        else success = false
-        //********
-
-        if (success) {
-//            isQuizClearedViewModel.postQuizClear(curGameId)
-            // 성공 다이얼로그 출력
-            av.setReplaceLevelState(true)
-        } else {
-            // 실패 다이얼로그 출력
-            av.setReplaceLevelState(false)
-        }
-    }
-
-    private fun handleBlockMove(blockMove: String, dropId: Int) {
-        val blockMoveMap = mapOf(
-            resources.getString(R.string.game_wake) to R.string.game_wake,
-            resources.getString(R.string.game_wash) to R.string.game_wash,
-            resources.getString(R.string.game_practice) to R.string.game_practice,
-            resources.getString(R.string.game_breakfast) to R.string.game_breakfast,
-        )
-
-        val move = blockMoveMap[blockMove]
-        if (move != null) {
-            moveWay[dropId] = move
-        } else {
-            moveWay[dropId] = -1
-        }
+        TODO("Not yet implemented")
     }
 
     override fun showSuccessDialog(exit: Boolean) {
@@ -210,17 +180,4 @@ class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.frag
         val density = resources.displayMetrics.density
         return (this * density).toInt()
     }
-
-//    private fun buttonSet(isState: Boolean) {
-//        val av = requireActivity() as QuizBlockActivity
-//        av.onStoryState(isState)
-//        av.onGameplayState(isState)
-//    }
-//
-//    private fun buttonState(view1: View, view2: View) {
-//        view1.isSelected = true
-//        view2.isSelected = false
-//    }
-
-
 }

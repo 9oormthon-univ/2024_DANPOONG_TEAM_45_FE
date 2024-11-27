@@ -26,10 +26,12 @@ import androidx.core.view.children
 import androidx.draganddrop.DropHelper
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityGameBinding
@@ -39,9 +41,12 @@ import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.presentation.ui.fragment.quest.CustomDialog
 import com.example.myapplication.presentation.ui.fragment.quest.QuizBlock1Fragment
 import com.example.myapplication.presentation.ui.fragment.quest.QuizBlock2Fragment
+import com.example.myapplication.presentation.viewmodel.QuizViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activity_quiz_block) {
 
     private lateinit var navController: NavController
@@ -50,9 +55,11 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
     private var draggedTextView: TextView? = null
     private val dragSources = mutableListOf<FrameLayout>()
     var moveWay = mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+    val initialMoveWay = moveWay
     private var targetBlockMap = mutableMapOf<Int, Int?>()
     private var isRepeat = false
     private var repeatIdx: Int = -1
+    private lateinit var viewModel: QuizViewModel
 
     val messageList = listOf(
         "무무가 아침 일정을 잘 마치도록 도와줘\n일어나기 > 세수하기 > 아침먹기 > 준비하기\n순서로 부탁할게! 해줄 수 있지?",
@@ -71,11 +78,13 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
     }
 
     override fun setLayout() {
+        viewModel = ViewModelProvider(this)[QuizViewModel::class.java]
         setNavController()
         storySetting()
         nextFragment()
         onStoryState(true)
         setupDropTargets(dropTargets, this)
+        viewModel.setMoveWay(initialMoveWay)
     }
 
     fun handleViewFromFragment(view: FrameLayout) {
@@ -160,32 +169,46 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
     //버튼 이동
     private fun nextFragment() {
         binding.ibGameplayBtn.setOnClickListener {
+            repeatAddMoveWay()
             for (mv in moveWay) {
                 Log.d("dfddf", mv.toString())
             }
-            // buttonPosition이 정의되어 있어야 합니다. 예시로 1 또는 2 값을 가질 수 있다고 가정
-            val fv: Fragment? = when (buttonPosition) {
-                1 -> supportFragmentManager.findFragmentByTag("QuizBlock1FragmentTag")
-                2 -> supportFragmentManager.findFragmentByTag("QuizBlock2FragmentTag")
-                else -> null
-            }
 
-            // fv가 null이 아니면 checkSuccess 호출
-            if (fv is QuizBlock1Fragment) {
-                fv.checkSuccess()
-            } else if (fv is QuizBlock2Fragment) {
-                fv.checkSuccess()
-            } else {
-                // fv가 null이거나 잘못된 타입일 경우 처리
-                Log.e(TAG, "Fragment not found or wrong type")
+            val currentFragment = navController.currentDestination
+            if (currentFragment?.id == R.id.quizBlock1Fragment) {
+                // Fragment1이 활성화되었을 때
+                levelCorrect = viewModel.checkSuccess1()
+            } else if (currentFragment?.id == R.id.quizBlock2Fragment) {
+                // Fragment2가 활성화되었을 때
+                levelCorrect = viewModel.checkSuccess2()
             }
-
             onGameplayState()
             moveFragment()
         }
     }
 
+    private fun repeatAddMoveWay() {
+        // repeat일 경우 moveWay 추가
+        if (repeatIdx != -1 && isRepeat) {
+            Log.d("repeat index", repeatIdx.toString())
+            val repeatEditText =
+                dropTargets[repeatIdx]?.getTag(R.id.ib_gameplay_btn) as? EditText
+            val targetTextView =
+                dropTargets[repeatIdx].getTag(R.id.ib_game_state_done) as? TextView
+            var tempStr = 0
+            if (targetTextView?.text.toString() == resources.getString(R.string.game_wave)) {
+                tempStr = R.string.game_wave
+            }
 
+            if (repeatEditText?.text.toString().toInt() > 0) {
+                for (i in 0 until repeatEditText?.text.toString().toInt() - 1) {
+                    moveWay.add(repeatIdx, tempStr)
+                    viewModel.updateMoveWay(repeatIdx, tempStr)
+                }
+            }
+            isRepeat = false
+        }
+    }
     private fun bindingStory(index: Int) {
         binding.ibGamestoryMsgTxt.text = messageList[index]
     }
@@ -205,29 +228,6 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
             binding.ibGamestoryMsgTxt.isSelected = !isState
             binding.ibGamestoryMsg.isSelected = !isState
         }, 10000)  // 10초 후 메시지 사라짐
-    }
-
-    fun setupDragSources(dragSources: List<View>) {
-        dragSources.forEach { source ->
-            DragStartHelper(source) { view, _ ->
-                var imageResId = dragSources.indexOf(source)
-                Log.d("image resource id", imageResId.toString())
-                val dragClipData = ClipData.newPlainText("DragData", imageResId.toString())
-                dragClipData.addItem(ClipData.Item(imageResId.toString()))
-
-                // Set the visual appearance of the drag shadow
-                val dragShadow = View.DragShadowBuilder(view)
-
-                // Start the drag and drop process
-                view.startDragAndDrop(
-                    dragClipData,
-                    dragShadow,
-                    null,
-                    DRAG_FLAG_GLOBAL
-                )
-                true
-            }.attach()
-        }
     }
 
     // drop의 target id 찾기
@@ -442,11 +442,14 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
             if (move == R.string.game_repeat) {
                 moveWay[dropId] = move
                 repeatIdx = dropId
+                viewModel.updateMoveWay(dropId, move)
             } else {
                 moveWay[newdropId] = move
+                viewModel.updateMoveWay(newdropId, move)
             }
         } else {
             moveWay[newdropId] = -1
+            viewModel.updateMoveWay(newdropId, -1)
         }
     }
 
@@ -547,11 +550,4 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
         )
     }
 
-    fun onClickNext() {
-        nextFragmentWithIndex()
-    }
-
-    fun onClickStop() {
-        finish()
-    }
 }
