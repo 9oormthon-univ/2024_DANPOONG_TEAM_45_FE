@@ -476,11 +476,7 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
 
     private fun handleBlockMove(blockMove: String, newdropId: Int, dropId: Int) {
         val blockMoveMap = mapOf(
-            resources.getString(R.string.game_move_straight) to R.string.game_move_straight,
-            resources.getString(R.string.game_move_up) to R.string.game_move_up,
-            resources.getString(R.string.game_move_down) to R.string.game_move_down,
             resources.getString(R.string.game_repeat) to R.string.game_repeat,
-            resources.getString(R.string.game_fanning) to R.string.game_fanning,
             resources.getString(R.string.game_wake) to R.string.game_wake,
             resources.getString(R.string.game_wash) to R.string.game_wash,
             resources.getString(R.string.game_practice) to R.string.game_practice,
