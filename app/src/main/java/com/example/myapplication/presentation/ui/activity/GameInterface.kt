@@ -8,6 +8,7 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.View.DRAG_FLAG_GLOBAL
 import android.widget.EditText
@@ -85,24 +86,25 @@ interface GameInterface {
     // drag 시작
     fun setupDragSources(dragSources: List<View>) {
         dragSources.forEach { source ->
-            DragStartHelper(source) { view, _ ->
-                var imageResId = dragSources.indexOf(source)
-                Log.d("image resource id", imageResId.toString())
-                val dragClipData = ClipData.newPlainText("DragData", imageResId.toString())
-                dragClipData.addItem(ClipData.Item(imageResId.toString()))
+            source.setOnTouchListener { view, event ->
+                if (event.action == MotionEvent.ACTION_DOWN) {
+                    val imageResId = dragSources.indexOf(source)
+                    Log.d("Drag Event", "Starting drag with ID: $imageResId")
 
-                // Set the visual appearance of the drag shadow
-                val dragShadow = View.DragShadowBuilder(view)
+                    val dragClipData = ClipData.newPlainText("DragData", imageResId.toString())
+                    val dragShadow = View.DragShadowBuilder(view)
 
-                // Start the drag and drop process
-                view.startDragAndDrop(
-                    dragClipData,
-                    dragShadow,
-                    null,
-                    DRAG_FLAG_GLOBAL
-                )
-                true
-            }.attach()
+                    view.startDragAndDrop(
+                        dragClipData,
+                        dragShadow,
+                        null,
+                        View.DRAG_FLAG_GLOBAL
+                    )
+                    true
+                } else {
+                    false
+                }
+            }
         }
     }
 

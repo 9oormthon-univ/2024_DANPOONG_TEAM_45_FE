@@ -54,6 +54,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     private val dragSources = mutableListOf<View>()
     private var basicBlockId = 1 // 생성되는 블록 아이디 - 블록 색 지정을 위해 만든 변수
     private var curGameId = 2
+    private var gameId = 0
     private var chapterId = 1
 
     private lateinit var isQuizClearedViewModel: QuizViewModel
@@ -62,8 +63,8 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
     private var hint = ""
     private var moomooMsg = ""
-    private lateinit var question: List<Question>
-    private lateinit var answer: List<Answer>
+    private var question: List<Question> = mutableListOf()
+    private var answer: List<Answer> = mutableListOf()
 
     private var isNextGame: Boolean = false // 다음 게임 넘어가는지 여부 판단
         set(value) {
@@ -110,7 +111,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         initBlock()
         initGame()
         gameFunction(binding)
-        setupDragSources(dragSources)
         setupDropTargets(dropTargets, this)
 
         isQuizClearedViewModel.quizDistinct(curGameId)
@@ -128,6 +128,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                 isQuizClearedViewModel.quizDistinct.collectLatest {
                     when (it.result.code) {
                         200 -> {
+                            gameId = it.payload?.quizId!!
                             hint = it.payload?.hint.toString()
                             moomooMsg = it.payload?.message.toString()
                             question = it.payload?.questions!!
@@ -135,6 +136,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
                             binding.ivGameHintTxt.text = hint
                             binding.ibGamestoryMsgTxt.text = moomooMsg
+
+                            initBlock()
+                            setupDragSources(dragSources)
                         }
                     }
                 }
@@ -158,50 +162,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     // init ---------------------------------------------------------
     override fun initBlock() {
         clearDragTargets(binding)
-
-        Log.d("로그","$curGameId")
-        when(curGameId) {
-            3 -> {
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
-            }
-            4 -> {
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
-            }
-            5 -> {
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_up), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_down), 0))
-            }
-
-            6 -> {
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_up), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_fanning), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_down), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
-            }
-            7 -> {
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_straight), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_up), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_down), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_move_down), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_normal), resources.getString(R.string.game_fanning), 0))
-                addBlock(BlockDTO(resources.getString(R.string.block_type_repeat), resources.getString(R.string.game_repeat), 0))
-            }
-        }
-    }
-
-    //위에 예시를 간소화 한 예시 함수
-    private fun manageAddBlock(blockDTOList: List<BlockDTO>){
-        blockDTOList.map {
+        question.toBlockDTOList().map {
             addBlock(it)
         }
     }
