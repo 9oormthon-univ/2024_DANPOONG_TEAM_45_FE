@@ -56,7 +56,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     private var basicBlockId = 1 // 생성되는 블록 아이디 - 블록 색 지정을 위해 만든 변수
     private var curGameId = 2
     private var gameId = 0
-    private var chapterId = 1
+    private var chapterId = 2
 
     private lateinit var isQuizClearedViewModel: QuizViewModel
     private lateinit var isChapterClearedViewModel: ChapterViewModel
@@ -720,6 +720,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     private fun handleSuccess() {
         isQuizClearedViewModel.postQuizClear(curGameId)
         if (curGameId == 7) { // 마지막 퀴즈이면 챕터 클리어 POST
+            Log.d("okhttp","클리어")
             isChapterClearedViewModel.postChapterClear(chapterId)
         }
         showSuccessDialog()
