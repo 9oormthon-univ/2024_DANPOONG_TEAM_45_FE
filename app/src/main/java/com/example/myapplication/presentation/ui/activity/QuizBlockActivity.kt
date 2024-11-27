@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.ClipDescription.MIMETYPE_TEXT_PLAIN
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.text.InputType
@@ -30,6 +31,7 @@ import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.presentation.ui.fragment.quest.CustomDialog
 import com.example.myapplication.presentation.ui.fragment.quest.QuizBlock1Fragment
 import com.example.myapplication.presentation.ui.fragment.quest.QuizBlock2Fragment
+import com.example.myapplication.presentation.viewmodel.ChapterViewModel
 import com.example.myapplication.presentation.viewmodel.QuizViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -45,6 +47,7 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
     private var isRepeat = false
     private var repeatIdx: Int = -1
     private lateinit var viewModel: QuizViewModel
+    private val chapterClearViewModel : ChapterViewModel by viewModels()
 
     val messageList = listOf(
         "무무가 아침 일정을 잘 마치도록 도와줘\n일어나기 > 세수하기 > 아침먹기 > 준비하기\n순서로 부탁할게! 해줄 수 있지?",
@@ -506,11 +509,16 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
         when (buttonPosition) {
             1 -> {
                 showSuccessDialog(1)
+                clearDragTargets() // 상태 초기화 추가
+                clearDropTargets()
                 viewModel.postQuizClear(1)
             }
             2 -> {
                 showSuccessDialog(2)
+                clearDragTargets() // 상태 초기화 추가
+                clearDropTargets()
                 viewModel.postQuizClear(2)
+                chapterClearViewModel.postChapterClear(1)
             }
         }
     }
@@ -556,9 +564,13 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
 
         nextBtn.setOnClickListener {
             dialog.dismiss()
-            nextFragmentWithIndex()
+            if(id==1) {
+                nextFragmentWithIndex()
+            }
+            else{
+                startActivity(Intent(this@QuizBlockActivity,QuizClearActivity::class.java))
+            }
         }
-
         dialog.show() // 다이얼로그 표시
     }
 
@@ -623,8 +635,6 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
     }
 
     private fun nextFragmentWithIndex() {
-        clearDragTargets()
-        clearDropTargets()
         navController.navigate(
             R.id.quizBlock2Fragment, null,
             NavOptions.Builder()
