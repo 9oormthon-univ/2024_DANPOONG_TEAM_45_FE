@@ -19,7 +19,7 @@ fun AllChapterResponse.toDomain(): List<IslandDto> {
                     name = it.name,
                     background = R.drawable.ic_island_left,
                     island = locked(decideIsClear(this.result, it.id), index),
-                    locked = decideIsClear(this.result, it.id),
+                    locked = !decideIsClear(this.result, it.id),
                     id = it.id,
                     quizzes = it.quizzes,
                     isCleared = it.isCleared
@@ -31,7 +31,7 @@ fun AllChapterResponse.toDomain(): List<IslandDto> {
                     name = it.name,
                     background = R.drawable.ic_island_right,
                     island = locked(decideIsClear(this.result, it.id), index), // 사진
-                    locked = decideIsClear(this.result, it.id), // 잠김 여부
+                    locked = !decideIsClear(this.result, it.id), // 잠김 여부
                     id = it.id,
                     quizzes = it.quizzes,
                     isCleared = it.isCleared
@@ -50,13 +50,12 @@ fun decideIsClear(list: List<DistinctChapterResponse>, id: Int): Boolean {
     }
     // 이전 챕터의 상태 확인
     val previousCleared = list[id - 2].isCleared // id - 2로 이전 챕터 참조
-    Log.d("okhttp", "ID: $id, 이전 챕터(${id - 1}) isCleared: $previousCleared") // 디버깅 로그 추가
-    return !previousCleared
+    return previousCleared
 }
 
 fun locked(isCleared: Boolean, number: Int): Int {
     Log.d("okhttp", "locked() 호출 - isCleared: $isCleared, number: $number")
-    return if (!isCleared) {
+    return if (isCleared) {
         when (number) {
             0 -> R.drawable.iv_biginner_island
             1 -> R.drawable.iv_candy_island_unlocked

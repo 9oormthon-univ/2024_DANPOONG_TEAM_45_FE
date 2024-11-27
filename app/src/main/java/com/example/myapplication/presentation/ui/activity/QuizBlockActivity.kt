@@ -16,6 +16,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.draganddrop.DropHelper
@@ -507,8 +508,14 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
     private fun setDialog() {
         onGamestopState()
         when (buttonPosition) {
-            1 -> showSuccessDialog(1)
-            2 -> showSuccessDialog(2)
+            1 -> {
+                showSuccessDialog(1)
+                viewModel.postQuizClear(1)
+            }
+            2 -> {
+                showSuccessDialog(2)
+                viewModel.postQuizClear(2)
+            }
         }
     }
 
@@ -577,7 +584,7 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
         confirmButton.setOnClickListener {
             dialog.dismiss()
             clearDropTargets()
-            var fv =
+            val fv =
                 if (id == 1) supportFragmentManager.findFragmentByTag("QuizBlock1FragmentTag") as? QuizBlock1Fragment
                 else supportFragmentManager.findFragmentByTag("QuizBlock2FragmentTag") as? QuizBlock2Fragment
             fv?.initGame()

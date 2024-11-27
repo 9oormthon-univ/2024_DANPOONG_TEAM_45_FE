@@ -48,6 +48,7 @@ class QuizClearActivity : BaseActivity<ActivityQuizClearBinding>(R.layout.activi
                 tokenManager.saveCountToken("${score + 1}")
             }
             binding.btnNextstageSeeMoomoo.setOnClickListener {
+                //믈약
                 characterViewModel.postIncreaseActivity(cid.toInt(), 50)
                 val intent = Intent(this, MainActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -61,6 +62,8 @@ class QuizClearActivity : BaseActivity<ActivityQuizClearBinding>(R.layout.activi
             binding.btnNextstageSeeMoomoo.text = "보상받으러 가기"
             lifecycleScope.launch {
                 tokenManager.saveTut2("ok")
+                val score = tokenManager.getCountToken.first().toString().toInt()
+                tokenManager.saveCountToken("${score + 1}")
             }
 
             loginViewModel.getCompleteTraining()
@@ -73,18 +76,7 @@ class QuizClearActivity : BaseActivity<ActivityQuizClearBinding>(R.layout.activi
         }
         binding.ivNextStageCancel.setOnClickListener {
             binding.btnNextstageSeeMoomoo.visibility = View.GONE
-//            supportFragmentManager
-//                .beginTransaction()
-//                .add(R.id.activity_quiz_clear, QuestChapterFragment())
-//                .commit()
             finish()
-//            BiginnerFragment().biginner_item[0].game_state = 2 -> TODO game_state 완료로 바꾸기
-//            supportFragmentManager.executePendingTransactions()
-//            questFragment.updateLakeIslandVisibility(isOn = true)
-//
-//            val sharedPref = getSharedPreferences("QuestPrefs", Context.MODE_PRIVATE)
-//            sharedPref.edit().putBoolean("lakeIslandVisible", true).apply()
-
         }
     }
 
