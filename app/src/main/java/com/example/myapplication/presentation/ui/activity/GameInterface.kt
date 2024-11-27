@@ -8,6 +8,7 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.View.DRAG_FLAG_GLOBAL
 import android.widget.EditText
@@ -79,58 +80,31 @@ interface GameInterface {
     fun addBlock(blockDTO: BlockDTO) // drag 아이템 추가
 
     // 각종 버튼들 처리, repeat 블록 있으면 moveWay에 추가
-    fun gameFunction(binding: ActivityGameBinding) {
-        // 각종 버튼들 처리
-        binding.ibGamestopBtn.setOnClickListener {
-            blockVisibility(binding.ibGameplayBtn, binding.ibGamestopBtn)
-        }
-
-        binding.ibBulbBtn.setOnClickListener {
-            binding.ibBulbBtn.isSelected = !binding.ibBulbBtn.isSelected
-            if (binding.ibBulbBtn.isSelected) {
-                // 힌트 보여주기
-                binding.ivGameHint.visibility = View.VISIBLE
-                binding.ivGameHintTxt.visibility = View.VISIBLE
-            } else {
-                binding.ivGameHint.visibility = View.GONE
-                binding.ivGameHintTxt.visibility = View.GONE
-            }
-        }
-
-        binding.ibGamestoryOn.setOnClickListener {
-            binding.ibGamestoryMsg.visibility = View.GONE
-            binding.ibGamestoryMsgTxt.visibility = View.GONE
-            blockVisibility(binding.ibGamestoryOff, binding.ibGamestoryOn)
-        }
-        binding.ibGamestoryOff.setOnClickListener {
-            binding.ibGamestoryMsg.visibility = View.VISIBLE
-            binding.ibGamestoryMsgTxt.visibility = View.VISIBLE
-            blockVisibility(binding.ibGamestoryOn, binding.ibGamestoryOff)
-        }
-    }
+    fun gameFunction(binding: ActivityGameBinding)
 
     // drag and drop ----------------------------------------------
     // drag 시작
     fun setupDragSources(dragSources: List<View>) {
         dragSources.forEach { source ->
-            DragStartHelper(source) { view, _ ->
-                var imageResId = dragSources.indexOf(source)
-                Log.d("image resource id", imageResId.toString())
-                val dragClipData = ClipData.newPlainText("DragData", imageResId.toString())
-                dragClipData.addItem(ClipData.Item(imageResId.toString()))
+            source.setOnTouchListener { view, event ->
+                if (event.action == MotionEvent.ACTION_DOWN) {
+                    val imageResId = dragSources.indexOf(source)
+                    Log.d("Drag Event", "Starting drag with ID: $imageResId")
 
-                // Set the visual appearance of the drag shadow
-                val dragShadow = View.DragShadowBuilder(view)
+                    val dragClipData = ClipData.newPlainText("DragData", imageResId.toString())
+                    val dragShadow = View.DragShadowBuilder(view)
 
-                // Start the drag and drop process
-                view.startDragAndDrop(
-                    dragClipData,
-                    dragShadow,
-                    null,
-                    DRAG_FLAG_GLOBAL
-                )
-                true
-            }.attach()
+                    view.startDragAndDrop(
+                        dragClipData,
+                        dragShadow,
+                        null,
+                        View.DRAG_FLAG_GLOBAL
+                    )
+                    true
+                } else {
+                    false
+                }
+            }
         }
     }
 
@@ -180,7 +154,7 @@ interface GameInterface {
 
     // 게임 성공 여부 판단
     fun checkSuccess() // 게임 성공인지 판별
-    fun showSuccessDialog(exit: Boolean) // 게임 성공 시 성공 다이얼로그 출력, exit : 나가기 버튼 눌렀을 때 다이얼로그
+    fun showSuccessDialog() // 게임 성공 시 성공 다이얼로그 출력
     fun showFailDialog() // 게임 실패 시 실패 다이얼로그 출력
 
     // 기타 기능
