@@ -1,5 +1,6 @@
 package com.example.myapplication.presentation.ui.fragment.quest
 
+import android.media.MediaPlayer
 import android.text.InputType
 import android.util.Log
 import android.view.Gravity
@@ -25,6 +26,7 @@ class QuizBlock2Fragment : BaseFragment<FragmentQuizBlock2Binding>(R.layout.frag
     private var isExit = false //나가기 버튼 클릭했는지 여부 판단
     private var isDialogShown = false // 다이얼로그 표시 상태 플래그
     private var isFailDialogShown = false
+    private lateinit var mediaPlayer: MediaPlayer
 
     private val dragSources = mutableListOf<View>()
     private var basicBlockId = 1 // 생성되는 블록 아이디 - 블록 색 지정을 위해 만든 변수
@@ -43,6 +45,7 @@ class QuizBlock2Fragment : BaseFragment<FragmentQuizBlock2Binding>(R.layout.frag
         // 블록 튜토리얼 2번
         initGame()
         initBlock()
+        initMediaPlayer()
         setupDragSources(dragSources)
     }
 
@@ -266,5 +269,33 @@ class QuizBlock2Fragment : BaseFragment<FragmentQuizBlock2Binding>(R.layout.frag
     override fun Int.dpToPx(): Int {
         val density = resources.displayMetrics.density
         return (this * density).toInt()
+    }
+
+    private fun initMediaPlayer(){
+        // MediaPlayer 초기화
+        mediaPlayer = MediaPlayer.create(requireContext(), R.raw.tide)
+        mediaPlayer.isLooping = true // 반복 재생
+        mediaPlayer.start() // 음악 시작
+    }
+    override fun onPause() {
+        super.onPause()
+        // Activity가 중단되면 음악 일시 중지
+        if (mediaPlayer.isPlaying) {
+            mediaPlayer.pause()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Activity가 다시 활성화되면 음악 재개
+        if (!mediaPlayer.isPlaying) {
+            mediaPlayer.start()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // MediaPlayer 해제
+        mediaPlayer.release()
     }
 }
