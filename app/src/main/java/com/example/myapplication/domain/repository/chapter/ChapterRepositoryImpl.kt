@@ -5,6 +5,7 @@ import com.example.myapplication.data.repository.remote.request.chapter.Register
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.chapter.AllChapterResponse
 import com.example.myapplication.data.repository.remote.response.chapter.DistinctChapterResponse
+import com.kakao.sdk.cert.a.a
 import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -22,8 +23,8 @@ data class ChapterRepositoryImpl @Inject constructor(
     override suspend fun deleteChapter(lchapter_id: String): Flow<BaseResponse<Any>> =
         chapterDataSource.deleteChapter(lchapter_id)
 
-    override suspend fun modifyChapter(registerChapterDto: RegisterChapterDto): Flow<Response<ResponseBody>> =
-        chapterDataSource.modifyChapter(registerChapterDto)
+    override suspend fun modifyChapter(chapter_id: String, registerChapterDto: RegisterChapterDto): Flow<BaseResponse<Any>> =
+        chapterDataSource.modifyChapter(chapter_id,registerChapterDto)
 
     override suspend fun getAllChapter(): Flow<BaseResponse<AllChapterResponse>> =
         chapterDataSource.getAllChapter()
