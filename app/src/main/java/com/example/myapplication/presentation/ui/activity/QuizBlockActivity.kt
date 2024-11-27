@@ -151,6 +151,7 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
                 is ImageView -> child.setImageDrawable(
                     ContextCompat.getDrawable(this, R.drawable.shape_square_rounded_16dp)
                 )
+
                 is TextView -> child.text = ""
             }
         }
@@ -287,7 +288,12 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
                         val overlayTextView = TextView(this).apply {
                             text = draggedTextView!!.text
                             textSize = 12f
-                            setTextColor(ContextCompat.getColor(this@QuizBlockActivity, R.color.white))
+                            setTextColor(
+                                ContextCompat.getColor(
+                                    this@QuizBlockActivity,
+                                    R.color.white
+                                )
+                            )
                             setPadding(45, 90, 0, 0)
                         }
                         target.setTag(R.id.ib_game_state_done, overlayTextView)
@@ -309,7 +315,12 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
                         val overlayTextView = TextView(this).apply {
                             text = draggedTextView!!.text
                             textSize = 12f
-                            setTextColor(ContextCompat.getColor(this@QuizBlockActivity, R.color.white))
+                            setTextColor(
+                                ContextCompat.getColor(
+                                    this@QuizBlockActivity,
+                                    R.color.white
+                                )
+                            )
                             setPadding(20, 25, 0, 0)
                         }
                         target.addView(overlayTextView, 1)
@@ -389,7 +400,8 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
                     val newEditText = EditText(this).apply {
                         setText(draggedEditText.text)
                         setTextColor(ContextCompat.getColor(this@QuizBlockActivity, R.color.white))
-                        inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+                        inputType =
+                            InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
                         textSize = 10.51f
                         layoutParams = FrameLayout.LayoutParams(
                             FrameLayout.LayoutParams.WRAP_CONTENT,
@@ -468,8 +480,9 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
         confirmButton.setOnClickListener {
             dialog.dismiss()
             clearDropTargets()
-            var fv = if (id == 1) supportFragmentManager.findFragmentByTag("QuizBlock1FragmentTag") as? QuizBlock1Fragment
-            else supportFragmentManager.findFragmentByTag("QuizBlock2FragmentTag") as? QuizBlock2Fragment
+            var fv =
+                if (id == 1) supportFragmentManager.findFragmentByTag("QuizBlock1FragmentTag") as? QuizBlock1Fragment
+                else supportFragmentManager.findFragmentByTag("QuizBlock2FragmentTag") as? QuizBlock2Fragment
             fv?.initGame()
             onGamestopState()
         }
