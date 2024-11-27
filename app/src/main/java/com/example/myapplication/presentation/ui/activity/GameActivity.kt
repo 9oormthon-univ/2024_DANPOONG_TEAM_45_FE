@@ -34,6 +34,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.myapplication.data.mapper.toBlockDTOList
+import com.example.myapplication.data.repository.remote.response.quiz.Answer
+import com.example.myapplication.data.repository.remote.response.quiz.Question
 import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.presentation.viewmodel.ChapterViewModel
 import com.example.myapplication.presentation.viewmodel.CharacterViewModel
@@ -47,7 +50,6 @@ import kotlinx.coroutines.launch
 class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), GameInterface {
 
     private var targetBlockMap = mutableMapOf<Int, Int?>()
-    private var isDialogShown = false // 다이얼로그 표시 상태 플래그
 
     private val dragSources = mutableListOf<View>()
     private var basicBlockId = 1 // 생성되는 블록 아이디 - 블록 색 지정을 위해 만든 변수
@@ -60,6 +62,8 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
     private var hint = ""
     private var moomooMsg = ""
+    private lateinit var question: List<Question>
+    private lateinit var answer: List<Answer>
 
     private var isNextGame: Boolean = false // 다음 게임 넘어가는지 여부 판단
         set(value) {
@@ -86,7 +90,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
             binding.ibBiginnerGame1Space7
         )
     }
-
 
     private val successDialogComment by lazy {
         listOf(
@@ -127,6 +130,8 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                         200 -> {
                             hint = it.payload?.hint.toString()
                             moomooMsg = it.payload?.message.toString()
+                            question = it.payload?.questions!!
+                            answer = it.payload?.answers!!
 
                             binding.ivGameHintTxt.text = hint
                             binding.ibGamestoryMsgTxt.text = moomooMsg
@@ -717,37 +722,43 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
     // check success ------------------------------------------------
     override fun checkSuccess() {
-        if (isDialogShown) return
+        val correctBlockOrder = getCorrectBlockOrder(curGameId)
+        val isSuccess = isMoveCorrect(correctBlockOrder)
 
-        for (mv in moveWay) {
-            Log.d("dfdfd", mv.toString())
+        if (isSuccess) {
+            handleSuccess()
+        } else {
+            showFailDialog()
         }
+    }
 
-        var correctBlockOrder = listOf(0)
-        var successCnt = 0
-        when (curGameId) {
-            3 -> correctBlockOrder = listOf(R.string.game_move_straight)
-            4 -> correctBlockOrder = listOf(
+    private fun getCorrectBlockOrder(gameId: Int): List<Int> {
+        return when (gameId) {
+            3 -> listOf(R.string.game_move_straight)
+            4 -> listOf(
                 R.string.game_move_straight,
                 R.string.game_move_straight,
                 R.string.game_move_straight,
-                R.string.game_move_straight)
-            5 -> correctBlockOrder = listOf(
+                R.string.game_move_straight
+            )
+            5 -> listOf(
                 R.string.game_move_straight,
                 R.string.game_move_down,
                 R.string.game_move_straight,
                 R.string.game_move_straight,
                 R.string.game_move_up,
-                R.string.game_move_straight)
-            6 -> correctBlockOrder = listOf(
+                R.string.game_move_straight
+            )
+            6 -> listOf(
                 R.string.game_move_straight,
                 R.string.game_move_up,
                 R.string.game_move_straight,
                 R.string.game_fanning,
                 R.string.game_move_straight,
                 R.string.game_move_straight,
-                R.string.game_move_down)
-            7 -> correctBlockOrder = listOf(
+                R.string.game_move_down
+            )
+            7 -> listOf(
                 R.string.game_fanning,
                 R.string.game_move_down,
                 R.string.game_move_straight,
@@ -757,33 +768,27 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                 R.string.game_repeat,
                 R.string.game_move_straight
             )
-        }
-
-        for (i: Int in correctBlockOrder.indices) {
-            if (moveWay[i] == correctBlockOrder[i]) {
-                successCnt += 1
-            }
-
-        }
-        var success : Boolean
-        if (successCnt == correctBlockOrder.size) success = true
-        else success = false
-        //********
-        if (success) {
-            isDialogShown = true
-            Log.d("cur id testtest", curGameId.toString())
-            isQuizClearedViewModel.postQuizClear(curGameId)
-            if (curGameId == 7) {
-                isChapterClearedViewModel.postChapterClear(chapterId)
-            }
-
-            // 성공 다이얼로그 출력
-            showSuccessDialog()
-        } else {
-            // 실패 다이얼로그 출력
-            showFailDialog()
+            else -> emptyList()
         }
     }
+
+    private fun isMoveCorrect(correctBlockOrder: List<Int>): Boolean {
+        for (i in correctBlockOrder.indices) {
+            if (moveWay[i] != correctBlockOrder[i]) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun handleSuccess() {
+        isQuizClearedViewModel.postQuizClear(curGameId)
+        if (curGameId == 7) { // 마지막 퀴즈이면 챕터 클리어 POST
+            isChapterClearedViewModel.postChapterClear(chapterId)
+        }
+        showSuccessDialog()
+    }
+
 
     @SuppressLint("InflateParams")
     override fun showSuccessDialog() {
