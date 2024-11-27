@@ -155,7 +155,7 @@
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/ib_gamestory_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
@@ -163,15 +163,16 @@
                 app:layout_constraintBottom_toTopOf="@+id/ib_gamestory_msg_txt"
                 app:layout_constraintStart_toStartOf="@+id/ib_gamestory_msg_txt" />
             <TextView
+                android:id="@+id/ib_gamestory_txt"
                 android:layout_marginStart="6dp"
                 style="@style/pretandard_bold.12sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:text="무무의 메시지"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
-                app:layout_constraintTop_toTopOf="@+id/imageView" />
+                app:layout_constraintBottom_toBottomOf="@+id/ib_gamestory_img"
+                app:layout_constraintStart_toEndOf="@+id/ib_gamestory_img"
+                app:layout_constraintTop_toTopOf="@+id/ib_gamestory_img" />
             <TextView
                 android:id="@+id/ib_gamestory_msg_txt"
                 android:layout_width="wrap_content"
