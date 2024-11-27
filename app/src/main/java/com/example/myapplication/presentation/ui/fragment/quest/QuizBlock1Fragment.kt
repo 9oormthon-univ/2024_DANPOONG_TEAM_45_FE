@@ -1,31 +1,17 @@
 package com.example.myapplication.presentation.ui.fragment.quest
 
-import android.app.Activity
-import android.content.ClipData
-import android.content.ClipDescription.MIMETYPE_TEXT_PLAIN
-import android.content.ContentValues.TAG
-import android.content.Context
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.text.InputType
 import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.view.View.DRAG_FLAG_GLOBAL
-import android.widget.EditText
 import android.widget.FrameLayout
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getColor
-import androidx.core.view.DragStartHelper
-import androidx.draganddrop.DropHelper
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.R
+import com.example.myapplication.databinding.ActivityGameBinding
 import com.example.myapplication.databinding.FragmentQuizBlock1Binding
 import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.presentation.ui.activity.BlockDTO
@@ -38,23 +24,11 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.fragment_quiz_block_1), GameInterface {
     private var targetBlockMap = mutableMapOf<Int, Int?>()
-    private var isExit = false //나가기 버튼 클릭했는지 여부 판단
-    private var isDialogShown = false // 다이얼로그 표시 상태 플래그
-    private var isFailDialogShown = false
     private lateinit var viewModel: QuizViewModel
+    private var moveWay = MutableList(10) { 0 }
 
     private val dragSources = mutableListOf<View>()
     private var basicBlockId = 1 // 생성되는 블록 아이디 - 블록 색 지정을 위해 만든 변수
-    private var repeatBlockId = 1 // 생성되는 블록 아이디
-    private var curGameId = 2
-    private var chapterId = 1
-
-    private var isState = false
-    private var moveWay = mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-
-    private var isRepeat = false
-    private var repeatIdx: Int = -1
-    private var draggedTextView: TextView? = null
 
     override fun setLayout() {
         //블럭 튜토리얼 1번
@@ -69,7 +43,7 @@ class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.frag
         viewModel = ViewModelProvider(requireActivity())[QuizViewModel::class.java]
     }
 
-    fun updateViewModel() {
+    private fun updateViewModel() {
         viewModel.moveWay.observe(viewLifecycleOwner, Observer { moveWay ->
             // moveWay 값 변경 시 처리할 로직
             this.moveWay = moveWay
@@ -88,15 +62,10 @@ class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.frag
     }
 
     override fun initGame() {
-        val av = requireActivity() as QuizBlockActivity
-        isExit = false
-        isDialogShown = false
-
-        targetBlockMap = mutableMapOf()
+        targetBlockMap = mutableMapOf() // 매팽된 target block map 초기화
         for (dragSource in dragSources) {
             dragSource.visibility = View.VISIBLE
         }
-        isFailDialogShown = false
     }
 
     override fun addBlock(block: BlockDTO) {
@@ -168,7 +137,11 @@ class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.frag
         TODO("Not yet implemented")
     }
 
-    override fun showSuccessDialog(exit: Boolean) {
+    override fun showSuccessDialog() {
+        TODO("Not yet implemented")
+    }
+
+    override fun gameFunction(binding: ActivityGameBinding) {
         TODO("Not yet implemented")
     }
 

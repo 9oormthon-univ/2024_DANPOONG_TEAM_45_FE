@@ -2,40 +2,28 @@ package com.example.myapplication.presentation.ui.activity
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.ClipData
 import android.content.ClipDescription.MIMETYPE_TEXT_PLAIN
 import android.content.ContentValues.TAG
 import android.content.Context
-import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.DRAG_FLAG_GLOBAL
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.view.DragStartHelper
 import androidx.core.view.children
 import androidx.draganddrop.DropHelper
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.myapplication.R
-import com.example.myapplication.databinding.ActivityGameBinding
-import com.example.myapplication.databinding.ActivityQuizBinding
 import com.example.myapplication.databinding.ActivityQuizBlockBinding
 import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.presentation.ui.fragment.quest.CustomDialog
@@ -43,19 +31,15 @@ import com.example.myapplication.presentation.ui.fragment.quest.QuizBlock1Fragme
 import com.example.myapplication.presentation.ui.fragment.quest.QuizBlock2Fragment
 import com.example.myapplication.presentation.viewmodel.QuizViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activity_quiz_block) {
 
     private lateinit var navController: NavController
     private var buttonPosition = 1
-    lateinit var customDialog: CustomDialog
-    private var draggedTextView: TextView? = null
     private val dragSources = mutableListOf<FrameLayout>()
-    var moveWay = mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-    val initialMoveWay = moveWay
+    private var moveWay = MutableList(10) { 0 }
+    private val initialMoveWay = moveWay
     private var targetBlockMap = mutableMapOf<Int, Int?>()
     private var isRepeat = false
     private var repeatIdx: Int = -1
@@ -78,12 +62,17 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
     }
 
     override fun setLayout() {
-        viewModel = ViewModelProvider(this)[QuizViewModel::class.java]
+        initViewModel()
+        initStory()
         setNavController()
-        storySetting()
+        mappingFragmentNumber()
         nextFragment()
-        onStoryState(true)
+        onClickExit()
         setupDropTargets(dropTargets, this)
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(this)[QuizViewModel::class.java]
         viewModel.setMoveWay(initialMoveWay)
     }
 
@@ -100,7 +89,7 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
     }
 
     //네비게이션마다 프레그먼트 번호로 매칭
-    private fun storySetting() {
+    private fun mappingFragmentNumber() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.quizBlock1Fragment -> {
@@ -123,7 +112,13 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
 
     }
 
-    fun clearDragTargets() {
+    private fun onClickExit() {
+        binding.ibGameplayExitBtn.setOnClickListener {
+            showExitDialog()
+        }
+    }
+
+    private fun clearDragTargets() {
         dragSources.clear()
         binding.linearLayoutBlockList.removeAllViews()
     }
@@ -212,27 +207,72 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
     }
     private fun bindingStory(index: Int) {
         binding.ibGamestoryMsgTxt.text = messageList[index]
+        binding.ibGamestoryOn.setOnClickListener {
+            onStoryState(false)
+        }
+        binding.ibGamestoryOff.setOnClickListener {
+            onStoryState(true)
+        }
     }
 
-    fun onGameplayState() {
+    private fun onGameplayState() {
         binding.ibGameplayBtn.visibility = View.GONE
         binding.ibGamestopBtn.visibility = View.VISIBLE
     }
 
-    fun onGamestopState() {
+    private fun onGamestopState() {
         binding.ibGameplayBtn.visibility = View.VISIBLE
         binding.ibGamestopBtn.visibility = View.GONE
     }
 
-    fun onStoryState(isState: Boolean) {
+    private fun setViewsVisibility(visibleViews: List<View>, goneViews: List<View>) {
+        visibleViews.forEach { it.visibility = View.VISIBLE }
+        goneViews.forEach { it.visibility = View.GONE }
+    }
+
+    private fun onStoryState(isState: Boolean) {
+        if (isState) {
+            setViewsVisibility(
+                visibleViews = listOf(
+                    binding.ibGamestoryImg,
+                    binding.ibGamestoryTxt,
+                    binding.ibGamestoryMsg,
+                    binding.ibGamestoryMsgTxt,
+                    binding.ibGamestoryOn
+                ),
+                goneViews = listOf(binding.ibGamestoryOff)
+            )
+        } else {
+            setViewsVisibility(
+                visibleViews = listOf(binding.ibGamestoryOff),
+                goneViews = listOf(
+                    binding.ibGamestoryImg,
+                    binding.ibGamestoryTxt,
+                    binding.ibGamestoryMsg,
+                    binding.ibGamestoryMsgTxt,
+                    binding.ibGamestoryOn
+                )
+            )
+        }
+    }
+
+    private fun initStory() {
         Handler(Looper.getMainLooper()).postDelayed({
-            binding.ibGamestoryMsgTxt.isSelected = !isState
-            binding.ibGamestoryMsg.isSelected = !isState
+            setViewsVisibility(
+                visibleViews = listOf(binding.ibGamestoryOff),
+                goneViews = listOf(
+                    binding.ibGamestoryImg,
+                    binding.ibGamestoryTxt,
+                    binding.ibGamestoryMsg,
+                    binding.ibGamestoryMsgTxt,
+                    binding.ibGamestoryOn
+                )
+            )
         }, 10000)  // 10초 후 메시지 사라짐
     }
 
     // drop의 target id 찾기
-    fun setupDropTargets(dropTargets: List<View>, context: Context) {
+    private fun setupDropTargets(dropTargets: List<View>, context: Context) {
         val activity = QuizBlockActivity()
 
         dropTargets.forEach { target ->
@@ -259,7 +299,7 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
         }
     }
 
-    fun handleImageDrop(target: View, dragId: Int, dropId: Int) {
+    private fun handleImageDrop(target: View, dragId: Int, dropId: Int) {
         targetBlockMap[dropId] = dragId
         dragSources[dragId].visibility = View.GONE
 
@@ -423,7 +463,6 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
             }
 
         }
-        val repeatImageView = target.getTag(R.id.ib_gamestop_btn) as? ImageView
         var newdropId: Int
         if (repeatIdx == dropId) {
             newdropId = dropId + 1
@@ -435,7 +474,7 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
 
     }
 
-    fun handleBlockMove(blockMove: String, newdropId: Int, dropId: Int) {
+    private fun handleBlockMove(blockMove: String, newdropId: Int, dropId: Int) {
         val blockMoveMap = mapOf(
             resources.getString(R.string.game_move_straight) to R.string.game_move_straight,
             resources.getString(R.string.game_move_up) to R.string.game_move_up,
@@ -465,39 +504,11 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
         }
     }
 
-    @SuppressLint("InflateParams")
-    private fun showCustomDialog(id: Int) {
-        // 다이얼로그 레이아웃을 불러옴
-        val dialogView =
-            LayoutInflater.from(this).inflate(R.layout.dialog_fail, null)
-
-        // 커스텀 다이얼로그 생성
-        val dialogBuilder = AlertDialog.Builder(this)
-            .setView(dialogView)
-            .setCancelable(false)  // 다이얼로그 외부 터치로 종료되지 않도록
-
-        // 다이얼로그 만들기
-        val dialog = dialogBuilder.create()
-
-        val confirmButton = dialogView.findViewById<Button>(R.id.btn_dialog_biginner_quiz_fail)
-        confirmButton.setOnClickListener {
-            dialog.dismiss()
-            clearDropTargets()
-            var fv =
-                if (id == 1) supportFragmentManager.findFragmentByTag("QuizBlock1FragmentTag") as? QuizBlock1Fragment
-                else supportFragmentManager.findFragmentByTag("QuizBlock2FragmentTag") as? QuizBlock2Fragment
-            fv?.initGame()
-            onGamestopState()
-        }
-        // 다이얼로그 보여주기
-        dialog.show()
-    }
-
     private fun setDialog() {
         onGamestopState()
         when (buttonPosition) {
-            1 -> showCustomTwoDialog(1)
-            2 -> showCustomTwoDialog(2)
+            1 -> showSuccessDialog(1)
+            2 -> showSuccessDialog(2)
         }
     }
 
@@ -506,13 +517,14 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
             setDialog()
         } else {
             when (buttonPosition) {
-                1 -> showCustomDialog(1)
-                2 -> showCustomDialog(2)
+                1 -> showFailDialog(1)
+                2 -> showFailDialog(2)
             }
         }
     }
 
-    private fun showCustomTwoDialog(id: Int) {
+    @SuppressLint("InflateParams")
+    private fun showSuccessDialog(id: Int) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_success, null)
 
         val dialogBuilder = AlertDialog.Builder(this)
@@ -547,8 +559,64 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
         dialog.show() // 다이얼로그 표시
     }
 
-    fun setReplaceLevelState(levelState: Boolean) {
-        levelCorrect = levelState
+    @SuppressLint("InflateParams")
+    private fun showFailDialog(id: Int) {
+        // 다이얼로그 레이아웃을 불러옴
+        val dialogView =
+            LayoutInflater.from(this).inflate(R.layout.dialog_fail, null)
+
+        // 커스텀 다이얼로그 생성
+        val dialogBuilder = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(false)  // 다이얼로그 외부 터치로 종료되지 않도록
+
+        // 다이얼로그 만들기
+        val dialog = dialogBuilder.create()
+
+        val confirmButton = dialogView.findViewById<Button>(R.id.btn_dialog_biginner_quiz_fail)
+        confirmButton.setOnClickListener {
+            dialog.dismiss()
+            clearDropTargets()
+            var fv =
+                if (id == 1) supportFragmentManager.findFragmentByTag("QuizBlock1FragmentTag") as? QuizBlock1Fragment
+                else supportFragmentManager.findFragmentByTag("QuizBlock2FragmentTag") as? QuizBlock2Fragment
+            fv?.initGame()
+            onGamestopState()
+        }
+        // 다이얼로그 보여주기
+        dialog.show()
+    }
+
+    @SuppressLint("InflateParams")
+    private fun showExitDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_success, null)
+
+        val dialogBuilder = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(false)
+
+        val dialog = dialogBuilder.create()
+
+        val title = dialogView.findViewById<TextView>(R.id.dialog_button_two_title)
+        val subTitle = dialogView.findViewById<TextView>(R.id.dialog_button_two_subtitle)
+        val stopBtn = dialogView.findViewById<Button>(R.id.dialog_button_stop)
+        val nextBtn = dialogView.findViewById<Button>(R.id.dialog_button_next_step)
+
+        title.text = "정말 그만두시겠어요?"
+        subTitle.text = "그만하면 과정을 저장할 수 없어요\uD83E\uDD72"
+        stopBtn.text = "그만하기"
+        nextBtn.text = "이어서 하기"
+
+        stopBtn.setOnClickListener {
+            dialog.dismiss()
+            finish()
+        }
+
+        nextBtn.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show() // 다이얼로그 표시
     }
 
     private fun nextFragmentWithIndex() {
