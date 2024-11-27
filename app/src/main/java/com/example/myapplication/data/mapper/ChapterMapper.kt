@@ -1,7 +1,6 @@
 package com.example.myapplication.data.mapper
 
 import android.util.Log
-import com.bumptech.glide.load.engine.executor.GlideExecutor.UncaughtThrowableStrategy.LOG
 import com.example.myapplication.R
 import com.example.myapplication.data.repository.remote.response.chapter.AllChapterResponse
 import com.example.myapplication.data.repository.remote.response.chapter.DistinctChapterResponse
@@ -81,7 +80,9 @@ fun QuizResponse.toDomain(): QuestDto {
         gameImg = images[this.quizId - 1],
         gameState = decideClear(this.isCleared),
         gameDescript = subtitles[this.quizId - 1],
-        id = this.quizId
+        id = this.quizId,
+        isCleared = this.isCleared,
+        isOpen = false
     )
     return item
 }
