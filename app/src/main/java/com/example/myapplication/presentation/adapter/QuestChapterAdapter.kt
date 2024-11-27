@@ -76,10 +76,7 @@ class QuestChapterAdapter(
                     itemClickListener?.OnItemClick(itemId)  // ID 전달
                 }
             }
-
-//            saveCharacterNickName
-
-            binding.tvRvGameDescript.text = "뜨거운 태양에 고통받는 00이를 구해주세요!"
+            binding.tvRvGameDescript.text = item.gameDescript
         }
     }
 
