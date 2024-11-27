@@ -71,10 +71,9 @@ class FriendFragment : BaseFragment<FragmentFriendBinding>(R.layout.fragment_fri
             if (i < 3) {
                 setProfileTopRank(i)
             }
-
-            val recycleItem = item.filter { it.rank.toInt() > 3 }
-            friendAdapter.submitList(recycleItem)
         }
+        val recycleItem = item.filter { it.rank.toInt() > 3 }
+        friendAdapter.submitList(recycleItem)
         Log.d("아이템", "$item")
     }
 

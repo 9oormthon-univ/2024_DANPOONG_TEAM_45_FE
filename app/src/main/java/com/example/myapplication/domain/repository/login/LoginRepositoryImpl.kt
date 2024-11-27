@@ -28,4 +28,5 @@ data class LoginRepositoryImpl @Inject constructor(
         logInDataSource.checkTraining()
 
     override suspend fun getAllUser(): Flow<BaseResponse<UserListDTO>> = logInDataSource.getAllUser()
+    override suspend fun deleteUser(user_id: Int): Flow<BaseResponse<Any>> = logInDataSource.deleteUser(user_id)
 }

@@ -1072,7 +1072,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         }
     }
 
-    fun handleFireCondition() {
+    private fun handleFireCondition() {
         // Fire 처리 로직
         blockVisibility(binding.ivGameFan, binding.ivGameFire)
     }

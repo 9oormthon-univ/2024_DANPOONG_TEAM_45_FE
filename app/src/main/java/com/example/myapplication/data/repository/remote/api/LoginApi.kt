@@ -6,10 +6,12 @@ import com.example.myapplication.data.repository.remote.request.login.UserListDT
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.login.LogInKakaoResponse
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface LoginApi {
 
@@ -40,5 +42,10 @@ interface LoginApi {
     @GET("v1/users/all")
     suspend fun getAllUser(
     ) : BaseResponse<UserListDTO>
+
+    @DELETE("v1/users")
+    suspend fun deleteUser(
+        @Query("user_id")user_id: Int
+    ):BaseResponse<Any>
 
 }

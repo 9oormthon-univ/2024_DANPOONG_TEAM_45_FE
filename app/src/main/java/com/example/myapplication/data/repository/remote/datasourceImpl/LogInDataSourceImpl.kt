@@ -60,4 +60,10 @@ class LogInDataSourceImpl @Inject constructor(
         Log.e("LogInDataSource 에러", e.message.toString())
     }
 
+    override suspend fun deleteUser(user_id: Int): Flow<BaseResponse<Any>> = flow {
+        val result = loginApi.deleteUser(user_id)
+        emit(result)
+    }.catch { e ->
+        Log.e("LogInDataSource 에러", e.message.toString())
+    }
 }
