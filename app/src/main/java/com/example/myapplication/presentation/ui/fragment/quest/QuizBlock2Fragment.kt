@@ -1,6 +1,8 @@
 package com.example.myapplication.presentation.ui.fragment.quest
 
 import android.media.MediaPlayer
+import android.os.Handler
+import android.os.Looper
 import android.text.InputType
 import android.util.Log
 import android.view.Gravity
@@ -26,23 +28,12 @@ import com.example.myapplication.presentation.viewmodel.QuizViewModel
 class QuizBlock2Fragment : BaseFragment<FragmentQuizBlock2Binding>(R.layout.fragment_quiz_block_2), GameInterface {
 
     private var targetBlockMap = mutableMapOf<Int, Int?>()
-    private var isExit = false //나가기 버튼 클릭했는지 여부 판단
-    private var isDialogShown = false // 다이얼로그 표시 상태 플래그
-    private var isFailDialogShown = false
     private lateinit var mediaPlayer: MediaPlayer
 
     private val dragSources = mutableListOf<View>()
     private var basicBlockId = 1 // 생성되는 블록 아이디 - 블록 색 지정을 위해 만든 변수
-    private var repeatBlockId = 1 // 생성되는 블록 아이디
-    private var curGameId = 2
-    private var chapterId = 1
 
-    private var isState = false
-    private var moveWay = mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-
-    private var isRepeat = false
-    private var repeatIdx: Int = -1
-    private var draggedTextView: TextView? = null
+    private var moveWay = MutableList(10) { 0 }
     private lateinit var viewModel: QuizViewModel
 
     override fun setLayout() {
@@ -76,15 +67,10 @@ class QuizBlock2Fragment : BaseFragment<FragmentQuizBlock2Binding>(R.layout.frag
     }
 
     override fun initGame() {
-        val av = requireActivity() as QuizBlockActivity
-        isExit = false
-        isDialogShown = false
-
         targetBlockMap = mutableMapOf()
         for (dragSource in dragSources) {
             dragSource.visibility = View.VISIBLE
         }
-        isFailDialogShown = false
     }
 
     override fun addBlock(block: BlockDTO) {
