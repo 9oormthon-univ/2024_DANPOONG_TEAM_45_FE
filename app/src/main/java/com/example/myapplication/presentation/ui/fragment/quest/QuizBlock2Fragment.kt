@@ -211,7 +211,7 @@ class QuizBlock2Fragment : BaseFragment<FragmentQuizBlock2Binding>(R.layout.frag
     override fun checkSuccess() {
         TODO("Not yet implemented")
     }
-    override fun showSuccessDialog(exit: Boolean) {
+    override fun showSuccessDialog() {
         TODO("Not yet implemented")
     }
 

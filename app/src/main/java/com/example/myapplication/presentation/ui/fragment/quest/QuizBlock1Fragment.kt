@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.R
+import com.example.myapplication.databinding.ActivityGameBinding
 import com.example.myapplication.databinding.FragmentQuizBlock1Binding
 import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.presentation.ui.activity.BlockDTO
@@ -136,7 +137,11 @@ class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.frag
         TODO("Not yet implemented")
     }
 
-    override fun showSuccessDialog(exit: Boolean) {
+    override fun showSuccessDialog() {
+        TODO("Not yet implemented")
+    }
+
+    override fun gameFunction(binding: ActivityGameBinding) {
         TODO("Not yet implemented")
     }
 
