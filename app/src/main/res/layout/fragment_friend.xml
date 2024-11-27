@@ -57,6 +57,15 @@
                 android:layout_width="85dp"
                 android:layout_height="85dp"
                 android:layout_marginTop="30dp"
+                android:background="@drawable/shape_circle_ececec"
+                app:layout_constraintEnd_toStartOf="@+id/fragment_friends_frame_3rd_iv"
+                app:layout_constraintStart_toEndOf="@+id/fragment_friends_frame_2nd_iv"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:layout_marginTop="30dp"
                 android:background="@drawable/shape_circle_stroke_2dp_mint"
                 app:layout_constraintEnd_toStartOf="@+id/fragment_friends_frame_3rd_iv"
                 app:layout_constraintStart_toEndOf="@+id/fragment_friends_frame_2nd_iv"
@@ -98,6 +107,15 @@
 
             <ImageView
                 android:id="@+id/fragment_friends_frame_2nd_iv"
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="38dp"
+                android:background="@drawable/shape_circle_ececec"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/fragment_friends_frame_1st_iv" />
+
+            <ImageView
                 android:layout_width="85dp"
                 android:layout_height="85dp"
                 android:layout_marginStart="28dp"
@@ -144,6 +162,15 @@
 
             <ImageView
                 android:id="@+id/fragment_friends_frame_3rd_iv"
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:layout_marginTop="38dp"
+                android:layout_marginEnd="28dp"
+                android:background="@drawable/shape_circle_ececec"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/fragment_friends_frame_1st_iv" />
+
+            <ImageView
                 android:layout_width="85dp"
                 android:layout_height="85dp"
                 android:layout_marginTop="38dp"
