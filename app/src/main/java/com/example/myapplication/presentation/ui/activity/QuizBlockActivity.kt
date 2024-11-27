@@ -31,6 +31,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityGameBinding
@@ -168,17 +169,46 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
     //버튼 이동
     private fun nextFragment() {
         binding.ibGameplayBtn.setOnClickListener {
+            repeatAddMoveWay()
             for (mv in moveWay) {
                 Log.d("dfddf", mv.toString())
             }
 
-            levelCorrect = viewModel.checkSuccess1()
+            val currentFragment = navController.currentDestination
+            if (currentFragment?.id == R.id.quizBlock1Fragment) {
+                // Fragment1이 활성화되었을 때
+                levelCorrect = viewModel.checkSuccess1()
+            } else if (currentFragment?.id == R.id.quizBlock2Fragment) {
+                // Fragment2가 활성화되었을 때
+                levelCorrect = viewModel.checkSuccess2()
+            }
             onGameplayState()
             moveFragment()
         }
     }
 
+    private fun repeatAddMoveWay() {
+        // repeat일 경우 moveWay 추가
+        if (repeatIdx != -1 && isRepeat) {
+            Log.d("repeat index", repeatIdx.toString())
+            val repeatEditText =
+                dropTargets[repeatIdx]?.getTag(R.id.ib_gameplay_btn) as? EditText
+            val targetTextView =
+                dropTargets[repeatIdx].getTag(R.id.ib_game_state_done) as? TextView
+            var tempStr = 0
+            if (targetTextView?.text.toString() == resources.getString(R.string.game_wave)) {
+                tempStr = R.string.game_wave
+            }
 
+            if (repeatEditText?.text.toString().toInt() > 0) {
+                for (i in 0 until repeatEditText?.text.toString().toInt() - 1) {
+                    moveWay.add(repeatIdx, tempStr)
+                    viewModel.updateMoveWay(repeatIdx, tempStr)
+                }
+            }
+            isRepeat = false
+        }
+    }
     private fun bindingStory(index: Int) {
         binding.ibGamestoryMsgTxt.text = messageList[index]
     }
@@ -198,29 +228,6 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
             binding.ibGamestoryMsgTxt.isSelected = !isState
             binding.ibGamestoryMsg.isSelected = !isState
         }, 10000)  // 10초 후 메시지 사라짐
-    }
-
-    fun setupDragSources(dragSources: List<View>) {
-        dragSources.forEach { source ->
-            DragStartHelper(source) { view, _ ->
-                var imageResId = dragSources.indexOf(source)
-                Log.d("image resource id", imageResId.toString())
-                val dragClipData = ClipData.newPlainText("DragData", imageResId.toString())
-                dragClipData.addItem(ClipData.Item(imageResId.toString()))
-
-                // Set the visual appearance of the drag shadow
-                val dragShadow = View.DragShadowBuilder(view)
-
-                // Start the drag and drop process
-                view.startDragAndDrop(
-                    dragClipData,
-                    dragShadow,
-                    null,
-                    DRAG_FLAG_GLOBAL
-                )
-                true
-            }.attach()
-        }
     }
 
     // drop의 target id 찾기
@@ -543,11 +550,4 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
         )
     }
 
-    fun onClickNext() {
-        nextFragmentWithIndex()
-    }
-
-    fun onClickStop() {
-        finish()
-    }
 }

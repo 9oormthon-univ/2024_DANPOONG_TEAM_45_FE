@@ -104,9 +104,16 @@ class QuizViewModel @Inject constructor(
         _moveWay.value = currentList
     }
 
-    // 성공 여부 체크 로직은 별도로 호출할 때만 실행
     fun checkSuccess1(): Boolean {
         val correctBlockOrder = listOf(R.string.game_wake, R.string.game_wash, R.string.game_breakfast, R.string.game_practice)
+        val successCnt = _moveWay.value?.zip(correctBlockOrder) { a, b -> a == b }?.count { it } ?: 0
+        Log.d("success cnt", successCnt.toString())
+
+        return successCnt == correctBlockOrder.size
+    }
+
+    fun checkSuccess2(): Boolean {
+        val correctBlockOrder = listOf(R.string.game_wave, R.string.game_wave, R.string.game_repeat, R.string.game_wave)
         val successCnt = _moveWay.value?.zip(correctBlockOrder) { a, b -> a == b }?.count { it } ?: 0
         Log.d("success cnt", successCnt.toString())
 

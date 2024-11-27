@@ -11,6 +11,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityGameBinding
 import com.example.myapplication.databinding.FragmentQuizBlock2Binding
@@ -18,6 +20,7 @@ import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.presentation.ui.activity.BlockDTO
 import com.example.myapplication.presentation.ui.activity.GameInterface
 import com.example.myapplication.presentation.ui.activity.QuizBlockActivity
+import com.example.myapplication.presentation.viewmodel.QuizViewModel
 
 class QuizBlock2Fragment : BaseFragment<FragmentQuizBlock2Binding>(R.layout.fragment_quiz_block_2), GameInterface {
 
@@ -38,16 +41,27 @@ class QuizBlock2Fragment : BaseFragment<FragmentQuizBlock2Binding>(R.layout.frag
     private var isRepeat = false
     private var repeatIdx: Int = -1
     private var draggedTextView: TextView? = null
+    private lateinit var viewModel: QuizViewModel
 
     override fun setLayout() {
         // 블록 튜토리얼 2번
+        initViewModel()
         initGame()
         initBlock()
         setupDragSources(dragSources)
+        updateViewModel()
     }
 
     override fun initViewModel() {
-        TODO("Not yet implemented")
+        viewModel = ViewModelProvider(requireActivity())[QuizViewModel::class.java]
+    }
+
+    private fun updateViewModel() {
+        viewModel.moveWay.observe(viewLifecycleOwner, Observer { moveWay ->
+            // moveWay 값 변경 시 처리할 로직
+            this.moveWay = moveWay
+            Log.d("moveWay", moveWay.toString())
+        })
     }
 
     override fun initBlock() {
@@ -59,6 +73,7 @@ class QuizBlock2Fragment : BaseFragment<FragmentQuizBlock2Binding>(R.layout.frag
     }
 
     override fun initGame() {
+        val av = requireActivity() as QuizBlockActivity
         isExit = false
         isDialogShown = false
 
@@ -67,7 +82,6 @@ class QuizBlock2Fragment : BaseFragment<FragmentQuizBlock2Binding>(R.layout.frag
             dragSource.visibility = View.VISIBLE
         }
         isFailDialogShown = false
-        blockVisibility(requireActivity().findViewById<ImageButton>(R.id.ib_gameplay_btn), requireActivity().findViewById<ImageButton>(R.id.ib_gamestop_btn))
     }
 
     override fun addBlock(block: BlockDTO) {
@@ -202,58 +216,11 @@ class QuizBlock2Fragment : BaseFragment<FragmentQuizBlock2Binding>(R.layout.frag
     }
 
     override fun gameFunction(binding: ActivityGameBinding) {
-        val av = requireActivity() as QuizBlockActivity
-        binding.ibGameplayBtn.setOnClickListener {
-            if (repeatIdx != -1 && isRepeat) {
-                Log.d("repeat index", repeatIdx.toString())
-                val repeatEditText =
-                    av.dropTargets[repeatIdx]?.getTag(R.id.ib_gameplay_btn) as? EditText
-                val targetTextView =
-                    av.dropTargets[repeatIdx].getTag(R.id.ib_game_state_done) as? TextView
-                var tempStr: Int = 0
-                if (targetTextView?.text.toString() == resources.getString(R.string.game_wave)) {
-                    tempStr = R.string.game_wave
-                }
-
-                if (repeatEditText?.text.toString().toInt() > 0) {
-                    for (i in 0 until repeatEditText?.text.toString().toInt() - 1) {
-                        moveWay.add(repeatIdx, tempStr)
-                    }
-                }
-                isRepeat = false
-            }
-        }
+        TODO("Not yet implemented")
     }
 
     override fun checkSuccess() {
-        if (isDialogShown) return
-
-        var correctBlockOrder = listOf(0)
-        var successCnt = 0
-        correctBlockOrder = listOf(R.string.game_wave, R.string.game_wave, R.string.game_repeat, R.string.game_wave)
-
-        for (i: Int in correctBlockOrder.indices) {
-            if (moveWay[i] == correctBlockOrder[i]) {
-                successCnt += 1
-            }
-        }
-        var success : Boolean
-        if (successCnt == correctBlockOrder.size) success = true
-        else success = false
-        //********
-        if (success) {
-            isDialogShown = true
-            Log.d("cur id testtest", curGameId.toString())
-//            isQuizClearedViewModel.postQuizClear(curGameId)
-            // 성공 다이얼로그 출력
-            showSuccessDialog(false)
-        } else {
-            // 실패 다이얼로그 출력
-            if (!isFailDialogShown) { // 실패 다이얼로그가 이미 표시되지 않았으면
-                showFailDialog()
-                isFailDialogShown = true
-            }
-        }
+        TODO("Not yet implemented")
     }
     override fun showSuccessDialog(exit: Boolean) {
         TODO("Not yet implemented")
