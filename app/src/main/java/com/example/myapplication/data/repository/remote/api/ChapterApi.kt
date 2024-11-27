@@ -37,8 +37,9 @@ interface ChapterApi {
     //챕터 수정
     @PATCH("/v1/api/chapter/{chapter_id}")
     suspend fun modifyChapter(
+        @Path("chapter_id") chapter_id : String,
         @Body registerChapterDto: RegisterChapterDto
-    ): Response<ResponseBody>
+    ): BaseResponse<Any>
 
     //등록된 챕터 모두 조회
     @GET("/v1/api/chapter/all")

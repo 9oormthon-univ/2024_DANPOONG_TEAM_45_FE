@@ -10,6 +10,7 @@ import com.example.myapplication.data.repository.remote.response.chapter.Distinc
 import com.example.myapplication.domain.usecase.chapter.DeleteChapterUseCase
 import com.example.myapplication.domain.usecase.chapter.GetAllChapterUseCase
 import com.example.myapplication.domain.usecase.chapter.GetDistinctChapterUseCase
+import com.example.myapplication.domain.usecase.chapter.PatchChapterUseCase
 import com.example.myapplication.domain.usecase.chapter.PostCreateChapterUseCase
 import com.example.myapplication.domain.usecase.chapter.RewardUseCase
 import com.example.myapplication.domain.usecase.chaptercleared.PostChapterClearedUseCase
@@ -26,26 +27,30 @@ class ChapterViewModel @Inject constructor(
     private val postCreateChapterUseCase: PostCreateChapterUseCase,
     private val deleteChapterUseCase: DeleteChapterUseCase,
     private val chapterClearedUseCase: PostChapterClearedUseCase,
-    private val rewardUseCase: RewardUseCase
+    private val rewardUseCase: RewardUseCase,
+    private val patchChapterUseCase: PatchChapterUseCase
 ) : ViewModel() {
 
     private val _postCreateChapter = MutableStateFlow(BaseResponse<Any>())
-    val postCreateChapter : StateFlow<BaseResponse<Any>> = _postCreateChapter
+    val postCreateChapter: StateFlow<BaseResponse<Any>> = _postCreateChapter
 
     private val _getDistinctChapter = MutableStateFlow(BaseResponse<DistinctChapterResponse>())
     val getDistinctChapter: StateFlow<BaseResponse<DistinctChapterResponse>> = _getDistinctChapter
 
     private val _getAllChapter = MutableStateFlow(BaseResponse<AllChapterResponse>())
-    val getAllChapter : StateFlow<BaseResponse<AllChapterResponse>> = _getAllChapter
+    val getAllChapter: StateFlow<BaseResponse<AllChapterResponse>> = _getAllChapter
 
     private val _deleteChapter = MutableStateFlow(BaseResponse<Any>())
-    val deleteChapter : StateFlow<BaseResponse<Any>> = _deleteChapter
+    val deleteChapter: StateFlow<BaseResponse<Any>> = _deleteChapter
+
+    private val _patchChapter = MutableStateFlow(BaseResponse<Any>())
+    val patchChapter: StateFlow<BaseResponse<Any>> = _patchChapter
 
     private val _chapterClear = MutableStateFlow(BaseResponse<Any>())
-    val chapterClear : StateFlow<BaseResponse<Any>> = _chapterClear
+    val chapterClear: StateFlow<BaseResponse<Any>> = _chapterClear
 
- private val _reward = MutableStateFlow(BaseResponse<Any>())
-    val reward : StateFlow<BaseResponse<Any>> = _reward
+    private val _reward = MutableStateFlow(BaseResponse<Any>())
+    val reward: StateFlow<BaseResponse<Any>> = _reward
 
 
     fun getDistinctChapter(chapter_id: Int) {
@@ -65,7 +70,7 @@ class ChapterViewModel @Inject constructor(
             try {
                 getAllChapterUseCase().collect {
                     _getAllChapter.value = it
-                    Log.d("okhttp viewModel","${_getAllChapter.value}")
+                    Log.d("okhttp viewModel", "${_getAllChapter.value}")
                 }
             } catch (e: Exception) {
                 Log.e("에러", e.message.toString())
@@ -85,7 +90,7 @@ class ChapterViewModel @Inject constructor(
         }
     }
 
-    fun deleteChapter(chapterId : String) {
+    fun deleteChapter(chapterId: String) {
         viewModelScope.launch {
             try {
                 deleteChapterUseCase(chapterId).collect {
@@ -98,7 +103,7 @@ class ChapterViewModel @Inject constructor(
     }
 
     //챕터 완료
-    fun postChapterClear(chapterId : Int) {
+    fun postChapterClear(chapterId: Int) {
         viewModelScope.launch {
             try {
                 chapterClearedUseCase(chapterId).collect {
@@ -111,11 +116,23 @@ class ChapterViewModel @Inject constructor(
     }
 
     //챕터 완료
-    fun reward(chapterId : Int) {
+    fun reward(chapterId: Int) {
         viewModelScope.launch {
             try {
                 rewardUseCase(chapterId).collect {
                     _postCreateChapter.value = it
+                }
+            } catch (e: Exception) {
+                Log.e("에러", e.message.toString())
+            }
+        }
+    }
+
+    fun patchChapter(chapterId: String, registerChapterDto: RegisterChapterDto) {
+        viewModelScope.launch {
+            try {
+                patchChapterUseCase(chapterId,registerChapterDto).collect {
+                    _patchChapter.value = it
                 }
             } catch (e: Exception) {
                 Log.e("에러", e.message.toString())

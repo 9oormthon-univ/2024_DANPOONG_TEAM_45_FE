@@ -12,7 +12,7 @@ interface ChapterRepository {
     suspend fun postCreateChapter(registerChapterDto: RegisterChapterDto):  Flow<BaseResponse<Any>>
     suspend fun getDistinctChapter(chapter_id: Int): Flow<BaseResponse<DistinctChapterResponse>>
     suspend fun deleteChapter(lchapter_id: String): Flow<BaseResponse<Any>>
-    suspend fun modifyChapter(registerChapterDto: RegisterChapterDto): Flow<Response<ResponseBody>>
+    suspend fun modifyChapter(chapter_id: String, registerChapterDto: RegisterChapterDto): Flow<BaseResponse<Any>>
     suspend fun getAllChapter(): Flow<BaseResponse<AllChapterResponse>>
     suspend fun rewardSuccess(chapter_id : Int): Flow<BaseResponse<Any>>
 }

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Toolbar
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:titleTextAppearance="@style/pretandard_bold.20sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:title="관리자 페이지" />
+
+        <EditText
+            android:id="@+id/difficulty_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:hint="난이도 레벨 입력"
+            android:padding="20dp" />
+
+        <Button
+            android:id="@+id/difficulty_bt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="난이도 등록" />
+
+        <EditText
+            android:id="@+id/chapter_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:hint="챕터 입력"
+            android:padding="20dp" />
+
+        <Button
+            android:id="@+id/chapter_bt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="챕터 등록" />
+
+        <EditText
+            android:id="@+id/quiz_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:hint="퀴즈 입력"
+            android:padding="20dp" />
+
+        <Button
+            android:id="@+id/quiz_bt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="퀴즈 등록" />
+
+        <TextView
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</layout>

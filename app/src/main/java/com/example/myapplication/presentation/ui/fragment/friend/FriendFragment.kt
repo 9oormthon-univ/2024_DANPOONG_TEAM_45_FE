@@ -57,7 +57,10 @@ class FriendFragment : BaseFragment<FragmentFriendBinding>(R.layout.fragment_fri
         return list.mapIndexed { index, result ->
             result.character
                 .toDomain()
-                .apply { profile = result.userPicture }
+                .apply {
+                    rank = (index + 1).toString()
+                    profile = result.userPicture
+                }
         }
             .sortedByDescending { it.point }
             .toMutableList()// 거는거
@@ -67,19 +70,36 @@ class FriendFragment : BaseFragment<FragmentFriendBinding>(R.layout.fragment_fri
         for (i in item.indices) {
             if (i < 3) {
                 setProfileTopRank(i)
-                item.removeAt(i)
-            } else {
-                Log.d("아이템", "$item")
             }
-            friendAdapter.submitList(item)
+
+            val recycleItem = item.filter { it.rank.toInt() > 3 }
+            friendAdapter.submitList(recycleItem)
         }
+        Log.d("아이템", "$item")
     }
+
 
     private fun setProfileTopRank(index: Int) {
         with(binding) {
-            fragmentFriendsFrame1stIv.loadProfileImage(item[index].profile)
-            fragmentFriendsAchieve1Tv.text = item[index].achievement
-            fragmentFriendsName1stTitleTv.text = item[index].name
+            when (index) {
+                0 -> {
+                    fragmentFriendsFrame1stIv.loadProfileImage(item[index].profile)
+                    fragmentFriendsAchieve1Tv.text = item[index].achievement
+                    fragmentFriendsName1stTitleTv.text = item[index].name
+                }
+
+                1 -> {
+                    fragmentFriendsFrame2ndIv.loadProfileImage(item[index].profile)
+                    fragmentFriendsAchieve2Tv.text = item[index].achievement
+                    fragmentFriendsName2ndTitleTv.text = item[index].name
+                }
+
+                2 -> {
+                    fragmentFriendsFrame3rdIv.loadProfileImage(item[index].profile)
+                    fragmentFriendsAchieve3Tv.text = item[index].achievement
+                    fragmentFriendsName3rdTitleTv.text = item[index].name
+                }
+            }
         }
     }
 

@@ -1,20 +1,13 @@
 package com.example.myapplication.presentation.ui.fragment.setting
 
 import android.content.Intent
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentSettingBinding
-import com.example.myapplication.presentation.ui.activity.GameActivity
+import com.example.myapplication.presentation.base.BaseFragment
+import com.example.myapplication.presentation.ui.activity.AdminActivity
 import com.example.myapplication.presentation.ui.activity.QuestIntroActivity
-import com.example.myapplication.presentation.ui.activity.QuizBlockActivity
 import com.example.myapplication.presentation.widget.extention.TokenManager
-import com.example.myapplication.presentation.widget.extention.loadProfileImage
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -39,15 +32,15 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(R.layout.fragment_s
 //        }
 
         //임시 버튼
-        binding.fragmentSettingNotificationTv.setOnClickListener{
+        binding.fragmentSettingNotificationTv.setOnClickListener {
             val intent = Intent(requireContext(), QuestIntroActivity::class.java)
             intent.putExtra("game id", 2)
             startActivity(intent)
 
         }
         // 임시 버튼
-        binding.fragmentQuestionTv.setOnClickListener{
-            startActivity(Intent(requireActivity(), QuestIntroActivity::class.java))
+        binding.fragmentQuestionTv.setOnClickListener {
+            startActivity(Intent(requireActivity(), AdminActivity::class.java))
         }
     }
 

@@ -40,8 +40,8 @@ class ChapterDataSorceImpl @Inject constructor(
         Log.e("deleteChapter 에러", e.message.toString())
     }
 
-    override suspend fun modifyChapter(registerChapterDto: RegisterChapterDto): Flow<Response<ResponseBody>> = flow {
-        val result = chapterApi.modifyChapter(registerChapterDto)
+    override suspend fun modifyChapter(chapter_id: String,registerChapterDto: RegisterChapterDto): Flow<BaseResponse<Any>> = flow {
+        val result = chapterApi.modifyChapter(chapter_id,registerChapterDto)
         emit(result)
     }.catch { e ->
         Log.e("modifyChapter 에러", e.message.toString())
