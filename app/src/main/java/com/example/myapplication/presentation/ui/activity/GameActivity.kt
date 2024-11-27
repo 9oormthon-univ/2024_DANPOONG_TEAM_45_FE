@@ -135,9 +135,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         initViewModel()
         initBlock()
         initGame()
-        gameFunction()
-        setupDragSources()
-        setupDropTargets()
+        gameFunction(binding)
+        setupDragSources(dragSources)
+        setupDropTargets(dropTargets, this)
 
         isQuizClearedViewModel.quizDistinct(curGameId)
     }
@@ -185,7 +185,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
     // init ---------------------------------------------------------
     override fun initBlock() {
-        clearBlocks()
+        clearDragTargets(binding)
 
         Log.d("로그","$curGameId")
         when(curGameId) {
@@ -258,7 +258,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         moveWay = mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 //        if (curGameId != 2 && isNextGame) gameId += 1
 //        Log.d("game id test", gameId.toString())
-        initCharacter(curGameId)
+        runOnUiThread {
+            initCharacter(curGameId, binding)
+        }
 
         // 배경 설정
         if (curGameId == 2) {
@@ -361,70 +363,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
     }
 
-    override fun initCharacter(game: Int) {
-        // 캐릭터 다시 원래 위치로
-        when (game) {
-            3 -> {
-                val view = binding.ivGameCharacter
-                view.translationX = 0f  // X 좌표 초기화
-                view.translationY = 0f  // Y 좌표 초기화
-                view.invalidate() // 강제로 뷰 갱신
-            }
-            4, 5 -> {
-                val character = binding.ivGameCharacter
-                runOnUiThread {
-                    character.translationX = -320f
-                    character.translationY = 0f
-                }
-
-                val candy = binding.ivGameCandy
-                runOnUiThread {
-                    candy.translationX = 200f
-                    candy.translationY = 0f
-                }
-            }
-
-            6 -> {
-                val character = binding.ivGameCharacter
-                runOnUiThread {
-                    character.translationX = -280f
-                    character.translationY = 0f
-                }
-
-                val candy = binding.ivGameCandy
-                runOnUiThread {
-                    candy.translationX = 200f
-                    candy.translationY = 0f
-                }
-            }
-            7 -> {
-                val character = binding.ivGameCharacter
-                runOnUiThread {
-                    character.translationX = -360f
-                    character.translationY = -180f
-                }
-
-                val fire = binding.ivGameFire
-                runOnUiThread {
-                    fire.translationX = -580f
-                    fire.translationY = 180f
-                }
-
-                val candy = binding.ivGameCandy
-                runOnUiThread {
-                    candy.translationX = 280f
-                    candy.translationY = 0f
-                }
-
-                val fan = binding.ivGameFan
-                runOnUiThread {
-                    fan.translationX = -540f
-                    fan.translationY = 0f
-                }
-            }
-        }
-    }
-
     override fun addBlock(block: BlockDTO) {
         when (block.blockType) {
             resources.getString(R.string.block_type_normal) -> {
@@ -478,7 +416,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                 newBlock.addView(textView)
 
                 // `LinearLayout`에 새 `FrameLayout` 추가
-                binding.linearLayoutBlockList.addView(newBlock)
+                binding.linearLayoutBlockGameList.addView(newBlock)
 
                 dragSources.add(newBlock)
                 newBlock.tag = block  // BlockDTO를 tag로 설정
@@ -546,7 +484,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                 imageView3.visibility = View.GONE
 
                 // `LinearLayout`에 새 `FrameLayout` 추가
-                binding.linearLayoutBlockList.addView(newBlock)
+                binding.linearLayoutBlockGameList.addView(newBlock)
                 dragSources.add(newBlock)
                 newBlock.tag = block  // BlockDTO를 tag로 설정
             }
@@ -554,16 +492,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
     }
 
-    override fun blockVisibility(visibleBlock: View, goneBlock: View) {
-        visibleBlock.visibility = View.VISIBLE
-        goneBlock.visibility = View.GONE
-    }
-
-    override fun clearBlocks() {
-        binding.linearLayoutBlockList.removeAllViews()
-    }
-
-    override fun gameFunction() {
+    override fun gameFunction(binding: ActivityGameBinding) {
         // 각종 버튼들 처리
         Log.d("Debug", "isFirstStage: $isFirstStage, isNextGame: $isNextGame, before: $curGameId")
         binding.ibGameplayBtn.setOnClickListener {
@@ -580,7 +509,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                 }
 
                 if (repeatEditText?.text.toString().toInt() > 0) {
-                    for (i in 0..<repeatEditText?.text.toString().toInt() - 1) {
+                    for (i in 0 until repeatEditText?.text.toString().toInt() - 1) {
                         moveWay.add(repeatIdx, tempStr)
                     }
                 }
@@ -595,104 +524,16 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
             }
         }
 
-        binding.ibGamestopBtn.setOnClickListener {
-            blockVisibility(binding.ibGameplayBtn, binding.ibGamestopBtn)
-        }
         binding.ibGameplayExitBtn.setOnClickListener {
             isExit = true
             showSuccessDialog(isExit)
-        }
-
-        binding.ibBulbBtn.setOnClickListener {
-            binding.ibBulbBtn.isSelected = !binding.ibBulbBtn.isSelected
-            if (binding.ibBulbBtn.isSelected) {
-                // 힌트 보여주기
-                binding.ivGameHint.visibility = View.VISIBLE
-                binding.ivGameHintTxt.visibility = View.VISIBLE
-            } else {
-                binding.ivGameHint.visibility = View.GONE
-                binding.ivGameHintTxt.visibility = View.GONE
-            }
-        }
-
-        binding.ibGamestoryOn.setOnClickListener {
-            binding.ibGamestoryMsg.visibility = View.GONE
-            binding.ibGamestoryMsgTxt.visibility = View.GONE
-            blockVisibility(binding.ibGamestoryOff, binding.ibGamestoryOn)
-        }
-        binding.ibGamestoryOff.setOnClickListener {
-            binding.ibGamestoryMsg.visibility = View.VISIBLE
-            binding.ibGamestoryMsgTxt.visibility = View.VISIBLE
-            blockVisibility(binding.ibGamestoryOn, binding.ibGamestoryOff)
         }
     }
 
     // drag and drop ------------------------------------------------
 
-    override fun setupDragSources() {
-        dragSources.forEach { source ->
-            DragStartHelper(source) { view, _ ->
-                var imageResId = dragSources.indexOf(source)
-                Log.d("image resource id", imageResId.toString())
-                val dragClipData = ClipData.newPlainText("DragData", imageResId.toString())
-                dragClipData.addItem(ClipData.Item(imageResId.toString()))
 
-                // Set the visual appearance of the drag shadow
-                val dragShadow = View.DragShadowBuilder(view)
-
-                // Start the drag and drop process
-                view.startDragAndDrop(
-                    dragClipData,
-                    dragShadow,
-                    null,
-                    DRAG_FLAG_GLOBAL
-                )
-                true
-            }.attach()
-        }
-    }
-
-    override fun setupDropTargets() {
-        dropTargets.forEach { target ->
-            DropHelper.configureView(
-                this,
-                target,
-                arrayOf(MIMETYPE_TEXT_PLAIN),
-                DropHelper.Options.Builder()
-                    .setHighlightColor(getColor(R.color.water_color))
-                    .build()
-            ) { view, payload ->
-                val item = payload.clip.getItemAt(0)
-                val imageResId = item.text.toString().toIntOrNull()
-                if (imageResId != null) {
-                    val dropTargetId = dropTargets.indexOf(target)
-
-//                    // 현재 타겟에 이미 블록이 놓여 있는 경우 - 다시 제자리에 갖다놓기
-//                    val previousBlockId = targetBlockMap[dropTargetId]
-//                    if (previousBlockId != null) {
-//                        val previousBlock = dragSources[previousBlockId]
-//                        val previousBlockDTO = previousBlock.tag as? BlockDTO
-//                        val previousBlockType = previousBlockDTO?.blockType
-//
-//                        // 이전에 놓인 블록이 repeat이면 제외
-//                        if (previousBlockType != getString(R.string.block_type_repeat)) {
-//                            dragSources[previousBlockId].visibility = View.VISIBLE
-//                            removeBlockFromMoveWay(previousBlockId)
-//                        }
-//                    }
-
-                    handleImageDrop(view, imageResId, dropTargetId)
-                } else {
-                    Log.e(TAG, "Failed to retrieve imageResId from ClipData")
-                }
-
-                // 드롭 후 다른 데이터 처리
-                payload.partition { it == item }.second
-            }
-        }
-    }
-
-     override fun handleImageDrop(target: View, dragId: Int, dropId: Int) {
+    override fun handleImageDrop(target: View, dragId: Int, dropId: Int) {
         targetBlockMap[dropId] = dragId
         dragSources[dragId].visibility = View.GONE
 
@@ -856,41 +697,34 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
             newdropId = dropId
         }
 //        val draggedTextView = draggedBlock.getChildAt(1) as TextView
-        when (blockMove) {
-            resources.getString(R.string.game_move_straight) -> {
-                moveWay[newdropId] = R.string.game_move_straight
-            }
-            resources.getString(R.string.game_move_up) -> {
-                moveWay[newdropId] = R.string.game_move_up
-            }
-            resources.getString(R.string.game_move_down) -> {
-                moveWay[newdropId] = R.string.game_move_down
-            }
-            resources.getString(R.string.game_repeat) -> {
-                moveWay[dropId] = R.string.game_repeat
+        handleBlockMove(blockMove!!, newdropId, dropId)
+
+    }
+
+    fun handleBlockMove(blockMove: String, newdropId: Int, dropId: Int) {
+        val blockMoveMap = mapOf(
+            resources.getString(R.string.game_move_straight) to R.string.game_move_straight,
+            resources.getString(R.string.game_move_up) to R.string.game_move_up,
+            resources.getString(R.string.game_move_down) to R.string.game_move_down,
+            resources.getString(R.string.game_repeat) to R.string.game_repeat,
+            resources.getString(R.string.game_fanning) to R.string.game_fanning,
+            resources.getString(R.string.game_wake) to R.string.game_wake,
+            resources.getString(R.string.game_wash) to R.string.game_wash,
+            resources.getString(R.string.game_practice) to R.string.game_practice,
+            resources.getString(R.string.game_breakfast) to R.string.game_breakfast,
+            resources.getString(R.string.game_wave) to R.string.game_wave
+        )
+
+        val move = blockMoveMap[blockMove]
+        if (move != null) {
+            if (move == R.string.game_repeat) {
+                moveWay[dropId] = move
                 repeatIdx = dropId
+            } else {
+                moveWay[newdropId] = move
             }
-            resources.getString(R.string.game_fanning) -> {
-                moveWay[newdropId] = R.string.game_fanning
-            }
-            resources.getString(R.string.game_wake) -> {
-                moveWay[newdropId] = R.string.game_wake
-            }
-            resources.getString(R.string.game_wash) -> {
-                moveWay[newdropId] = R.string.game_wash
-            }
-            resources.getString(R.string.game_practice) -> {
-                moveWay[newdropId] = R.string.game_practice
-            }
-            resources.getString(R.string.game_breakfast) -> {
-                moveWay[newdropId] = R.string.game_breakfast
-            }
-            resources.getString(R.string.game_wave) -> {
-                moveWay[newdropId] = R.string.game_wave
-            }
-            else -> {
-                moveWay[newdropId] = -1
-            }
+        } else {
+            moveWay[newdropId] = -1
         }
     }
 
@@ -1059,7 +893,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         dialog.show()
     }
 
-     override fun showFailDialog() {
+    override fun showFailDialog() {
         // 다이얼로그 레이아웃을 불러옴
         val dialogView =
             LayoutInflater.from(this).inflate(R.layout.dialog_fail, null)
@@ -1143,7 +977,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         }
     }
 
-     override fun characterMove() {
+    fun characterMove() {
         var currentX = 0f // 현재 X 위치
         var currentY = 0f // 현재 Y 위치
 
@@ -1210,11 +1044,11 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
 
     // 배경 지정
-    override fun backgroundVisibility(background: Int) {
+    fun backgroundVisibility(background: Int) {
         binding.ivGameBackground.loadCropImage(background)
     }
 
-     override fun isFireCondition(): Boolean {
+    fun isFireCondition(): Boolean {
         // Fire가 발생할 조건을 정의
         if (curGameId == 6) {
             val fanBlockOrder = listOf(
@@ -1238,9 +1072,8 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         }
     }
 
-     override fun handleFireCondition() {
+    fun handleFireCondition() {
         // Fire 처리 로직
-         blockVisibility(binding.ivGameFan, binding.ivGameFire)
+        blockVisibility(binding.ivGameFan, binding.ivGameFire)
     }
 }
-

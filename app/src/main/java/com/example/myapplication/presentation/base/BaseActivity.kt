@@ -12,7 +12,7 @@ import androidx.viewbinding.ViewBinding
 
 abstract class BaseActivity<VB: ViewBinding>(@LayoutRes private val layoutRes: Int):
     AppCompatActivity() {
-    protected lateinit var binding: VB
+    lateinit var binding: VB
     private var imm : InputMethodManager? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
