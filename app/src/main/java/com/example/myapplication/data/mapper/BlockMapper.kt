@@ -1,7 +1,5 @@
 package com.example.myapplication.data.mapper
 
-import com.example.myapplication.data.repository.remote.api.QuizClearedApi
-import com.example.myapplication.data.repository.remote.response.chapter.QuizResponse
 import com.example.myapplication.data.repository.remote.response.quiz.Answer
 import com.example.myapplication.data.repository.remote.response.quiz.Question
 import com.example.myapplication.presentation.ui.activity.BlockDTO

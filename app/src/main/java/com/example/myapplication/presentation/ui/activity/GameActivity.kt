@@ -34,6 +34,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.myapplication.data.mapper.toBlockDTO
 import com.example.myapplication.data.mapper.toBlockDTOList
 import com.example.myapplication.data.repository.remote.response.quiz.Answer
 import com.example.myapplication.data.repository.remote.response.quiz.Question
@@ -395,9 +396,12 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     override fun gameFunction(binding: ActivityGameBinding) {
         // 각종 버튼들 처리
         binding.ibGameplayBtn.setOnClickListener {
-            repeatAddMoveWay()
-            characterMove()
-            blockVisibility(binding.ibGamestopBtn, binding.ibGameplayBtn)
+            binding.ibGameplayBtn.setOnClickListener {
+                repeatAddMoveWay()
+                blockVisibility(binding.ibGamestopBtn, binding.ibGameplayBtn)
+
+                characterMove()
+            }
         }
 
         binding.ibGameplayExitBtn.setOnClickListener {
@@ -429,15 +433,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
             Log.d("repeat index", repeatIdx.toString())
             val repeatEditText = dropTargets[repeatIdx]?.getTag(R.id.ib_gameplay_btn) as? EditText
             val targetTextView = dropTargets[repeatIdx].getTag(R.id.ib_game_state_done) as? TextView
-            var tempStr = when (targetTextView?.text.toString()) { // null 체크
-                resources.getString(R.string.game_move_straight) -> R.string.game_move_straight
-                resources.getString(R.string.game_move_up) -> R.string.game_move_up
-                resources.getString(R.string.game_move_down) -> R.string.game_move_down
-                resources.getString(R.string.game_wave) -> R.string.game_wave
-                else -> R.string.game_repeat // 일단 부채질 반복은 ,, 고려하지 않았음
-            }
+            var tempStr = mappingStrToResourceId(targetTextView?.text.toString())
 
-            if (repeatEditText?.text.toString().toInt() > 0) {
+            if (repeatEditText?.text.toString().toInt() > 0 && tempStr != null) {
                 for (i in 0 until repeatEditText?.text.toString().toInt() - 1) {
                     moveWay.add(repeatIdx, tempStr)
                 }
@@ -668,7 +666,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
             resources.getString(R.string.game_fanning) to R.string.game_fanning
         )
 
-        return resourceMap[string] ?: R.string.game_move_straight // 기본 리소스 ID 반환 (없으면)
+        return resourceMap[string] ?: R.string.game_wave
     }
 
     private fun handleBlockMove(blockMove: String, newdropId: Int, dropId: Int) {
@@ -687,7 +685,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
     // check success ------------------------------------------------
     override fun checkSuccess() {
-        val correctBlockOrder = getCorrectBlockOrder(curGameId)
+        val correctBlockOrder = getCorrectBlockOrder()
         val isSuccess = isMoveCorrect(correctBlockOrder)
 
         if (isSuccess) {
@@ -697,47 +695,20 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         }
     }
 
-    private fun getCorrectBlockOrder(gameId: Int): List<Int> {
-        return when (gameId) {
-            3 -> listOf(R.string.game_move_straight)
-            4 -> listOf(
-                R.string.game_move_straight,
-                R.string.game_move_straight,
-                R.string.game_move_straight,
-                R.string.game_move_straight
-            )
-            5 -> listOf(
-                R.string.game_move_straight,
-                R.string.game_move_down,
-                R.string.game_move_straight,
-                R.string.game_move_straight,
-                R.string.game_move_up,
-                R.string.game_move_straight
-            )
-            6 -> listOf(
-                R.string.game_move_straight,
-                R.string.game_move_up,
-                R.string.game_move_straight,
-                R.string.game_fanning,
-                R.string.game_move_straight,
-                R.string.game_move_straight,
-                R.string.game_move_down
-            )
-            7 -> listOf(
-                R.string.game_fanning,
-                R.string.game_move_down,
-                R.string.game_move_straight,
-                R.string.game_move_straight,
-                R.string.game_move_straight,
-                R.string.game_move_straight,
-                R.string.game_repeat,
-                R.string.game_move_straight
-            )
-            else -> emptyList()
+    private fun getCorrectBlockOrder(): List<Int> {
+        val correctBlock = answer.map { it.toBlockDTO().blockDescript }
+        val correctBlockOrder = mutableListOf<Int>()
+        for (cbo in correctBlock) {
+            val resourceId = mappingStrToResourceId(cbo)
+            correctBlockOrder.add(resourceId) // 변환된 resourceId를 리스트에 추가
         }
+        return correctBlockOrder
     }
 
     private fun isMoveCorrect(correctBlockOrder: List<Int>): Boolean {
+        for (mv in moveWay) {
+            Log.d("test move way", mv.toString())
+        }
         for (i in correctBlockOrder.indices) {
             if (moveWay[i] != correctBlockOrder[i]) {
                 return false
