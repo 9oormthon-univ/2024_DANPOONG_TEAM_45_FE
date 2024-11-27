@@ -1,7 +1,9 @@
 package com.example.myapplication.presentation.adapter
 
+import android.graphics.drawable.ColorDrawable
 import android.view.View
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ItemReclcyerviewQuestBinding
 import com.example.myapplication.presentation.base.BaseAdapter
@@ -44,6 +46,10 @@ class QuizAdapter(
                 listener.click(item)
             }
             binding.ibRvGamePic.loadCropRoundedSquareImage(item.gameImg, 16)
+            if(!item.isOpen){
+                binding.itemRecyclerQuestLock.visibility = View.VISIBLE
+                binding.ibRvGamePic.foreground = ColorDrawable(ContextCompat.getColor(root.context, R.color.blur_gray))
+            }
             when (item.gameState) {
                 0 -> blockVisiblity(
                     binding.ibGameStateIng,
