@@ -68,7 +68,6 @@ class QuestChapterAdapter(
             }
 
             binding.ibRvGamePic.loadCropRoundedSquareImage(item.gameImg, 16)
-
             binding.ibRvGamePic.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
