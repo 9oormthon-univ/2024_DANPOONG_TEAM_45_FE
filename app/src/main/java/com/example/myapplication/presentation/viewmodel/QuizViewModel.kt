@@ -1,8 +1,11 @@
 package com.example.myapplication.presentation.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.R
 import com.example.myapplication.data.repository.remote.request.quiz.QuizDto
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.quiz.DistinctQuizResponse
@@ -35,6 +38,9 @@ class QuizViewModel @Inject constructor(
 
     private val _quizClear = MutableStateFlow(BaseResponse<Any>())
     val quizClear: StateFlow<BaseResponse<Any>> = _quizClear
+
+    private val _moveWay = MutableLiveData<MutableList<Int>>()
+    val moveWay: LiveData<MutableList<Int>> get() = _moveWay
 
     //퀴즈 생성 - 관리자
     fun postCreateQuiz(quizDto: QuizDto) {
@@ -86,5 +92,24 @@ class QuizViewModel @Inject constructor(
                 Log.e("실패", "postKakaoLogin")
             }
         }
+    }
+
+    fun setMoveWay(newMoveWay: MutableList<Int>) {
+        _moveWay.value = newMoveWay
+    }
+
+    fun updateMoveWay(index: Int, value: Int) {
+        val currentList = _moveWay.value ?: mutableListOf()
+        currentList[index] = value
+        _moveWay.value = currentList
+    }
+
+    // 성공 여부 체크 로직은 별도로 호출할 때만 실행
+    fun checkSuccess1(): Boolean {
+        val correctBlockOrder = listOf(R.string.game_wake, R.string.game_wash, R.string.game_breakfast, R.string.game_practice)
+        val successCnt = _moveWay.value?.zip(correctBlockOrder) { a, b -> a == b }?.count { it } ?: 0
+        Log.d("success cnt", successCnt.toString())
+
+        return successCnt == correctBlockOrder.size
     }
 }
