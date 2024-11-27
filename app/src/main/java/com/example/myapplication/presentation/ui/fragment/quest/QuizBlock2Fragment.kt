@@ -61,7 +61,7 @@ class QuizBlock2Fragment : BaseFragment<FragmentQuizBlock2Binding>(R.layout.frag
     override fun initBlock() {
         val blocks = listOf(
             BlockDTO(resources.getString(R.string.block_type_normal), "파도 소리 재생", 0),
-            BlockDTO(resources.getString(R.string.block_type_repeat), "번 반복하기", 3),
+            BlockDTO(resources.getString(R.string.block_type_repeat), "반복하기", 3),
         )
         blocks.forEach { block -> addBlock(block) }
     }
