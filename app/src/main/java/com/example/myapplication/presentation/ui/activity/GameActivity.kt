@@ -659,16 +659,20 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
     }
 
-    private fun handleBlockMove(blockMove: String, newdropId: Int, dropId: Int) {
-        val blockMoveMap = mapOf(
+    private fun mappingStrToResourceId(string: String): Int {
+        val resourceMap = mapOf(
             resources.getString(R.string.game_move_straight) to R.string.game_move_straight,
             resources.getString(R.string.game_move_up) to R.string.game_move_up,
             resources.getString(R.string.game_move_down) to R.string.game_move_down,
             resources.getString(R.string.game_repeat) to R.string.game_repeat,
-            resources.getString(R.string.game_fanning) to R.string.game_fanning,
+            resources.getString(R.string.game_fanning) to R.string.game_fanning
         )
 
-        val move = blockMoveMap[blockMove]
+        return resourceMap[string] ?: R.string.game_move_straight // 기본 리소스 ID 반환 (없으면)
+    }
+
+    private fun handleBlockMove(blockMove: String, newdropId: Int, dropId: Int) {
+        val move = mappingStrToResourceId(blockMove)
         if (move != null) {
             if (move == R.string.game_repeat) {
                 moveWay[dropId] = move
