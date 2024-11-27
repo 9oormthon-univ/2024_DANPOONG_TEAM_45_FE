@@ -49,11 +49,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <ImageView
+            <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/fragment_home_character_iv"
                 android:layout_width="320dp"
                 android:layout_height="320dp"
                 android:layout_marginBottom="20dp"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/mini"
                 app:layout_constraintBottom_toTopOf="@+id/fragment_home_cactus_state_ll"
                 app:layout_constraintEnd_toEndOf="@id/fragment_home_title_tv"
                 app:layout_constraintStart_toStartOf="@id/fragment_home_title_tv" />
@@ -85,7 +88,7 @@
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/shape_square_rounded_16dp"
                 android:backgroundTint="@color/frame_color"
-                android:elevation="3dp"
+                android:elevation="1dp"
                 app:layout_constraintBottom_toTopOf="@+id/fragment_home_today_mission_ll"
                 app:layout_constraintEnd_toEndOf="@id/fragment_home_character_iv"
                 app:layout_constraintStart_toStartOf="@id/fragment_home_character_iv">
@@ -144,14 +147,15 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/fragment_home_today_mission_ll"
-                android:layout_width="260dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
                 android:layout_marginBottom="30dp"
+                android:layout_marginEnd="16dp"
                 android:background="@drawable/shape_square_rounded_16dp"
                 android:backgroundTint="@color/frame_color"
-                android:elevation="3dp"
+                android:elevation="1dp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/fragment_home_encyclopedia_ll"
                 app:layout_constraintStart_toStartOf="@id/fragment_home_cactus_state_ll">
 
                 <TextView
@@ -205,9 +209,9 @@
                     android:layout_marginEnd="24dp"
                     android:background="@drawable/shape_square_rounded_30dp"
                     android:backgroundTint="@color/selector_button_background"
-                    android:visibility="gone"
                     android:text="보상 받기"
                     android:textColor="@color/selector_button_text"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@+id/fragment_home_today_mission_stamp_1_iv"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/fragment_home_today_mission_stamp_1_iv" />
@@ -219,11 +223,10 @@
                 android:layout_height="78dp"
                 android:id="@+id/fragment_home_encyclopedia_ll"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="15dp"
                 android:layout_marginBottom="30dp"
                 android:background="@drawable/shape_square_rounded_16dp"
                 android:backgroundTint="@color/frame_color"
-                android:elevation="3dp"
+                android:elevation="1dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/fragment_home_cactus_state_ll">
 
@@ -232,7 +235,7 @@
                     android:layout_height="78dp"
                     android:id="@+id/fragment_home_encyclopedia_ib"
                     android:foreground="@drawable/shape_square_rounded_16dp"
-                    android:elevation="3dp"
+                    android:elevation="1dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 

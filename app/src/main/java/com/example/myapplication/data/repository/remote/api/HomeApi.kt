@@ -4,8 +4,6 @@ import com.example.myapplication.data.repository.remote.request.home.PatchHomeDT
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.home.DistinctHomeIdResponse
 import com.example.myapplication.data.repository.remote.response.home.HomeAllList
-import okhttp3.ResponseBody
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET

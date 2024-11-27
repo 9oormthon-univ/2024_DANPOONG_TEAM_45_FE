@@ -19,7 +19,6 @@ import com.example.myapplication.presentation.widget.extention.TokenManager
 import com.example.myapplication.presentation.widget.extention.loadCropImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,13 +34,14 @@ class QuestChapterFragment :
     override fun setLayout() {
         initBiginnerItem()
         observeLifeCycle()
-        setOnClickBtn()
     }
+
     var parseId = 0
     var islandName = ""
+
     //이미지 바인딩
     private fun initBiginnerItem() {
-         islandName = arguments?.getString("island name").toString()
+        islandName = arguments?.getString("island name").toString()
         if (arguments != null) {
             binding.ivBiginnerFlagTxt.text = islandName
             when (islandName) {
@@ -60,30 +60,10 @@ class QuestChapterFragment :
                 else -> binding.ivBiginnerIslandIcon.loadCropImage(R.drawable.iv_biginner_island)
             }
         }
-        addItem()
         adapter = QuizAdapter(this@QuestChapterFragment)
         val id = arguments?.getString("selectId")
         parseId = id?.toInt() ?: 0
         chapterViewModel.getDistinctChapter(parseId)
-    }
-
-
-    private fun addItem() {
-        val islandName = arguments?.getString("island name")
-        when (islandName) {
-            resources.getString(R.string.biginner_island) -> {
-
-            }
-        }
-    }
-
-
-    private fun setOnClickBtn(){
-        binding.ibRewardOn.setOnClickListener{
-            binding.ibRewardOff.visibility = View.VISIBLE
-            binding.ibRewardOn.visibility = View.GONE
-            chapterViewModel.reward(parseId)
-        }
     }
 
     @Inject
@@ -91,55 +71,43 @@ class QuestChapterFragment :
     private fun observeLifeCycle() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-                chapterViewModel.getDistinctChapter.collectLatest {
-                    when (it.result.code) {
-                        200 -> {
-                            if(it.payload?.isRewardButtonActive == true){
-                                binding.ibRewardOn.visibility = View.VISIBLE
-                            }else{
-                                binding.ibRewardOn.visibility = View.GONE
-                                binding.ibRewardOn.visibility = View.GONE
-                            }
-                            Log.d("okhttp", "${it.payload?.quizzes}")
-                            var count = 0
-                            val responseList = it.payload?.quizzes
-                            val list = it.payload?.quizzes?.map {
-                                item -> item.toDomain()
-                            }
-                            responseList?.forEach { it ->
-                                if(it.isCleared) {
-                                    count++
+                launch {
+                    chapterViewModel.getDistinctChapter.collectLatest {
+                        when (it.result.code) {
+                            200 -> {
+                                var count = 0
+                                val responseList = it.payload?.quizzes
+                                val list = it.payload?.quizzes?.map { item ->
+                                    item.toDomain()
+                                }
+                                responseList?.forEach { it ->
+                                    if (it.isCleared) {
+                                        count++
+                                    }
+                                }
+                                binding.rvBiginnerIsland.adapter = adapter
+                                adapter.submitList(list)
+                                binding.ivQuestMoomoo.text =
+                                    "무무의 퀘스트 (${count}/${responseList?.size})"
+                                if (count == responseList?.size) {
+                                    if(it.payload?.isRewardButtonActive == true) {
+                                        visibleRewardOn()
+                                        onClickBtn()
+                                    }
+                                    else{
+                                        visibleRewardOff()
+                                    }
                                 }
                             }
-                            binding.rvBiginnerIsland.adapter = adapter
-                            adapter.submitList(list)
-                            loginViewModel.getTraining()
-                            binding.ivQuestMoomoo.text = "무무의 퀘스트 (${count}/${responseList?.size})"
-                            if(count == responseList?.size){
-                                binding.ibRewardOn.visibility = View.VISIBLE
+                        }
+                    }
+                }
+                launch {
+                    chapterViewModel.reward.collectLatest {
+                        when(it.result.code){
+                            200 ->{
+                                chapterViewModel.getDistinctChapter(parseId)
                             }
-                        }
-                    }
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                loginViewModel.training.collectLatest {
-                    when (it.result.code) {
-                        200 -> {
-
-                        }
-                    }
-                }
-            }
-        }
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                loginViewModel.training.collectLatest {
-                    when (it.result.code) {
-                        200 -> {
                         }
                     }
                 }
@@ -147,6 +115,29 @@ class QuestChapterFragment :
         }
     }
 
+    private fun onClickBtn() {
+        binding.ibRewardOn.setOnClickListener {
+            if (parseId <= 2) {
+                loginViewModel.getCompleteTraining()
+            }
+            chapterViewModel.reward(parseId)
+        }
+    }
+
+    private fun visibleRewardOn() {
+        binding.ibRewardOn.visibility = View.VISIBLE
+    }
+
+    private fun visibleRewardOff() {
+        binding.ibRewardOff.visibility = View.VISIBLE
+        binding.ibRewardOn.visibility = View.GONE
+    }
+
+    private fun checkTraining() {
+        if (parseId <= 2) {
+            loginViewModel.getCompleteTraining()
+        }
+    }
 
     override fun click(item: Any) {
         item as QuestDto

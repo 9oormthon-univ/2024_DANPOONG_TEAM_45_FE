@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.DragStartHelper
 import androidx.core.view.children
 import androidx.draganddrop.DropHelper
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -48,7 +49,7 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
     lateinit var customDialog: CustomDialog
     private var draggedTextView: TextView? = null
     private val dragSources = mutableListOf<FrameLayout>()
-    private var moveWay = mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+    var moveWay = mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
     private var targetBlockMap = mutableMapOf<Int, Int?>()
     private var isRepeat = false
     private var repeatIdx: Int = -1
@@ -159,10 +160,31 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
     //버튼 이동
     private fun nextFragment() {
         binding.ibGameplayBtn.setOnClickListener {
+            for (mv in moveWay) {
+                Log.d("dfddf", mv.toString())
+            }
+            // buttonPosition이 정의되어 있어야 합니다. 예시로 1 또는 2 값을 가질 수 있다고 가정
+            val fv: Fragment? = when (buttonPosition) {
+                1 -> supportFragmentManager.findFragmentByTag("QuizBlock1FragmentTag")
+                2 -> supportFragmentManager.findFragmentByTag("QuizBlock2FragmentTag")
+                else -> null
+            }
+
+            // fv가 null이 아니면 checkSuccess 호출
+            if (fv is QuizBlock1Fragment) {
+                fv.checkSuccess()
+            } else if (fv is QuizBlock2Fragment) {
+                fv.checkSuccess()
+            } else {
+                // fv가 null이거나 잘못된 타입일 경우 처리
+                Log.e(TAG, "Fragment not found or wrong type")
+            }
+
             onGameplayState()
             moveFragment()
         }
     }
+
 
     private fun bindingStory(index: Int) {
         binding.ibGamestoryMsgTxt.text = messageList[index]

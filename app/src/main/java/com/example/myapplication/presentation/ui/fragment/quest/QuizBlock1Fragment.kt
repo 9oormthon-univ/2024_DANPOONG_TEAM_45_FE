@@ -156,11 +156,11 @@ class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.frag
 
 
     override fun checkSuccess() {
-        if (isDialogShown) return
-
-        var correctBlockOrder = listOf(0)
+        val av = requireActivity() as QuizBlockActivity
         var successCnt = 0
-        correctBlockOrder = listOf(R.string.game_wake, R.string.game_wash, R.string.game_breakfast, R.string.game_practice)
+        var correctBlockOrder = listOf(R.string.game_wake, R.string.game_wash, R.string.game_breakfast, R.string.game_practice)
+
+        val moveWay = (activity as QuizBlockActivity).moveWay
 
         for (i: Int in correctBlockOrder.indices) {
             if (moveWay[i] == correctBlockOrder[i]) {
@@ -172,7 +172,6 @@ class QuizBlock1Fragment : BaseFragment<FragmentQuizBlock1Binding>(R.layout.frag
         else success = false
         //********
 
-        val av = requireActivity() as QuizBlockActivity
         if (success) {
 //            isQuizClearedViewModel.postQuizClear(curGameId)
             // 성공 다이얼로그 출력

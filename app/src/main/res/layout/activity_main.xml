@@ -83,6 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="38dp"
+                tools:listitem="@layout/item_left"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -103,12 +104,12 @@
             <EditText
                 android:id="@+id/layout_chat_bottom_sheet_send_et"
                 android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:background="@color/gray9"
+                android:layout_height="46dp"
+                android:background="@drawable/shape_square_rounded_50dp_fill_gray9_stroke_dbdcdf"
                 android:hint="궁금한 점을 물어보세요"
                 android:textColorHint="@color/gray8"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -116,8 +117,8 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/layout_chat_bottom_sheet_send_bt"
                 android:textColor="@color/black"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
                 android:background="@drawable/ic_message_send"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/layout_chat_bottom_sheet_send_et" />

@@ -7,6 +7,7 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
+
         <TextView
             android:id="@+id/activity_account_title_tv"
             style="@style/H1"
@@ -33,9 +34,9 @@
             android:layout_width="wrap_content"
             android:layout_height="10dp"
             android:layout_marginTop="8dp"
-            app:ci_drawable_unselected="@drawable/shape_circle_gray_8"
-            app:ci_drawable="@drawable/shape_circle_black"
             app:ci_animator="@animator/scale_with_alpha"
+            app:ci_drawable="@drawable/shape_circle_black"
+            app:ci_drawable_unselected="@drawable/shape_circle_gray_8"
             app:layout_constraintEnd_toEndOf="@id/activity_account_view_vp"
             app:layout_constraintStart_toStartOf="@id/activity_account_view_vp"
             app:layout_constraintTop_toBottomOf="@id/activity_account_view_vp" />
@@ -43,27 +44,27 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/activity_account_kakao_login_bt"
             android:layout_width="match_parent"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
             android:layout_height="55dp"
-            android:background="@drawable/ic_kakao_login"
-            app:layout_constraintStart_toStartOf="@id/activity_account_indicator_ic"
-            app:layout_constraintEnd_toEndOf="@id/activity_account_indicator_ic"
-            app:layout_constraintTop_toBottomOf="@id/activity_account_indicator_ic"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="34dp"
-            />
-        <TextView
-            android:id="@+id/different_login_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="다른 방법으로 로그인"
-            style="@style/pretandard_medium.767676"
-            android:layout_marginTop="18dp"
-            app:layout_constraintStart_toStartOf="@id/activity_account_kakao_login_bt"
-            app:layout_constraintEnd_toEndOf="@id/activity_account_kakao_login_bt"
-            app:layout_constraintTop_toBottomOf="@id/activity_account_kakao_login_bt"/>
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/ic_kakao_login"
+            app:layout_constraintEnd_toEndOf="@id/activity_account_indicator_ic"
+            app:layout_constraintStart_toStartOf="@id/activity_account_indicator_ic"
+            app:layout_constraintTop_toBottomOf="@id/activity_account_indicator_ic" />
 
-
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_progress_bar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_loop="true"
+            app:lottie_autoPlay="false"
+            app:lottie_rawRes="@raw/loading" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

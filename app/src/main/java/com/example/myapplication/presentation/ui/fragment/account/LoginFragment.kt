@@ -2,6 +2,7 @@ package com.example.myapplication.presentation.ui.fragment.account
 
 import android.content.Intent
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -11,6 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.R
+import com.example.myapplication.data.base.BaseLoadingState
 import com.example.myapplication.data.repository.remote.request.login.LogInKakaoDto
 import com.example.myapplication.databinding.FragmentLoginBinding
 import com.example.myapplication.presentation.adapter.LoginBannerViewPagerAdapter
@@ -22,7 +24,6 @@ import com.example.myapplication.presentation.widget.extention.TokenManager
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -36,22 +37,29 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     private val homeViewModel: HomeViewModel by viewModels()
 
-    //화면 진입 시 토큰 초기화
+    //화면 진입 시 토큰 저장소 초기화
     override fun onStart() {
         super.onStart()
         initRemainToken()
     }
 
-    lateinit var userName: String
-
     override fun setLayout() {
-        onClickBtn()
         initPager()
         initViewModel()
         setOnclickBtn()
-        observeLifeCycle()
     }
 
+    private fun showProgress() {
+        binding.lottieProgressBar.visibility = View.VISIBLE
+        binding.lottieProgressBar.playAnimation() // 애니메이션 실행
+    }
+
+    private fun hideProgress() {
+        binding.lottieProgressBar.cancelAnimation() // 애니메이션 중단
+        binding.lottieProgressBar.visibility = View.GONE
+    }
+
+    //뷰 페이저 + 인디케이터 배너 아이템 세팅
     private fun initPager() {
         val list = arrayListOf(
             R.drawable.ic_onboarding_image_1,
@@ -84,27 +92,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         }
     }
 
-
-    //네비게이션 세팅
-    private fun onClickBtn() {
-        binding.differentLoginTv.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
-        }
-    }
-
     //잔여 토큰 초기화
     private fun initRemainToken() {
-        lifecycleScope.launch {
-            runBlocking {
-                val hd = tokenManager.getUserId.first().toString()
-                //tokenManager.deleteHome()
-                //homeViewModel.deleteHomeId(hd)
-                //tokenManager.saveTut1("")
-                //tokenManager.saveTut2("")
-            }
+        runBlocking {
             tokenManager.deleteAccessToken()
-            //tokenManager.saveCountToken("0")
         }
+
     }
 
     //뷰 모델 초기화
@@ -116,12 +109,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private fun setOnclickBtn() {
         binding.activityAccountKakaoLoginBt.setOnClickListener {
             userKakaoLogin()
-            startActivity(
-                Intent(
-                    requireActivity(),
-                    MainActivity::class.java
-                )
-            )
+            showProgress()
         }
     }
 
@@ -135,67 +123,67 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                 Log.e("카카오", "로그인 실패", error)
                 Toast.makeText(requireContext(), "로그인 실패", Toast.LENGTH_SHORT).show()
             } else if (token != null) {
+                observeLifeCycle()
                 loginViewModel.postKakaoLogin(sendKakaoAccessToken(token.accessToken))
                 Log.i("카카오", "로그인 성공 ${token.accessToken}")
             }
         }
     }
 
-    var checkOaboarding = false
-
     //토큰 수령 시 다음 화면으로 넘어감
     private fun observeLifeCycle() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-                homeViewModel.getDistinctHome.collectLatest {
-                    when (it.result.code) {
-                        200 -> {
-                            startActivity(
-                                Intent(
-                                    requireActivity(),
-                                    MainActivity::class.java
-                                )
-                            )
-                        }
-                        404 -> {
-                            findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
-                        }
-                        500 -> {
-                            findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
-                        }
-                        3000 -> {
-                            findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
-                        }
-                    }
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                loginViewModel.kakaoLogin.collectLatest {
-                    when (it.result.code) {
-                        200 -> {
-                            with(it.payload) {
-                                saveToken(accessToken, refreshToken, picture, nickname)
-                                homeViewModel.getDistinctHome()
-                                startActivity(
-                                    Intent(
-                                        requireActivity(),
-                                        MainActivity::class.java
-                                    )
-                                )
+                launch {
+                    loginViewModel.kakaoLogin.collectLatest {
+                        when (it.state) {
+                            BaseLoadingState.IDLE -> {}
+                            BaseLoadingState.LOADING -> {}
+                            BaseLoadingState.SUCCESS -> {
+                                with(it.payload) { saveToken(accessToken, refreshToken, picture, nickname) }
                             }
-
+                            BaseLoadingState.ERROR -> {}
                         }
                     }
-                }
-            }
-
+                }//launch
+                launch {
+                    homeViewModel.getDistinctHome.collectLatest {
+                        val result = it
+                        Log.d("결과 정보", "${it.result}")
+                        when (result.status) {
+                            BaseLoadingState.IDLE -> {}
+                            BaseLoadingState.LOADING -> {}
+                            BaseLoadingState.SUCCESS -> { callResultCode(it.result.code) }
+                            BaseLoadingState.ERROR -> {}
+                        }
+                        hideProgress()
+                    }
+                }//launch
+            }//repeatOnLifeCycle
         }
     }
 
-    fun saveToken(
+    private fun callResultCode(code : Int){
+        when (code) {
+            200 -> {
+                goToMain()
+            }
+            3000 -> {
+                goToOnboarding()
+            }
+            else -> {}
+        }
+    }
+
+    private fun goToMain() {
+        startActivity(Intent(requireContext(), MainActivity::class.java))
+    }
+
+    private fun goToOnboarding() {
+        findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
+    }
+
+    private suspend fun saveToken(
         accessToken: String,
         refreshToken: String,
         userProfile: String,
@@ -208,6 +196,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                 saveUserProfile(userProfile)
                 saveUserNickname(userNickname)
             }
+            homeViewModel.getDistinctHome()
         }
     }
 }
