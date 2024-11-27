@@ -81,6 +81,11 @@ class QuestChapterFragment :
                                 val list = it.payload?.quizzes?.map { item ->
                                     item.toDomain()
                                 }
+
+                                list?.forEachIndexed { index, item ->
+                                    item.isOpen = setIsOpen(list.toMutableList() ,index)
+                                }
+
                                 responseList?.forEach { response ->
                                     if (response.isCleared) {
                                         count++
@@ -141,6 +146,13 @@ class QuestChapterFragment :
     private fun checkTraining() {
         if (parseId <= 2) {
             loginViewModel.getCompleteTraining()
+        }
+    }
+
+    private fun setIsOpen(list: MutableList<QuestDto>, id: Int): Boolean {
+        return when (id) {
+            0 -> { true }
+            else -> { list[id - 1].isCleared }
         }
     }
 
