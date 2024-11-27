@@ -26,6 +26,7 @@
     <color name="pink2">#FF99C4</color>
     <color name="pink3">#FFC2DC</color>
     <color name="main0">#00C3C7</color>
+    <color name="blur_gray">#66878A93</color>
 
     <!-- custom -->
     <color name="ex_login_color">#767676</color>

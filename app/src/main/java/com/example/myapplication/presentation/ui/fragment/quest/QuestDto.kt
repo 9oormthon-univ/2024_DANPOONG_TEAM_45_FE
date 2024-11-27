@@ -7,4 +7,6 @@ data class QuestDto(
     var gameDescript: String,
     var gameImg: Int,
     var gameState: Int,
+    val isCleared : Boolean,
+    var isOpen : Boolean = false
 )

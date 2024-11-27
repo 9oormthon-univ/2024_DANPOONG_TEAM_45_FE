@@ -34,6 +34,7 @@ class QuestChapterFragment :
     override fun setLayout() {
         initBiginnerItem()
         observeLifeCycle()
+        onClickBtn()
     }
 
     var parseId = 0
@@ -72,7 +73,7 @@ class QuestChapterFragment :
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch {
-                    chapterViewModel.getDistinctChapter.collectLatest {
+                    chapterViewModel.getDistinctChapter.collectLatest { it ->
                         when (it.result.code) {
                             200 -> {
                                 var count = 0
@@ -80,8 +81,13 @@ class QuestChapterFragment :
                                 val list = it.payload?.quizzes?.map { item ->
                                     item.toDomain()
                                 }
-                                responseList?.forEach { it ->
-                                    if (it.isCleared) {
+
+                                list?.forEachIndexed { index, item ->
+                                    item.isOpen = setIsOpen(list.toMutableList() ,index)
+                                }
+
+                                responseList?.forEach { response ->
+                                    if (response.isCleared) {
                                         count++
                                     }
                                 }
@@ -90,13 +96,13 @@ class QuestChapterFragment :
                                 binding.ivQuestMoomoo.text =
                                     "무무의 퀘스트 (${count}/${responseList?.size})"
                                 if (count == responseList?.size) {
-                                    if(it.payload?.isRewardButtonActive == true) {
+                                    if (it.payload?.isRewardButtonActive == true) {
                                         visibleRewardOn()
-                                        onClickBtn()
-                                    }
-                                    else{
+                                    } else {
                                         visibleRewardOff()
                                     }
+                                } else {
+                                    allOff()
                                 }
                             }
                         }
@@ -104,9 +110,9 @@ class QuestChapterFragment :
                 }
                 launch {
                     chapterViewModel.reward.collectLatest {
-                        when(it.result.code){
-                            200 ->{
-                                chapterViewModel.getDistinctChapter(parseId)
+                        when (it.result.code) {
+                            200 -> {
+                                visibleRewardOff()
                             }
                         }
                     }
@@ -117,15 +123,19 @@ class QuestChapterFragment :
 
     private fun onClickBtn() {
         binding.ibRewardOn.setOnClickListener {
-            if (parseId <= 2) {
-                loginViewModel.getCompleteTraining()
-            }
+            checkTraining()
             chapterViewModel.reward(parseId)
         }
     }
 
+    private fun allOff() {
+        binding.ibRewardOn.visibility = View.GONE
+        binding.ibRewardOff.visibility = View.GONE
+    }
+
     private fun visibleRewardOn() {
         binding.ibRewardOn.visibility = View.VISIBLE
+        binding.ibRewardOff.visibility = View.GONE
     }
 
     private fun visibleRewardOff() {
@@ -136,6 +146,13 @@ class QuestChapterFragment :
     private fun checkTraining() {
         if (parseId <= 2) {
             loginViewModel.getCompleteTraining()
+        }
+    }
+
+    private fun setIsOpen(list: MutableList<QuestDto>, id: Int): Boolean {
+        return when (id) {
+            0 -> { true }
+            else -> { list[id - 1].isCleared }
         }
     }
 

@@ -43,12 +43,11 @@ class QuestFragment : BaseFragment<FragmentQuestBinding>(R.layout.fragment_quest
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 chapterViewModel.getAllChapter.collectLatest {
                     val islandList = it.payload?.toDomain()
-                    Log.d("okhttp", "$islandList")
-                    Log.d("okhttp", "${it.payload}")
                     when (it.result.code) {
                         200 -> {
                             islandAdapter.submitList(islandList)
                             binding.fragmentQuestRv.adapter = islandAdapter
+                            Log.d("okhttp","${islandList}")
                         }
                     }
                 }

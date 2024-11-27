@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="islandData"
+            type="com.example.myapplication.presentation.ui.fragment.quest.IslandDto.IslandRight" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -11,7 +16,6 @@
         <ImageView
             android:layout_marginTop="25dp"
             android:id="@+id/item_island_right_iv"
-            android:src="@drawable/iv_lake_island_locked"
             android:layout_width="215dp"
             android:layout_height="165dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -23,6 +27,7 @@
             android:background="@drawable/shape_square_rounded_20dp"
             android:textColor="@color/mint0"
             style="@style/pretandard_bold.12sp"
+            android:text="@{islandData.name}"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:paddingTop="8dp"

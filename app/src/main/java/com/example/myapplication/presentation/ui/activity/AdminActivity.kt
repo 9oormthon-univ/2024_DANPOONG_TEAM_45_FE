@@ -8,14 +8,17 @@ import com.example.myapplication.databinding.ActivityAdminBinding
 import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.presentation.viewmodel.ChapterViewModel
 import com.example.myapplication.presentation.viewmodel.DifficultyViewModel
+import com.example.myapplication.presentation.viewmodel.LoginViewModel
 import com.example.myapplication.presentation.viewmodel.QuizViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.log
 
 @AndroidEntryPoint
 class AdminActivity : BaseActivity<ActivityAdminBinding>(R.layout.activity_admin) {
     private lateinit var difficultyViewModel: DifficultyViewModel
     private lateinit var chapterViewModel: ChapterViewModel
     private lateinit var quizViewModel: QuizViewModel
+    private lateinit var loginViewModel: LoginViewModel
 
     override fun setLayout() {
         initViewModel()
@@ -26,6 +29,7 @@ class AdminActivity : BaseActivity<ActivityAdminBinding>(R.layout.activity_admin
         difficultyViewModel = ViewModelProvider(this)[DifficultyViewModel::class.java]
         chapterViewModel = ViewModelProvider(this)[ChapterViewModel::class.java]
         quizViewModel = ViewModelProvider(this)[QuizViewModel::class.java]
+        loginViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
     }
 
     private fun setOnClickBtn() {
@@ -57,10 +61,11 @@ class AdminActivity : BaseActivity<ActivityAdminBinding>(R.layout.activity_admin
                 )
             }
             difficultyBt.setOnClickListener {
-                difficultyViewModel.postCreateDifficulty("1")
+//                difficultyViewModel.postCreateDifficulty("1")
             }
             chapterBt.setOnClickListener {
-                chapterViewModel.postCreateChapter(binding.chapterEt.text.toString())
+//                chapterViewModel.postCreateChapter(binding.chapterEt.text.toString())
+                loginViewModel.deleteUser(4)
             }
         }
     }

@@ -14,4 +14,5 @@ interface LoginRepository {
     suspend fun getCompleteTraining(): Flow<BaseResponse<Any>>
     suspend fun checkTraining(): Flow<BaseResponse<Boolean>>
     suspend fun getAllUser(): Flow<BaseResponse<UserListDTO>>
+    suspend fun deleteUser(user_id: Int): Flow<BaseResponse<Any>>
 }

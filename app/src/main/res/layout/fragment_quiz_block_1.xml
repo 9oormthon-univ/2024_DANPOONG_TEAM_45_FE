@@ -1,41 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/quiz_block_activity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/iv_game_basic_background"
         android:background="@drawable/iv_game_basic_background"
-        android:id="@+id/quiz_block_activity">
+        android:src="@drawable/iv_game_basic_background">
 
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/iv_game_hint"
-            android:src="@drawable/iv_game_hintbox"
-            android:scaleType="fitCenter"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="48dp"
-            android:layout_marginLeft="90dp"
-            android:visibility="gone"/>
         <TextView
+            android:id="@+id/iv_game_hint_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/iv_game_hint_txt"
-            android:text=""
-            android:textSize="12sp"
-            android:textColor="@color/gray5"
-            android:src="@drawable/iv_game_hintbox"
-            android:scaleType="fitCenter"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="58dp"
+            android:scaleType="fitCenter"
+            android:paddingTop="11dp"
+            android:paddingBottom="11dp"
+            android:background="@drawable/iv_game_hintbox"
+            android:text=""
+            android:textColor="@color/gray5"
+            android:textSize="12sp"
             android:visibility="gone"
-            />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -63,13 +52,12 @@
                     android:src="@drawable/iv_gameplay_layout_background" />
 
                 <LinearLayout
+                    android:id="@+id/linearLayout_quiz_block1_list"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/linearLayout_quiz_block1_list"
-                    android:orientation="vertical"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="50dp">
-                </LinearLayout>
+                    android:layout_marginTop="50dp"
+                    android:orientation="vertical"/>
 
             </FrameLayout>
 
@@ -101,17 +89,17 @@
                     android:src="@drawable/iv_game_btn_start" />
 
                 <LinearLayout
+                    android:id="@+id/gameplay_area"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/gameplay_area"
-                    android:orientation="vertical"
                     android:layout_marginLeft="50dp"
-                    android:layout_marginTop="50dp">
+                    android:layout_marginTop="50dp"
+                    android:orientation="vertical">
 
                     <FrameLayout
+                        android:id="@+id/ib_biginner_game1_space1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/ib_biginner_game1_space1"
                         android:layout_marginTop="5dp">
 
                         <ImageView
@@ -121,22 +109,23 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="5dp"
                             android:src="@drawable/shape_square_rounded_16dp" />
+
                         <TextView
                             android:id="@+id/ib_biginner_game1_practice_txt_1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
                             android:layout_marginLeft="15dp"
-                            android:textSize="12sp"
-                            android:textColor="@color/white"
+                            android:layout_marginTop="10dp"
                             android:fontFamily="@font/pretendard_regular"
-                            android:text="" />
+                            android:text=""
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
                     </FrameLayout>
 
                     <FrameLayout
+                        android:id="@+id/ib_biginner_game1_space2"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/ib_biginner_game1_space2">
+                        android:layout_height="wrap_content">
 
                         <ImageView
                             android:id="@+id/ib_biginner_game1_practice_block_2"
@@ -145,21 +134,23 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="5dp"
                             android:src="@drawable/shape_square_rounded_16dp" />
+
                         <TextView
                             android:id="@+id/ib_biginner_game1_practice_txt_2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
                             android:layout_marginLeft="15dp"
-                            android:textSize="12sp"
-                            android:textColor="@color/white"
+                            android:layout_marginTop="10dp"
                             android:fontFamily="@font/pretendard_regular"
-                            android:text="" />
+                            android:text=""
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
                     </FrameLayout>
+
                     <FrameLayout
+                        android:id="@+id/ib_biginner_game1_space3"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/ib_biginner_game1_space3">
+                        android:layout_height="wrap_content">
 
                         <ImageView
                             android:id="@+id/ib_biginner_game1_practice_block_3"
@@ -168,21 +159,23 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="5dp"
                             android:src="@drawable/shape_square_rounded_16dp" />
+
                         <TextView
                             android:id="@+id/ib_biginner_game1_practice_txt_3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
                             android:layout_marginLeft="15dp"
-                            android:textSize="12sp"
-                            android:textColor="@color/white"
+                            android:layout_marginTop="10dp"
                             android:fontFamily="@font/pretendard_regular"
-                            android:text="" />
+                            android:text=""
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
                     </FrameLayout>
+
                     <FrameLayout
+                        android:id="@+id/ib_biginner_game1_space4"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/ib_biginner_game1_space4">
+                        android:layout_height="wrap_content">
 
                         <ImageView
                             android:id="@+id/ib_biginner_game1_practice_block_4"
@@ -191,16 +184,17 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="5dp"
                             android:src="@drawable/shape_square_rounded_16dp" />
+
                         <TextView
                             android:id="@+id/ib_biginner_game1_practice_txt_4"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
                             android:layout_marginLeft="15dp"
-                            android:textSize="12sp"
-                            android:textColor="@color/white"
+                            android:layout_marginTop="10dp"
                             android:fontFamily="@font/pretendard_regular"
-                            android:text="" />
+                            android:text=""
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
                     </FrameLayout>
                 </LinearLayout>
             </FrameLayout>

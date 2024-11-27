@@ -152,7 +152,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) ,
             with(response) {
                 lifecycleScope.launch {
                     saveUserId(payload?.id.toString())
-                    saveCharacterId(payload?.id.toString())
+                    saveCharacterId(payload?.character?.id.toString())
                 }
             }
         }
