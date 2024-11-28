@@ -395,7 +395,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
     }
 
-    override fun gameFunction(binding: ActivityGameBinding) {
+    private fun gameFunction(binding: ActivityGameBinding) {
         // 각종 버튼들 처리
         binding.ibGameplayBtn.setOnClickListener {
             binding.ibGameplayBtn.setOnClickListener {
@@ -686,7 +686,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     }
 
     // check success ------------------------------------------------
-    override fun checkSuccess() {
+    private fun checkSuccess() {
         val correctBlockOrder = getCorrectBlockOrder()
         val isSuccess = isMoveCorrect(correctBlockOrder)
 
@@ -730,7 +730,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
 
     @SuppressLint("InflateParams")
-    override fun showSuccessDialog() {
+    private fun showSuccessDialog() {
         val gameId = intent.getIntExtra("game id", -1)
         // 다이얼로그 레이아웃을 불러옴
         val dialogView =
@@ -774,7 +774,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         dialog.show()
     }
 
-    override fun showFailDialog() {
+    private fun showFailDialog() {
         // 다이얼로그 레이아웃을 불러옴
         val dialogView =
             LayoutInflater.from(this).inflate(R.layout.dialog_fail, null)

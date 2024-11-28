@@ -204,21 +204,6 @@ class QuizBlock2Fragment : BaseFragment<FragmentQuizBlock2Binding>(R.layout.frag
         TODO("Not yet implemented")
     }
 
-    override fun gameFunction(binding: ActivityGameBinding) {
-        TODO("Not yet implemented")
-    }
-
-    override fun checkSuccess() {
-        TODO("Not yet implemented")
-    }
-    override fun showSuccessDialog() {
-        TODO("Not yet implemented")
-    }
-
-    override fun showFailDialog() {
-        TODO("Not yet implemented")
-    }
-
     override fun Int.dpToPx(): Int {
         val density = resources.displayMetrics.density
         return (this * density).toInt()
