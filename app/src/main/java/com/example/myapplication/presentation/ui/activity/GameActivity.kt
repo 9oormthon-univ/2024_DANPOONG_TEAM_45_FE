@@ -155,10 +155,10 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     }
 
     override fun initGame() {
-        binding.ivGameCharacter.bringToFront() // 게임 캐릭터가 무조건 최상단에 오도록
+        binding.ivGameCharacter.bringToFront() // 게임 캐릭터를 최상단으로 설정
         initStory()
 
-        // 캐릭터 관련
+        // 캐릭터 관련 초기화
         moveXCnt = 0
         moveYCnt = 0
         moveWay = MutableList(10) { 0 }
@@ -167,45 +167,77 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         }
 
         // 배경 설정
-        if (curGameId == 3 || curGameId == 4) {
-            binding.ivGameWay2.visibility = View.GONE
-            binding.ivGameGum.visibility = View.GONE
-            binding.ivGameWay3.visibility = View.GONE
-            binding.ivGameFire.visibility = View.GONE
-            binding.ivGameWay4.visibility = View.GONE
-        }
-        else if (curGameId == 5) {
-            binding.ivGameWay2.visibility = View.VISIBLE
-            binding.ivGameGum.visibility = View.VISIBLE
-            binding.ivGameWay3.visibility = View.GONE
-            binding.ivGameFire.visibility = View.GONE
-            binding.ivGameWay4.visibility = View.GONE
-        }
-        else if (curGameId == 6){
-            binding.ivGameWay.visibility = View.GONE
-            binding.ivGameWay2.visibility = View.GONE
-            binding.ivGameGum.visibility = View.GONE
+        setupGameBackground(curGameId)
 
-            binding.ivGameWay3.visibility = View.VISIBLE
-            binding.ivGameFire.visibility = View.VISIBLE
-            binding.ivGameFan.visibility = View.GONE
-            binding.ivGameWay4.visibility = View.GONE
-        }
-        else {
-            binding.ivGameWay.visibility = View.GONE
-            binding.ivGameWay2.visibility = View.GONE
-            binding.ivGameGum.visibility = View.GONE
-            binding.ivGameWay3.visibility = View.GONE
-
-            binding.ivGameWay4.visibility = View.VISIBLE
-            binding.ivGameFire.visibility = View.VISIBLE
-        }
-
+        // 블록 초기화
         targetBlockMap = mutableMapOf()
-        for (dragSource in dragSources) {
-            dragSource.visibility = View.VISIBLE
-        }
+        dragSources.forEach { it.visibility = View.VISIBLE }
         initRepeatBlock()
+    }
+
+    private fun setVisibilityForViews(visibleViews: List<View>, hiddenViews: List<View>) {
+        visibleViews.forEach { it.visibility = View.VISIBLE }
+        hiddenViews.forEach { it.visibility = View.GONE }
+    }
+
+    // 게임 ID에 따른 배경 설정
+    private fun setupGameBackground(gameId: Int) {
+        when (gameId) {
+            3, 4 -> {
+                setVisibilityForViews(
+                    visibleViews = emptyList(),
+                    hiddenViews = listOf(
+                        binding.ivGameWay2,
+                        binding.ivGameGum,
+                        binding.ivGameWay3,
+                        binding.ivGameFire,
+                        binding.ivGameWay4
+                    )
+                )
+            }
+            5 -> {
+                setVisibilityForViews(
+                    visibleViews = listOf(
+                        binding.ivGameWay2,
+                        binding.ivGameGum
+                    ),
+                    hiddenViews = listOf(
+                        binding.ivGameWay3,
+                        binding.ivGameFire,
+                        binding.ivGameWay4
+                    )
+                )
+            }
+            6 -> {
+                setVisibilityForViews(
+                    visibleViews = listOf(
+                        binding.ivGameWay3,
+                        binding.ivGameFire
+                    ),
+                    hiddenViews = listOf(
+                        binding.ivGameWay,
+                        binding.ivGameWay2,
+                        binding.ivGameGum,
+                        binding.ivGameFan,
+                        binding.ivGameWay4
+                    )
+                )
+            }
+            else -> {
+                setVisibilityForViews(
+                    visibleViews = listOf(
+                        binding.ivGameWay4,
+                        binding.ivGameFire
+                    ),
+                    hiddenViews = listOf(
+                        binding.ivGameWay,
+                        binding.ivGameWay2,
+                        binding.ivGameGum,
+                        binding.ivGameWay3
+                    )
+                )
+            }
+        }
     }
 
     private fun initRepeatBlock() {
