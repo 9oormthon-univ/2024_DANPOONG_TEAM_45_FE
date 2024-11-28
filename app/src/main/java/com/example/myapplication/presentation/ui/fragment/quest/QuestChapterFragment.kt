@@ -8,7 +8,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.myapplication.R
-import com.example.myapplication.data.mapper.toDomain
+import com.example.myapplication.data.mapper.toQuestDto
 import com.example.myapplication.databinding.FragmentQuestChapterBinding
 import com.example.myapplication.presentation.adapter.QuizAdapter
 import com.example.myapplication.presentation.base.BaseFragment
@@ -27,7 +27,6 @@ class QuestChapterFragment :
     BaseFragment<FragmentQuestChapterBinding>(R.layout.fragment_quest_chapter), ItemClickListener {
 
     private lateinit var adapter: QuizAdapter
-
     private val loginViewModel: LoginViewModel by viewModels()
     private val chapterViewModel: ChapterViewModel by viewModels()
 
@@ -37,6 +36,7 @@ class QuestChapterFragment :
         onClickBtn()
     }
 
+    //챕터 아이디
     var parseId = 0
     var islandName = ""
 
@@ -64,7 +64,7 @@ class QuestChapterFragment :
         adapter = QuizAdapter(this@QuestChapterFragment)
         val id = arguments?.getString("selectId")
         parseId = id?.toInt() ?: 0
-        chapterViewModel.getDistinctChapter(parseId)
+        chapterViewModel.fetchQuizzesForChapter(parseId)
     }
 
     @Inject
@@ -73,39 +73,33 @@ class QuestChapterFragment :
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch {
-                    chapterViewModel.getDistinctChapter.collectLatest { it ->
-                        when (it.result.code) {
-                            200 -> {
-                                var count = 0
-                                val responseList = it.payload?.quizzes
-                                val list = it.payload?.quizzes?.map { item ->
-                                    item.toDomain()
-                                }
+                    chapterViewModel.quizzesForChapter.collectLatest { it ->
+                        var count = 0
+                        val responseList = it.map { it.toQuestDto() }
 
-                                list?.forEachIndexed { index, item ->
-                                    item.isOpen = setIsOpen(list.toMutableList() ,index)
-                                }
+                        responseList.forEachIndexed { index, item ->
+                            item.isOpen = setIsOpen(responseList.toMutableList(), index)
+                        }
 
-                                responseList?.forEach { response ->
-                                    if (response.isCleared) {
-                                        count++
-                                    }
-                                }
-                                binding.rvBiginnerIsland.adapter = adapter
-                                adapter.submitList(list)
-                                binding.ivQuestMoomoo.text =
-                                    "무무의 퀘스트 (${count}/${responseList?.size})"
-                                if (count == responseList?.size) {
-                                    if (it.payload?.isRewardButtonActive == true) {
-                                        visibleRewardOn()
-                                    } else {
-                                        visibleRewardOff()
-                                    }
-                                } else {
-                                    allOff()
-                                }
+                        responseList.forEach { response ->
+                            if (response.isCleared) {
+                                count++
                             }
                         }
+                        binding.rvBiginnerIsland.adapter = adapter
+                        adapter.submitList(responseList)
+
+                        binding.ivQuestMoomoo.text = "무무의 퀘스트 (${count}/${responseList?.size})"
+
+//                        if (count == responseList?.size) {
+//                            if (it.payload?.isRewardButtonActive == true) {
+//                                visibleRewardOn()
+//                            } else {
+//                                visibleRewardOff()
+//                            }
+//                        } else {
+//                            allOff()
+//                        }
                     }
                 }
                 launch {
@@ -151,8 +145,13 @@ class QuestChapterFragment :
 
     private fun setIsOpen(list: MutableList<QuestDto>, id: Int): Boolean {
         return when (id) {
-            0 -> { true }
-            else -> { list[id - 1].isCleared }
+            0 -> {
+                true
+            }
+
+            else -> {
+                list[id - 1].isCleared
+            }
         }
     }
 
