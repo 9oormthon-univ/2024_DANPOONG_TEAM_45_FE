@@ -26,6 +26,8 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
 import androidx.core.view.DragStartHelper
@@ -48,7 +50,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), GameInterface {
+class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), GameInterface, FireConditionInterface {
 
     private var targetBlockMap = mutableMapOf<Int, Int?>()
 
@@ -925,8 +927,8 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                 R.string.game_fanning -> {
                     deltaX = 0f
                     deltaY = 0f
-                    if (isFireCondition()) {
-                        handleFireCondition()
+                    if (isFireCondition(this, curGameId, moveWay)) {
+                        handleFireCondition(this)
                     }
                     Handler(Looper.getMainLooper()).postDelayed({
                         binding.ivGameFan.visibility = View.GONE
@@ -951,34 +953,5 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         }
 
         moveStep(0) // 첫 번째 이동 실행
-    }
-
-    private fun isFireCondition(): Boolean {
-        // Fire가 발생할 조건을 정의
-        if (curGameId == 6) {
-            val fanBlockOrder = listOf(
-                R.string.game_move_straight,
-                R.string.game_move_up,
-                R.string.game_move_straight,
-                R.string.game_fanning
-            )
-            if (moveWay.size >= 4) {
-                for (i: Int in 0..3) {
-                    if (fanBlockOrder[i] != moveWay[i])
-                        return false
-                }
-                return true
-            } else {
-                return false
-            }
-        }
-        else {
-            return (R.string.game_fanning == moveWay[0])
-        }
-    }
-
-    private fun handleFireCondition() {
-        // Fire 처리 로직
-        blockVisibility(binding.ivGameFan, binding.ivGameFire)
     }
 }
