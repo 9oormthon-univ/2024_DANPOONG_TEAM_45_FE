@@ -84,27 +84,11 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     private var isRepeat = false
     private var repeatIdx: Int = -1
     private val dropTargets by lazy {
-        mutableListOf(
-            binding.ibBiginnerGame1Space1,
-            binding.ibBiginnerGame1Space2,
-            binding.ibBiginnerGame1Space3,
-            binding.ibBiginnerGame1Space4,
-            binding.ibBiginnerGame1Space5,
-            binding.ibBiginnerGame1Space6,
-            binding.ibBiginnerGame1Space7
-        )
+        GameDropTarget.getAllViews(binding)
     }
 
     private val successDialogComment by lazy {
-        listOf(
-            Pair("완벽한 아침이야!", "상쾌한 아침을 만들어줘서 고마워 :)"),
-            Pair("우와, 멋지다!", "파도 소리를 듣게 해줘서 고마워 :)"),
-            Pair("너무 달콤하다!", "사탕을 먹을 수 있게 도와줘서 고마워 :)"),
-            Pair("우와 또 사탕이다!", "너무 맛있다 ㅎㅎ  도와줘서 고마워 :)"),
-            Pair("휴~ 무사히 껌을 피했어!", "도와줘서 고마워 :)"),
-            Pair("우와 불이 무사히 꺼졌어!", "도와줘서 고마워 :)"),
-            Pair("우와 불이 무사히 꺼졌어!", "도와줘서 고마워 :)"),
-        )
+        SuccessDialogComment.getAllComments()
     }
 
     override fun setLayout() {
@@ -239,23 +223,29 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
             removeTarget4?.visibility = View.GONE
             removeTarget5?.visibility = View.GONE
 
-            val targetImageView = target.getChildAt(0) as ImageView
-            targetImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.shape_square_rounded_16dp))
-            FrameLayout(this).apply {
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-            }
+            dropTargets.forEach { target ->
+                // target이 FrameLayout인지 확인
+                if (target is FrameLayout) {
+                    // 첫 번째 자식이 ImageView인지 확인 후 처리
+                    val targetImageView = target.getChildAt(0) as? ImageView
+                    targetImageView?.setImageDrawable(
+                        ContextCompat.getDrawable(this, R.drawable.shape_square_rounded_16dp)
+                    )
 
-            // 기존에 있던 TextView를 제거하고 새로 추가
-            if (target.childCount >= 1) {
-                target.removeViewAt(1)
+                    // 기존 TextView를 제거
+                    if (target.childCount > 1) {
+                        target.removeViewAt(1)
+                    }
+
+                    // 새로운 TextView 추가
+                    val overlayTextView = TextView(this).apply {
+                        text = "" // 초기 텍스트 설정
+                    }
+                    target.addView(overlayTextView, 1)
+                } else {
+                    Log.e("DropTarget", "Target is not a FrameLayout: ${target.id}")
+                }
             }
-            val overlayTextView = TextView(this).apply {
-                text = "" // 초기 텍스트 설정
-            }
-            target.addView(overlayTextView, 1)
         }
 
         blockVisibility(binding.ibGameplayBtn, binding.ibGamestopBtn)
@@ -749,14 +739,8 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         val stopBtn = dialogView.findViewById<Button>(R.id.dialog_button_stop)
         val nextBtn = dialogView.findViewById<Button>(R.id.dialog_button_next_step)
 
-        if (!isNextGame) {
-            title.text = successDialogComment[gameId - 1].first
-            subTitle.text = successDialogComment[gameId - 1].second
-        }
-        else {
-            title.text = successDialogComment[gameId].first
-            subTitle.text = successDialogComment[gameId].second
-        }
+        title.text = successDialogComment[gameId - 3].first
+        subTitle.text = successDialogComment[gameId - 3].second
 
         stopBtn.setOnClickListener {
             dialog.dismiss()
