@@ -121,7 +121,7 @@
             android:id="@+id/ib_gamestop_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="53dp"
             android:adjustViewBounds="true"
             android:background="@android:color/transparent"
@@ -135,14 +135,14 @@
             android:id="@+id/ib_bulb_btn"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="46dp"
             android:layout_marginTop="53dp"
             android:background="@drawable/selector_bulb"
             android:clickable="true"
             android:text=""
             android:textOff=""
             android:textOn=""
-            app:layout_constraintStart_toEndOf="@+id/ib_gameplay_btn"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
@@ -176,7 +176,8 @@
             android:textSize="12sp"
             app:layout_constraintEnd_toStartOf="@+id/ib_gameplay_exit_btn"
             app:layout_constraintStart_toStartOf="@+id/ib_bulb_btn"
-            app:layout_constraintTop_toBottomOf="@+id/ib_bulb_btn" />
+            app:layout_constraintTop_toBottomOf="@+id/ib_bulb_btn"
+            android:visibility="gone"/>
 
 
         <!--        <TextView-->
