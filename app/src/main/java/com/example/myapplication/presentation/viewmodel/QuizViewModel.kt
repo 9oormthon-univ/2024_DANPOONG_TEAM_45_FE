@@ -9,9 +9,11 @@ import com.example.myapplication.R
 import com.example.myapplication.data.repository.remote.request.quiz.QuizDto
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.quiz.DistinctQuizResponse
+import com.example.myapplication.data.repository.remote.response.quizcleared.ClearStateListResponse
 import com.example.myapplication.domain.usecase.quiz.DeleteQuizUseCase
 import com.example.myapplication.domain.usecase.quiz.GetDistinctQuizUseCase
 import com.example.myapplication.domain.usecase.quiz.PostCreateQuizUseCase
+import com.example.myapplication.domain.usecase.quizcleared.GetQuizAllUseCase
 import com.example.myapplication.domain.usecase.quizcleared.PostQuizClearedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -25,7 +27,8 @@ class QuizViewModel @Inject constructor(
     private val postCreateQuizUseCase: PostCreateQuizUseCase,
     private val deleteQuizUseCase: DeleteQuizUseCase,
     private val quizDistinctQuizUseCase: GetDistinctQuizUseCase,
-    private val quizClearedUseCase: PostQuizClearedUseCase
+    private val quizClearedUseCase: PostQuizClearedUseCase,
+    private val getQuizAllUseCase: GetQuizAllUseCase
 ) : ViewModel() {
     private val _postCreateQuiz = MutableStateFlow(BaseResponse<Any>())
     val postCreateQuiz: StateFlow<BaseResponse<Any>> = _postCreateQuiz
@@ -38,6 +41,9 @@ class QuizViewModel @Inject constructor(
 
     private val _quizClear = MutableStateFlow(BaseResponse<Any>())
     val quizClear: StateFlow<BaseResponse<Any>> = _quizClear
+
+    private val _quizAllClear = MutableStateFlow(BaseResponse<ClearStateListResponse>())
+    val quizAllClear: StateFlow<BaseResponse<ClearStateListResponse>> = _quizAllClear
 
     private val _moveWay = MutableLiveData<MutableList<Int>>()
     val moveWay: LiveData<MutableList<Int>> get() = _moveWay
@@ -90,6 +96,19 @@ class QuizViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 Log.e("실패", "postKakaoLogin")
+            }
+        }
+    }
+
+    //완료 퀴즈 등록
+    fun getQuizAll() {
+        viewModelScope.launch {
+            try {
+                getQuizAllUseCase().collect {
+                    _quizAllClear.value = it
+                }
+            } catch (e: Exception) {
+                Log.e("실패", "getQuizAll")
             }
         }
     }
