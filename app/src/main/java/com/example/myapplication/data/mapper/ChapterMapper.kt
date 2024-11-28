@@ -2,6 +2,8 @@ package com.example.myapplication.data.mapper
 
 import android.util.Log
 import com.example.myapplication.R
+import com.example.myapplication.data.repository.local.ChapterDTO
+import com.example.myapplication.data.repository.local.QuizDTO
 import com.example.myapplication.data.repository.remote.response.chapter.AllChapterResponse
 import com.example.myapplication.data.repository.remote.response.chapter.DistinctChapterResponse
 import com.example.myapplication.data.repository.remote.response.chapter.QuizResponse
@@ -82,7 +84,8 @@ fun QuizResponse.toDomain(): QuestDto {
         gameDescript = subtitles[this.quizId - 1],
         id = this.quizId,
         isCleared = this.isCleared,
-        isOpen = false
+        isOpen = false,
+
     )
     return item
 }
@@ -140,3 +143,38 @@ val images = mutableListOf(
     R.drawable.iv_background_lake_game1,
     R.drawable.iv_background_lake_game2
 )
+
+fun DistinctChapterResponse.toChapter(): ChapterDTO {
+    return ChapterDTO(
+        id = this.id,
+        name = this.name,
+        isCleared = this.isCleared,
+        isRewardButtonActive = this.isRewardButtonActive
+    )
+}
+
+fun DistinctChapterResponse.toQuizzes(chapterId: Int): List<QuizDTO> {
+    return this.quizzes.map { quizResponse ->
+        QuizDTO(
+            chapterId = chapterId,
+            quizId = quizResponse.quizId,
+            title = quizResponse.title,
+            level = quizResponse.level,
+            isCleared = quizResponse.isCleared
+        )
+    }
+}
+
+fun QuizDTO.toQuestDto(): QuestDto{
+    val item = QuestDto(
+        gameName = titles[this.quizId - 1],
+        gameType = decideType(this.quizId),
+        gameImg = images[this.quizId - 1],
+        gameState = decideClear(this.isCleared),
+        gameDescript = subtitles[this.quizId - 1],
+        id = this.quizId,
+        isCleared = this.isCleared,
+        isOpen = false
+    )
+    return item
+}
