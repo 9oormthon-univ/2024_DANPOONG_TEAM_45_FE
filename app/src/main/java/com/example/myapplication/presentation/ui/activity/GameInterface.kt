@@ -79,8 +79,6 @@ interface GameInterface {
     }
     fun addBlock(blockDTO: BlockDTO) // drag 아이템 추가
 
-    // 각종 버튼들 처리, repeat 블록 있으면 moveWay에 추가
-    fun gameFunction(binding: ActivityGameBinding)
 
     // drag and drop ----------------------------------------------
     // drag 시작
@@ -151,11 +149,6 @@ interface GameInterface {
         }
     }
     fun handleImageDrop(target: View, dragId: Int, dropId: Int)// drag와 drop 매핑
-
-    // 게임 성공 여부 판단
-    fun checkSuccess() // 게임 성공인지 판별
-    fun showSuccessDialog() // 게임 성공 시 성공 다이얼로그 출력
-    fun showFailDialog() // 게임 실패 시 실패 다이얼로그 출력
 
     // 기타 기능
     fun blockVisibility(visibleBlock: View, goneBlock: View) {
