@@ -242,41 +242,11 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
     private fun initRepeatBlock() {
         dropTargets.forEach { target ->
-            // 기존 ImageView 리셋
-            val removeTarget1 = target.getTag(R.id.ib_biginner_game1_space1) as? ImageView
-            val removeTarget2 = target.getTag(R.id.ib_biginner_game1_space2) as? ImageView
-            val removeTarget3 = target.getTag(R.id.ib_gamestop_btn) as? ImageView
-            val removeTarget4 = target.getTag(R.id.ib_gameplay_btn) as? EditText
-            val removeTarget5 = target.getTag(R.id.ib_game_state_done) as? TextView
-
-            removeTarget1?.visibility = View.GONE
-            removeTarget2?.visibility = View.GONE
-            removeTarget3?.visibility = View.GONE
-            removeTarget4?.visibility = View.GONE
-            removeTarget5?.visibility = View.GONE
-
-            dropTargets.forEach { target ->
-                // target이 FrameLayout인지 확인
-                if (target is FrameLayout) {
-                    // 첫 번째 자식이 ImageView인지 확인 후 처리
-                    val targetImageView = target.getChildAt(0) as? ImageView
-                    targetImageView?.setImageDrawable(
-                        ContextCompat.getDrawable(this, R.drawable.shape_square_rounded_16dp)
-                    )
-
-                    // 기존 TextView를 제거
-                    if (target.childCount > 1) {
-                        target.removeViewAt(1)
-                    }
-
-                    // 새로운 TextView 추가
-                    val overlayTextView = TextView(this).apply {
-                        text = "" // 초기 텍스트 설정
-                    }
-                    target.addView(overlayTextView, 1)
-                } else {
-                    Log.e("DropTarget", "Target is not a FrameLayout: ${target.id}")
-                }
+            resetTargetVisibility(target)
+            if (target is FrameLayout) {
+                resetFrameLayout(target)
+            } else {
+                Log.e("DropTarget", "Target is not a FrameLayout: ${target.id}")
             }
         }
 
@@ -286,6 +256,36 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
             binding.ibGamestoryMsgTxt.visibility = View.GONE
             blockVisibility(binding.ibGamestoryOff, binding.ibGamestoryOn)
         }, 10000)  // 10초 후 메시지 사라짐
+    }
+
+    private fun resetTargetVisibility(target: View) {
+        listOf(
+            R.id.ib_biginner_game1_space1 to ImageView::class.java,
+            R.id.ib_biginner_game1_space2 to ImageView::class.java,
+            R.id.ib_gamestop_btn to ImageView::class.java,
+            R.id.ib_gameplay_btn to EditText::class.java,
+            R.id.ib_game_state_done to TextView::class.java
+        ).forEach { (tagId, viewClass) ->
+            (target.getTag(tagId) as? View)?.takeIf { viewClass.isInstance(it) }?.apply {
+                visibility = View.GONE
+            }
+        }
+    }
+
+    private fun resetFrameLayout(frameLayout: FrameLayout) {
+        // 첫 번째 자식이 ImageView인지 확인 후 이미지 초기화
+        (frameLayout.getChildAt(0) as? ImageView)?.setImageDrawable(
+            ContextCompat.getDrawable(frameLayout.context, R.drawable.shape_square_rounded_16dp)
+        )
+
+        // 기존 TextView 제거 및 새 TextView 추가
+        if (frameLayout.childCount > 1) {
+            frameLayout.removeViewAt(1)
+        }
+        val overlayTextView = TextView(frameLayout.context).apply {
+            text = "" // 초기 텍스트 설정
+        }
+        frameLayout.addView(overlayTextView, 1)
     }
 
     override fun addBlock(block: BlockDTO) {
