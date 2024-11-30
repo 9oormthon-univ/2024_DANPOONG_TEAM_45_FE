@@ -155,13 +155,8 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     }
 
     override fun initGame() {
-        binding.ivGameCharacter.bringToFront() // 게임 캐릭터를 최상단으로 설정
         initStory()
-
-        // 캐릭터 관련 초기화
-        moveXCnt = 0
-        moveYCnt = 0
-        moveWay = MutableList(10) { 0 }
+        initCharacterMove()
         runOnUiThread {
             initCharacter(curGameId, binding)
         }
@@ -170,14 +165,46 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         setupGameBackground(curGameId)
 
         // 블록 초기화
-        targetBlockMap = mutableMapOf()
-        dragSources.forEach { it.visibility = View.VISIBLE }
+        initDragBlock()
         initRepeatBlock()
 
         blockVisibility(binding.ibGameplayBtn, binding.ibGamestopBtn)
+        setUpStory()
+    }
+
+    private fun initCharacterMove() {
+        binding.ivGameCharacter.bringToFront() // 게임 캐릭터를 최상단으로 설정
+        moveXCnt = 0
+        moveYCnt = 0
+        moveWay = MutableList(10) { 0 }
+    }
+
+    private fun initDragBlock() {
+        targetBlockMap = mutableMapOf()
+        dragSources.forEach { it.visibility = View.VISIBLE }
+    }
+
+    private fun initRepeatBlock() {
+        dropTargets.forEach { target ->
+            resetFrameLayoutVisibility(target)
+            if (target is FrameLayout) {
+                initFrameLayout(target)
+            } else {
+                Log.e("DropTarget", "Target is not a FrameLayout: ${target.id}")
+            }
+        }
+    }
+
+    private fun setUpStory() {
         Handler(Looper.getMainLooper()).postDelayed({
-            binding.ibGamestoryMsg.visibility = View.GONE
-            binding.ibGamestoryMsgTxt.visibility = View.GONE
+            setVisibilityForViews(
+                visibleViews = emptyList(),
+                hiddenViews = listOf(
+                    binding.ibGamestoryMsg,
+                    binding.ibGamestoryMsgTxt
+                )
+            )
+
             blockVisibility(binding.ibGamestoryOff, binding.ibGamestoryOn)
         }, 10000)  // 10초 후 메시지 사라짐
     }
@@ -247,18 +274,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         }
     }
 
-    private fun initRepeatBlock() {
-        dropTargets.forEach { target ->
-            resetTargetVisibility(target)
-            if (target is FrameLayout) {
-                resetFrameLayout(target)
-            } else {
-                Log.e("DropTarget", "Target is not a FrameLayout: ${target.id}")
-            }
-        }
-    }
-
-    private fun resetTargetVisibility(target: View) {
+    private fun resetFrameLayoutVisibility(target: View) {
         listOf(
             R.id.ib_biginner_game1_space1 to ImageView::class.java,
             R.id.ib_biginner_game1_space2 to ImageView::class.java,
@@ -272,7 +288,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         }
     }
 
-    private fun resetFrameLayout(frameLayout: FrameLayout) {
+    private fun initFrameLayout(frameLayout: FrameLayout) {
         // 첫 번째 자식이 ImageView인지 확인 후 이미지 초기화
         (frameLayout.getChildAt(0) as? ImageView)?.setImageDrawable(
             ContextCompat.getDrawable(frameLayout.context, R.drawable.shape_square_rounded_16dp)
