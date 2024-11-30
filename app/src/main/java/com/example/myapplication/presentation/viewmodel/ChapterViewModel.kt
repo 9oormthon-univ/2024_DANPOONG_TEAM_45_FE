@@ -1,8 +1,13 @@
 package com.example.myapplication.presentation.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.data.repository.local.ChapterDTO
+import com.example.myapplication.data.repository.local.QuizDTO
+import com.example.myapplication.data.repository.local.dao.ChapterRepository
 import com.example.myapplication.data.repository.remote.request.chapter.RegisterChapterDto
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.chapter.AllChapterResponse
@@ -28,7 +33,9 @@ class ChapterViewModel @Inject constructor(
     private val deleteChapterUseCase: DeleteChapterUseCase,
     private val chapterClearedUseCase: PostChapterClearedUseCase,
     private val rewardUseCase: RewardUseCase,
-    private val patchChapterUseCase: PatchChapterUseCase
+    private val patchChapterUseCase: PatchChapterUseCase,
+    private val repository: ChapterRepository
+
 ) : ViewModel() {
 
     private val _postCreateChapter = MutableStateFlow(BaseResponse<Any>())
@@ -52,6 +59,28 @@ class ChapterViewModel @Inject constructor(
     private val _reward = MutableStateFlow(BaseResponse<Any>())
     val reward: StateFlow<BaseResponse<Any>> = _reward
 
+    private val _chapters = MutableLiveData<List<ChapterDTO>>()
+    val chapters: LiveData<List<ChapterDTO>> = _chapters
+
+    // 내부에서 관리하는 MutableStateFlow
+    private val _quizzesForChapter = MutableStateFlow<List<QuizDTO>>(emptyList())
+    val quizzesForChapter: StateFlow<List<QuizDTO>> = _quizzesForChapter
+
+    fun fetchAndSaveChapters(chapterResponses: List<DistinctChapterResponse>) {
+        viewModelScope.launch {
+            repository.saveChaptersWithQuizzes(chapterResponses)
+            _chapters.value = repository.getAllChapters()
+        }
+    }
+
+    fun fetchQuizzesForChapter(chapterId: Int) {
+        viewModelScope.launch {
+            repository.getQuizzesByChapterFlow(chapterId)
+                .collect { quizzes ->
+                    _quizzesForChapter.value = quizzes
+                }
+        }
+    }
 
     fun getDistinctChapter(chapter_id: Int) {
         viewModelScope.launch {
@@ -120,7 +149,7 @@ class ChapterViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 rewardUseCase(chapterId).collect {
-                    _postCreateChapter.value = it
+                    _reward.value = it.copy()
                 }
             } catch (e: Exception) {
                 Log.e("에러", e.message.toString())
@@ -131,7 +160,7 @@ class ChapterViewModel @Inject constructor(
     fun patchChapter(chapterId: String, registerChapterDto: RegisterChapterDto) {
         viewModelScope.launch {
             try {
-                patchChapterUseCase(chapterId,registerChapterDto).collect {
+                patchChapterUseCase(chapterId, registerChapterDto).collect {
                     _patchChapter.value = it
                 }
             } catch (e: Exception) {

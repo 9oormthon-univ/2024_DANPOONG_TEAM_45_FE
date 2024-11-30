@@ -4,6 +4,7 @@ plugins {
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -51,6 +52,7 @@ dependencies {
 
     // glide
     implementation(libs.glide)
+    implementation(libs.androidx.paging.common.android)
     annotationProcessor (libs.compiler)
 
     // viewpager
@@ -101,6 +103,11 @@ dependencies {
 
     //lottie
     implementation (libs.lottie)
+
+    //room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 }
 
 kapt {

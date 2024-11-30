@@ -28,7 +28,7 @@ class PotionMysteryActivity :
 
     private fun setBtnClick() {
         binding.activityAccountKakaoLoginBt.setOnClickListener {
-            characterViewModel.postIncreaseActivity(cid.toInt(),50)
+            characterViewModel.postIncreaseActivity(cid.toInt(),200)
             startActivity(Intent(this@PotionMysteryActivity, MainActivity::class.java))
             finish()
         }

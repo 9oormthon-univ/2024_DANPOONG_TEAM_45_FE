@@ -528,7 +528,6 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
                 showSuccessDialog(1)
                 clearDragTargets() // 상태 초기화 추가
                 clearDropTargets()
-                viewModel.postQuizClear(1)
             }
             2 -> {
                 showSuccessDialog(2)

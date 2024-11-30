@@ -3,7 +3,11 @@ package com.example.myapplication.presentation.ui.activity
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.view.Window
 import android.widget.Button
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
@@ -118,8 +122,7 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
     @SuppressLint("InflateParams")
     private fun showCustomDialog() {
         // 다이얼로그 레이아웃을 불러옴
-        val dialogView =
-            LayoutInflater.from(this).inflate(R.layout.dialog_fail, null)
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_fail, null)
 
         // 커스텀 다이얼로그 생성
         val dialogBuilder = AlertDialog.Builder(this)
@@ -129,12 +132,30 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
         // 다이얼로그 만들기
         val dialog = dialogBuilder.create()
 
+        // 다이얼로그 창 설정
+        dialog?.window?.apply {
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            requestFeature(Window.FEATURE_NO_TITLE)
+
+            val sumMargins = 120
+
+            // LayoutParams 설정
+            val layoutParams = attributes
+            layoutParams.width = (resources.displayMetrics.widthPixels - sumMargins.dpToPx()) // 양쪽 42dp 마진
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            attributes = layoutParams
+        }
+
         val confirmButton = dialogView.findViewById<Button>(R.id.btn_dialog_biginner_quiz_fail)
         confirmButton.setOnClickListener {
             dialog.dismiss()
         }
         // 다이얼로그 보여주기
         dialog.show()
+    }
+
+    private fun Int.dpToPx(): Int {
+        return (this * resources.displayMetrics.density).toInt()
     }
 
     private fun moveFragment() {
