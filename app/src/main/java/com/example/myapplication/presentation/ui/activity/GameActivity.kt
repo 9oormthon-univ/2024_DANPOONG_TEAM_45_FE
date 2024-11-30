@@ -484,14 +484,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         }
     }
 
-    private fun setViewsVisibility(visibleViews: List<View>, goneViews: List<View>) {
-        visibleViews.forEach { it.visibility = View.VISIBLE }
-        goneViews.forEach { it.visibility = View.GONE }
-    }
-
     private fun onStoryState(isState: Boolean) {
         if (isState) {
-            setViewsVisibility(
+            setVisibilityForViews(
                 visibleViews = listOf(
                     binding.ibGamestoryImg,
                     binding.ibGamestoryTxt,
@@ -499,12 +494,12 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                     binding.ibGamestoryMsgTxt,
                     binding.ibGamestoryOn
                 ),
-                goneViews = listOf(binding.ibGamestoryOff)
+                hiddenViews = listOf(binding.ibGamestoryOff)
             )
         } else {
-            setViewsVisibility(
+            setVisibilityForViews(
                 visibleViews = listOf(binding.ibGamestoryOff),
-                goneViews = listOf(
+                hiddenViews = listOf(
                     binding.ibGamestoryImg,
                     binding.ibGamestoryTxt,
                     binding.ibGamestoryMsg,
@@ -517,9 +512,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
     private fun initStory() {
         Handler(Looper.getMainLooper()).postDelayed({
-            setViewsVisibility(
+            setVisibilityForViews(
                 visibleViews = listOf(binding.ibGamestoryOff),
-                goneViews = listOf(
+                hiddenViews = listOf(
                     binding.ibGamestoryImg,
                     binding.ibGamestoryTxt,
                     binding.ibGamestoryMsg,
@@ -531,8 +526,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     }
 
     // drag and drop ------------------------------------------------
-
-
     override fun handleImageDrop(target: View, dragId: Int, dropId: Int) {
         targetBlockMap[dropId] = dragId
         dragSources[dragId].visibility = View.GONE
