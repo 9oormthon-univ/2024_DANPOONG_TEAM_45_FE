@@ -19,6 +19,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
+import androidx.core.content.ContextCompat.getString
 import androidx.core.view.DragStartHelper
 import androidx.draganddrop.DropHelper
 import com.example.myapplication.R
@@ -107,7 +108,7 @@ interface GameInterface {
     }
 
     // drop의 target id 찾기
-    fun setupDropTargets(dropTargets: List<View>, context: Context) {
+    fun setupDropTargets(dropTargets: List<View>, context: Context, targetMap: Map<Int, Int?>, drag: List<View>) {
         val activity = context as? Activity ?: throw IllegalArgumentException("Context must be an Activity")
 
         dropTargets.forEach { target ->
@@ -124,19 +125,18 @@ interface GameInterface {
                 if (imageResId != null) {
                     val dropTargetId = dropTargets.indexOf(target)
 
-//                    // 현재 타겟에 이미 블록이 놓여 있는 경우 - 다시 제자리에 갖다놓기
-//                    val previousBlockId = targetBlockMap[dropTargetId]
-//                    if (previousBlockId != null) {
-//                        val previousBlock = dragSources[previousBlockId]
-//                        val previousBlockDTO = previousBlock.tag as? BlockDTO
-//                        val previousBlockType = previousBlockDTO?.blockType
-//
-//                        // 이전에 놓인 블록이 repeat이면 제외
-//                        if (previousBlockType != getString(R.string.block_type_repeat)) {
-//                            dragSources[previousBlockId].visibility = View.VISIBLE
-//                            removeBlockFromMoveWay(previousBlockId)
-//                        }
-//                    }
+                    // 현재 타겟에 이미 블록이 놓여 있는 경우 - 다시 제자리에 갖다놓기
+                    val previousBlockId = targetMap[dropTargetId]
+                    if (previousBlockId != null) {
+                        val previousBlock = drag[previousBlockId]
+                        val previousBlockDTO = previousBlock.tag as? BlockDTO
+                        val previousBlockType = previousBlockDTO?.blockType
+
+                        // 이전에 놓인 블록이 repeat이면 제외
+                        if (previousBlockType != getString(context, R.string.block_type_repeat)) {
+                            drag[previousBlockId].visibility = View.VISIBLE
+                        }
+                    }
 
                     handleImageDrop(view, imageResId, dropTargetId)
                 } else {

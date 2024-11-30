@@ -98,7 +98,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         initBlock()
         initGame()
         gameFunction(binding)
-        setupDropTargets(dropTargets, this)
+        setupDropTargets(dropTargets, this, targetBlockMap, dragSources)
 
         isQuizClearedViewModel.quizDistinct(curGameId)
     }
@@ -173,6 +173,13 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         targetBlockMap = mutableMapOf()
         dragSources.forEach { it.visibility = View.VISIBLE }
         initRepeatBlock()
+
+        blockVisibility(binding.ibGameplayBtn, binding.ibGamestopBtn)
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.ibGamestoryMsg.visibility = View.GONE
+            binding.ibGamestoryMsgTxt.visibility = View.GONE
+            blockVisibility(binding.ibGamestoryOff, binding.ibGamestoryOn)
+        }, 10000)  // 10초 후 메시지 사라짐
     }
 
     private fun setVisibilityForViews(visibleViews: List<View>, hiddenViews: List<View>) {
@@ -249,13 +256,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                 Log.e("DropTarget", "Target is not a FrameLayout: ${target.id}")
             }
         }
-
-        blockVisibility(binding.ibGameplayBtn, binding.ibGamestopBtn)
-        Handler(Looper.getMainLooper()).postDelayed({
-            binding.ibGamestoryMsg.visibility = View.GONE
-            binding.ibGamestoryMsgTxt.visibility = View.GONE
-            blockVisibility(binding.ibGamestoryOff, binding.ibGamestoryOn)
-        }, 10000)  // 10초 후 메시지 사라짐
     }
 
     private fun resetTargetVisibility(target: View) {

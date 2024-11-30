@@ -292,6 +292,23 @@ class QuizBlockActivity : BaseActivity<ActivityQuizBlockBinding>(R.layout.activi
                 val imageResId = item.text.toString().toIntOrNull()
                 if (imageResId != null) {
                     val dropTargetId = dropTargets.indexOf(target)
+
+                    // 현재 타겟에 이미 블록이 놓여 있는 경우 - 다시 제자리에 갖다놓기
+                    val previousBlockId = targetBlockMap[dropTargetId]
+                    if (previousBlockId != null) {
+                        val previousBlock = dragSources[previousBlockId]
+                        val previousBlockDTO = previousBlock.tag as? BlockDTO
+                        val previousBlockType = previousBlockDTO?.blockType
+
+                        // 이전에 놓인 블록이 repeat이면 제외
+                        if (previousBlockType != ContextCompat.getString(
+                                context,
+                                R.string.block_type_repeat
+                            )
+                        ) {
+                            dragSources[previousBlockId].visibility = View.VISIBLE
+                        }
+                    }
                     handleImageDrop(view, imageResId, dropTargetId)
                 } else {
                     Log.e(TAG, "Failed to retrieve imageResId from ClipData")
