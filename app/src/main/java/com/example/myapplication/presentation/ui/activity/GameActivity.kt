@@ -10,6 +10,8 @@ import android.content.ClipData
 import android.content.ClipDescription.MIMETYPE_TEXT_PLAIN
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Handler
 import android.os.Looper
 import android.text.InputType
@@ -19,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.DRAG_FLAG_GLOBAL
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -766,6 +769,23 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         // 다이얼로그 만들기
         val dialog = dialogBuilder.create()
 
+        // 다이얼로그 창 설정
+        dialog?.window?.apply {
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            requestFeature(Window.FEATURE_NO_TITLE)
+
+            // 양쪽 42dp 마진 적용
+            val params = ViewGroup.LayoutParams(
+                (resources.displayMetrics.widthPixels * 0.9).toInt(), // 화면 폭의 90%
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            val sumMargin = 84
+
+            attributes = (attributes).apply {
+                width = (resources.displayMetrics.widthPixels - sumMargin.dpToPx()) // 양쪽 42dp 마진
+            }
+        }
+
         val title = dialogView.findViewById<TextView>(R.id.dialog_button_two_title)
         val subTitle = dialogView.findViewById<TextView>(R.id.dialog_button_two_subtitle)
         val stopBtn = dialogView.findViewById<Button>(R.id.dialog_button_stop)
@@ -803,6 +823,23 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         // 다이얼로그 만들기
         val dialog = dialogBuilder.create()
 
+        // 다이얼로그 창 설정
+        dialog?.window?.apply {
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            requestFeature(Window.FEATURE_NO_TITLE)
+
+            // 양쪽 42dp 마진 적용
+            val params = ViewGroup.LayoutParams(
+                (resources.displayMetrics.widthPixels * 0.9).toInt(), // 화면 폭의 90%
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            val sumMargin = 84
+
+            attributes = (attributes).apply {
+                width = (resources.displayMetrics.widthPixels - sumMargin.dpToPx()) // 양쪽 42dp 마진
+            }
+        }
+
         val failTitle = dialogView.findViewById<TextView>(R.id.tv_gameplay_fail_title)
         val failSubTitle = dialogView.findViewById<TextView>(R.id.tv_gameplay_fail_subtitle)
         val retryBtn = dialogView.findViewById<Button>(R.id.btn_dialog_biginner_quiz_fail)
@@ -823,11 +860,17 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     private fun showExitDialog() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_success, null)
 
+
         val dialogBuilder = AlertDialog.Builder(this)
             .setView(dialogView)
             .setCancelable(false)
 
         val dialog = dialogBuilder.create()
+
+        dialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT,
+        )
 
         val title = dialogView.findViewById<TextView>(R.id.dialog_button_two_title)
         val subTitle = dialogView.findViewById<TextView>(R.id.dialog_button_two_subtitle)

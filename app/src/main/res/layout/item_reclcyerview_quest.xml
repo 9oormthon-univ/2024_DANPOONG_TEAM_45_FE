@@ -2,7 +2,6 @@
 <layout>
 
     <data>
-
         <variable
             name="itemRecycler"
             type="com.example.myapplication.presentation.ui.fragment.quest.QuestDto" />

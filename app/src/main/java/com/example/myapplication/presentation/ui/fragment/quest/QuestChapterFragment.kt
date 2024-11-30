@@ -12,6 +12,7 @@ import com.example.myapplication.data.mapper.toQuestDto
 import com.example.myapplication.databinding.FragmentQuestChapterBinding
 import com.example.myapplication.presentation.adapter.QuizAdapter
 import com.example.myapplication.presentation.base.BaseFragment
+import com.example.myapplication.presentation.ui.activity.PotionMysteryActivity
 import com.example.myapplication.presentation.ui.activity.QuestIntroActivity
 import com.example.myapplication.presentation.viewmodel.ChapterViewModel
 import com.example.myapplication.presentation.viewmodel.LoginViewModel
@@ -63,7 +64,9 @@ class QuestChapterFragment :
         }
         adapter = QuizAdapter(this@QuestChapterFragment)
         val id = arguments?.getString("selectId")
+        Log.d("okhttp","$id")
         parseId = id?.toInt() ?: 0
+        chapterViewModel.getDistinctChapter(parseId)
         chapterViewModel.fetchQuizzesForChapter(parseId)
     }
 
@@ -86,20 +89,29 @@ class QuestChapterFragment :
                                 count++
                             }
                         }
+
                         binding.rvBiginnerIsland.adapter = adapter
                         adapter.submitList(responseList)
 
                         binding.ivQuestMoomoo.text = "무무의 퀘스트 (${count}/${responseList?.size})"
+                    }
+                }
 
-//                        if (count == responseList?.size) {
-//                            if (it.payload?.isRewardButtonActive == true) {
-//                                visibleRewardOn()
-//                            } else {
-//                                visibleRewardOff()
-//                            }
-//                        } else {
-//                            allOff()
-//                        }
+                launch {
+                    chapterViewModel.getDistinctChapter.collectLatest{
+                        if(it.payload?.isRewardButtonActive == true){
+                            visibleRewardOn()
+                        }else{
+                            val clearCount = it.payload?.quizzes?.count { count ->
+                                count.isCleared
+                            }
+                            val questionCount = it.payload?.quizzes?.size
+                            if(clearCount == questionCount){
+                                visibleRewardOff()
+                            }else{
+                                allOff()
+                            }
+                        }
                     }
                 }
                 launch {
@@ -117,8 +129,8 @@ class QuestChapterFragment :
 
     private fun onClickBtn() {
         binding.ibRewardOn.setOnClickListener {
-            checkTraining()
             chapterViewModel.reward(parseId)
+            checkTraining()
         }
     }
 
@@ -138,8 +150,21 @@ class QuestChapterFragment :
     }
 
     private fun checkTraining() {
-        if (parseId <= 2) {
-            loginViewModel.getCompleteTraining()
+        when (parseId) {
+            1 -> {
+                loginViewModel.getCompleteTraining()
+                Intent(requireActivity(), PotionMysteryActivity::class.java).apply {
+                    putExtra("potion", 1)
+                    startActivity(this)
+                }
+            }
+
+            2 -> {
+                Intent(requireActivity(), PotionMysteryActivity::class.java).apply {
+                    putExtra("potion", 3)
+                    startActivity(this)
+                }
+            }
         }
     }
 

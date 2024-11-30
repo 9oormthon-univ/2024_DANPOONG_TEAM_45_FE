@@ -49,11 +49,7 @@ class QuizClearActivity : BaseActivity<ActivityQuizClearBinding>(R.layout.activi
             }
             binding.btnNextstageSeeMoomoo.setOnClickListener {
                 //믈약
-                characterViewModel.postIncreaseActivity(cid.toInt(), 50)
-                val intent = Intent(this, MainActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                }
-                startActivity(intent)
+                increaseExp(300)
             }
         }
         // 모험 준비하기 클리어
@@ -68,10 +64,7 @@ class QuizClearActivity : BaseActivity<ActivityQuizClearBinding>(R.layout.activi
 
             loginViewModel.getCompleteTraining()
             binding.btnNextstageSeeMoomoo.setOnClickListener {
-                val intent = Intent(this, PotionMysteryActivity::class.java)
-                intent.putExtra("potion", 1)
-                startActivity(intent)
-                finish()
+                increaseExp(300)
             }
         }
         binding.ivNextStageCancel.setOnClickListener {
@@ -80,15 +73,20 @@ class QuizClearActivity : BaseActivity<ActivityQuizClearBinding>(R.layout.activi
         }
     }
 
+    private fun increaseExp(exp : Int){
+        characterViewModel.postIncreaseActivity(cid.toInt(), exp)
+    }
+
     private fun observeLifeCycle() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 characterViewModel.postIncreaseActivity.collectLatest {
                     when (it.result.code) {
                         200 -> {
-                            val intent = Intent(this@QuizClearActivity, MainActivity::class.java)
+                            val intent = Intent(this@QuizClearActivity, MainActivity::class.java).apply {
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            }
                             startActivity(intent)
-                            finish()
                         }
                     }
                 }

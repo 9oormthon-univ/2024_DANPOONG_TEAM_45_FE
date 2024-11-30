@@ -149,7 +149,7 @@ class ChapterViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 rewardUseCase(chapterId).collect {
-                    _postCreateChapter.value = it
+                    _reward.value = it.copy()
                 }
             } catch (e: Exception) {
                 Log.e("에러", e.message.toString())
