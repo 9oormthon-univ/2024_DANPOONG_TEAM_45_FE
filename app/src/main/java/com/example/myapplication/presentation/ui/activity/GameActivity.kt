@@ -536,161 +536,152 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         val blockMove = blockDTO?.blockDescript
 
         when (blockType) {
-            resources.getString(R.string.block_type_normal) -> {
-                // 드래그된 View (FrameLayout)에서 ImageView와 TextView를 가져옴
-                val draggedImageView = draggedBlock.getChildAt(0) as ImageView
-                val draggedTextView = draggedBlock.getChildAt(1) as TextView
-
-                if (target is FrameLayout) {
-                    // 기존에 "repeat" 블록이 있는지 확인
-                    val repeatImageView = target.getTag(R.id.ib_gamestop_btn) as? ImageView
-                    if (repeatImageView != null) {
-                        // repeat 블록이 이미 존재하면 newImageView3의 visibility를 VISIBLE로 변경
-                        repeatIdx = dropId
-                        repeatImageView.visibility = View.VISIBLE
-                        if (target.childCount > 1) {
-                            target.removeViewAt(1)
-                        }
-                        // TextView를 target에 새로 추가
-                        val overlayTextView = TextView(this).apply {
-                            text = draggedTextView!!.text
-                            textSize = 12f
-                            setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
-                            setPadding(45, 90, 0, 0)
-                        }
-                        target.setTag(R.id.ib_game_state_done, overlayTextView)
-                        target.addView(overlayTextView, 1)
-                        overlayTextView.bringToFront()
-                        overlayTextView.invalidate()
-                        target.requestLayout()
-                    } else {
-                        // 기존 ImageView를 target에 덮어씌우기
-                        val targetImageView = target.getChildAt(0) as ImageView
-                        targetImageView.setImageDrawable(draggedImageView.drawable)
-
-                        // 기존 TextView가 있다면 제거
-                        if (target.childCount > 1) {
-                            target.removeViewAt(1)
-                        }
-
-                        // TextView를 target에 새로 추가
-                        val overlayTextView = TextView(this).apply {
-                            text = draggedTextView!!.text
-                            textSize = 12f
-                            setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
-                            setPadding(20, 25, 0, 0)
-                        }
-                        target.addView(overlayTextView, 1)
-                    }
-                }
-            }
-
-            resources.getString(R.string.block_type_repeat) -> {
-                isRepeat = true
-
-                target.layoutParams = target.layoutParams.apply {
-                    height = dragSources[dragId].height
-                    width = dragSources[dragId].width
-                }
-
-                for (dropTarget in dropTargets) {
-                    if (dropTarget != dropTargets[dropId] && dragId == 0) {
-                        dropTarget.visibility = View.VISIBLE
-                    }
-                }
-
-                // REPEAT 블록 처리 (드래그된 블록의 ImageView 및 EditText 처리)
-                val draggedImageView1 = draggedBlock.getChildAt(0) as ImageView
-                val draggedImageView2 = draggedBlock.getChildAt(1) as ImageView
-                val draggedImageView3 = draggedBlock.getChildAt(2) as ImageView
-                val draggedEditText = draggedBlock.getChildAt(3) as EditText
-
-                if (target is FrameLayout) {
-                    // 기존 EditText가 있다면 제거
-                    if (target.childCount > 2) {
-                        target.removeViewAt(2)
-                    }
-
-                    // newImageView1 추가
-                    val newImageView1 = ImageView(this).apply {
-                        layoutParams = FrameLayout.LayoutParams(
-                            FrameLayout.LayoutParams.WRAP_CONTENT,
-                            FrameLayout.LayoutParams.WRAP_CONTENT
-                        ).apply {
-                            setMargins(0, 0, 0, 0)
-                        }
-                        setImageDrawable(draggedImageView1.drawable)
-                    }
-                    target.addView(newImageView1)
-                    target.setTag(R.id.ib_biginner_game1_space1, newImageView1)
-
-                    // newImageView2 추가
-                    val newImageView2 = ImageView(this).apply {
-                        layoutParams = FrameLayout.LayoutParams(
-                            FrameLayout.LayoutParams.WRAP_CONTENT,
-                            FrameLayout.LayoutParams.WRAP_CONTENT
-                        ).apply {
-                            setMargins(35, 15, 0, 0)
-                        }
-                        setImageDrawable(draggedImageView2.drawable)
-                        alpha = 0.9f
-                    }
-                    target.addView(newImageView2)
-                    target.setTag(R.id.ib_biginner_game1_space2, newImageView2)
-
-                    // newImageView3 추가
-                    val newImageView3 = ImageView(this).apply {
-                        layoutParams = FrameLayout.LayoutParams(
-                            FrameLayout.LayoutParams.WRAP_CONTENT,
-                            FrameLayout.LayoutParams.WRAP_CONTENT
-                        ).apply {
-                            setMargins(35, 75, 0, 0)
-                        }
-                        setImageDrawable(draggedImageView3.drawable)
-                        alpha = 0.8f
-                        visibility = View.GONE // 기본값을 GONE으로 설정
-                    }
-                    target.addView(newImageView3)
-                    target.setTag(R.id.ib_gamestop_btn, newImageView3) // newImageView3를 tag로 저장
-
-                    // EditText 추가
-                    val newEditText = EditText(this).apply {
-                        setText(draggedEditText.text)
-                        setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
-                        inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
-                        textSize = 10.51f
-                        layoutParams = FrameLayout.LayoutParams(
-                            FrameLayout.LayoutParams.WRAP_CONTENT,
-                            FrameLayout.LayoutParams.WRAP_CONTENT
-                        ).apply {
-                            setMargins(30, 0, 0, 0)
-                        }
-                        setPadding(30, 0, 0, 0)
-                    }
-                    target.addView(newEditText)
-                    target.setTag(R.id.ib_gameplay_btn, newEditText)
-                }
-
-            }
-
-            else -> {
-                // 블록 타입이 정의되지 않았을 경우 처리
-                Log.e("block type error", "블록 타입이 정해지지 않았습니다.")
-            }
-
+            resources.getString(R.string.block_type_normal) -> handleNormalBlockDrop(target, draggedBlock, dropId)
+            resources.getString(R.string.block_type_repeat) -> handleRepeatBlockDrop(target, draggedBlock, dragId, dropId)
+            else -> Log.e("block type error", "블록 타입이 정해지지 않았습니다.")
         }
 
-        var newdropId: Int
-        if (repeatIdx == dropId) {
-            newdropId = dropId + 1
-        } else {
-            newdropId = dropId
-        }
-        handleBlockMove(blockMove!!, newdropId, dropId)
-
+        val newDropId = if (repeatIdx == dropId) dropId + 1 else dropId
+        handleBlockMove(blockMove!!, newDropId, dropId)
     }
 
-    private fun mappingStrToResourceId(string: String): Int {
+    private fun handleNormalBlockDrop(target: View, draggedBlock: FrameLayout, dropId: Int) {
+        // 드래그된 View (FrameLayout)에서 ImageView와 TextView를 가져옴
+        val draggedImageView = draggedBlock.getChildAt(0) as ImageView
+        val draggedTextView = draggedBlock.getChildAt(1) as TextView
+
+        if (target is FrameLayout) {
+            // 기존에 "repeat" 블록이 있는지 확인
+            val repeatImageView = target.getTag(R.id.ib_gamestop_btn) as? ImageView
+            if (repeatImageView != null) {
+                // repeat 블록이 이미 존재하면 newImageView3의 visibility를 VISIBLE로 변경
+                repeatIdx = dropId
+                repeatImageView.visibility = View.VISIBLE
+                if (target.childCount > 1) {
+                    target.removeViewAt(1)
+                }
+                // TextView를 target에 새로 추가
+                val overlayTextView = TextView(this).apply {
+                    text = draggedTextView!!.text
+                    textSize = 12f
+                    setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
+                    setPadding(45, 90, 0, 0)
+                }
+                target.setTag(R.id.ib_game_state_done, overlayTextView)
+                target.addView(overlayTextView, 1)
+                overlayTextView.bringToFront()
+                overlayTextView.invalidate()
+                target.requestLayout()
+            } else {
+                // 기존 ImageView를 target에 덮어씌우기
+                val targetImageView = target.getChildAt(0) as ImageView
+                targetImageView.setImageDrawable(draggedImageView.drawable)
+
+                // 기존 TextView가 있다면 제거
+                if (target.childCount > 1) {
+                    target.removeViewAt(1)
+                }
+
+                // TextView를 target에 새로 추가
+                val overlayTextView = TextView(this).apply {
+                    text = draggedTextView!!.text
+                    textSize = 12f
+                    setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
+                    setPadding(20, 25, 0, 0)
+                }
+                target.addView(overlayTextView, 1)
+            }
+        }
+    }
+
+    private fun handleRepeatBlockDrop(target: View, draggedBlock: FrameLayout, dragId: Int, dropId: Int) {
+        isRepeat = true
+
+        target.layoutParams = target.layoutParams.apply {
+            height = dragSources[dragId].height
+            width = dragSources[dragId].width
+        }
+
+        for (dropTarget in dropTargets) {
+            if (dropTarget != dropTargets[dropId] && dragId == 0) {
+                dropTarget.visibility = View.VISIBLE
+            }
+        }
+
+        // REPEAT 블록 처리 (드래그된 블록의 ImageView 및 EditText 처리)
+        val draggedImageView1 = draggedBlock.getChildAt(0) as ImageView
+        val draggedImageView2 = draggedBlock.getChildAt(1) as ImageView
+        val draggedImageView3 = draggedBlock.getChildAt(2) as ImageView
+        val draggedEditText = draggedBlock.getChildAt(3) as EditText
+
+        if (target is FrameLayout) {
+            // 기존 EditText가 있다면 제거
+            if (target.childCount > 2) {
+                target.removeViewAt(2)
+            }
+
+            // newImageView1 추가
+            val newImageView1 = ImageView(this).apply {
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(0, 0, 0, 0)
+                }
+                setImageDrawable(draggedImageView1.drawable)
+            }
+            target.addView(newImageView1)
+            target.setTag(R.id.ib_biginner_game1_space1, newImageView1)
+
+            // newImageView2 추가
+            val newImageView2 = ImageView(this).apply {
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(35, 15, 0, 0)
+                }
+                setImageDrawable(draggedImageView2.drawable)
+                alpha = 0.9f
+            }
+            target.addView(newImageView2)
+            target.setTag(R.id.ib_biginner_game1_space2, newImageView2)
+
+            // newImageView3 추가
+            val newImageView3 = ImageView(this).apply {
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(35, 75, 0, 0)
+                }
+                setImageDrawable(draggedImageView3.drawable)
+                alpha = 0.8f
+                visibility = View.GONE // 기본값을 GONE으로 설정
+            }
+            target.addView(newImageView3)
+            target.setTag(R.id.ib_gamestop_btn, newImageView3) // newImageView3를 tag로 저장
+
+            // EditText 추가
+            val newEditText = EditText(this).apply {
+                setText(draggedEditText.text)
+                setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
+                inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+                textSize = 10.51f
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(30, 0, 0, 0)
+                }
+                setPadding(30, 0, 0, 0)
+            }
+            target.addView(newEditText)
+            target.setTag(R.id.ib_gameplay_btn, newEditText)
+        }
+    }
+
+        private fun mappingStrToResourceId(string: String): Int {
         val resourceMap = mapOf(
             resources.getString(R.string.game_move_straight) to R.string.game_move_straight,
             resources.getString(R.string.game_move_up) to R.string.game_move_up,
