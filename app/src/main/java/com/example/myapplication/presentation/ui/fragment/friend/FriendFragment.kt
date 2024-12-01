@@ -45,7 +45,7 @@ class FriendFragment : BaseFragment<FragmentFriendBinding>(R.layout.fragment_fri
     private fun observeLifeCycle() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-                homeViewModel.getAllHome.collectLatest { it ->
+                homeViewModel.getAllHome.collectLatest {
                     item = formatItem(it.result.toMutableList())
                     settingItem()
                 }

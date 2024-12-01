@@ -23,7 +23,7 @@ fun setLevel(type: String): String {
     return when (type) {
         "LEVEL_LOW" -> "미니 선인장"
         "LEVEL_MEDIUM" -> "꽃 선인장"
-        "LEVEL_HIGH " -> "킹 선인장"
+        "LEVEL_HIGH" -> "킹 선인장"
         else -> { "" }
     }
 }
