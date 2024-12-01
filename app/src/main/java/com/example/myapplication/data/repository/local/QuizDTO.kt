@@ -2,6 +2,7 @@ package com.example.myapplication.data.repository.local
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
@@ -12,7 +13,8 @@ import androidx.room.PrimaryKey
             childColumns = ["chapterId"],
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index(value = ["chapterId"])] // 외래 키 인덱스 추가
 )
 data class QuizDTO(
     @PrimaryKey(autoGenerate = true) var qid: Int = 0,
