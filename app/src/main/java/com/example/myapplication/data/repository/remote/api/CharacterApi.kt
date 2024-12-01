@@ -56,9 +56,11 @@ interface CharacterApi {
     suspend fun getAllCharacter(
     ): CharacterAllResponse
 
-    @GET("/character/pickup/random")
+    //캐릭터 랜덤 뽑기
+    @GET("/v1/api/character/pickup/random")
     suspend fun getRandomCactus(
     ): BaseResponse<CharacterRandomResponse>
+
     //캐릭터 삭제
     @DELETE("/character")
     suspend fun deleteCharacter(
