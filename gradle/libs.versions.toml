@@ -32,9 +32,9 @@ datastorePreferences = "1.1.1"
 datastorePreferencesVersion = "1.1.1"
 roomRuntime = "2.6.1"
 viewpager2 = "1.1.0"
-okhttp ="4.12.0"
-retrofit ="2.11.0"
-gson="2.11.0"
+okhttp = "4.12.0"
+retrofit = "2.11.0"
+gson = "2.11.0"
 draganddrop = "1.0.0"
 pagingCommonAndroid = "3.3.4"
 jetbrainsKotlinJvm = "1.9.24"
@@ -95,5 +95,6 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-multi-module-android-application = { id = "com.multi.module.android", version = "unspecified"}
+multi-module-android-application = { id = "com.multi.module.android", version = "unspecified" }
 multi-module-android-library = { id = "com.multi.module.library", version = "unspecified" }
+multi-module-android-dependency = { id = "com.multi.module.dependency", version = "unspecified" }

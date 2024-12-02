@@ -1,4 +1,4 @@
-package com.multi.module.convention
+package convention
 
 import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.JavaVersion

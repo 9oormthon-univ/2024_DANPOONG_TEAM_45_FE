@@ -1,4 +1,4 @@
-package com.multi.module.convention
+package convention
 
 enum class ExtensionType {
     APPLICATION,

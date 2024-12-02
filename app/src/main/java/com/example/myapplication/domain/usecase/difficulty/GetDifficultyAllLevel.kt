@@ -1,7 +1,7 @@
 package com.example.myapplication.domain.usecase.difficulty
 
 import com.example.myapplication.data.repository.remote.response.difficulty.DifficultyLevelList
-import com.example.myapplication.domain.repository.difficulty.DifficultyRepository
+import com.example.myapplication.repository.difficulty.DifficultyRepository
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import javax.inject.Inject

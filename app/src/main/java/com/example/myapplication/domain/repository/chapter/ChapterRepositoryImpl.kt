@@ -5,10 +5,8 @@ import com.example.myapplication.data.repository.remote.request.chapter.Register
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.chapter.AllChapterResponse
 import com.example.myapplication.data.repository.remote.response.chapter.DistinctChapterResponse
-import com.kakao.sdk.cert.a.a
+import com.example.myapplication.repository.chapter.ChapterRepository
 import kotlinx.coroutines.flow.Flow
-import okhttp3.ResponseBody
-import retrofit2.Response
 import javax.inject.Inject
 
 data class ChapterRepositoryImpl @Inject constructor(

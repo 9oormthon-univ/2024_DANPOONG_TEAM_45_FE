@@ -4,9 +4,8 @@ import com.example.myapplication.data.repository.remote.datasource.remote.IsQuiz
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.quizcleared.ClearStateListResponse
 import com.example.myapplication.data.repository.remote.response.quizcleared.ClearStateResponse
+import com.example.myapplication.repository.quizcleared.IsQuizClearedRepository
 import kotlinx.coroutines.flow.Flow
-import okhttp3.ResponseBody
-import retrofit2.Response
 import javax.inject.Inject
 
 data class IsQuizClearedRepositoryImpl @Inject constructor(

@@ -3,13 +3,13 @@ package com.example.myapplication.domain.repository.difficulty
 import com.example.myapplication.data.repository.remote.datasource.remote.DifficultyDatasourceDataSource
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.difficulty.DifficultyLevelList
-import com.example.myapplication.domain.repository.difficulty.DifficultyRepository
+import com.example.myapplication.repository.difficulty.DifficultyRepository
 import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
 import retrofit2.Response
 import javax.inject.Inject
 
-data class DifficultyRepositoryImpl @Inject constructor(
+class DifficultyRepositoryImpl @Inject constructor(
     private val difficultyDataSource: DifficultyDatasourceDataSource
 ) : DifficultyRepository {
     override suspend fun postDifficultyLevel(level: String): Flow<BaseResponse<Any>> =

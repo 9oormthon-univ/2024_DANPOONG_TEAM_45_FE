@@ -1,10 +1,8 @@
 package com.example.myapplication.domain.usecase.chapter
 
 import com.example.myapplication.data.repository.remote.response.BaseResponse
-import com.example.myapplication.domain.repository.chapter.ChapterRepository
+import com.example.myapplication.repository.chapter.ChapterRepository
 import kotlinx.coroutines.flow.Flow
-import okhttp3.ResponseBody
-import retrofit2.Response
 import javax.inject.Inject
 
 class DeleteChapterUseCase @Inject constructor(

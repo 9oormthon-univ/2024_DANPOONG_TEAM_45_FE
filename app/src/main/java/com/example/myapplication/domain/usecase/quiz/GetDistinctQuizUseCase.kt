@@ -2,9 +2,8 @@ package com.example.myapplication.domain.usecase.quiz
 
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.quiz.DistinctQuizResponse
-import com.example.myapplication.domain.repository.quiz.QuizRepository
+import com.example.myapplication.repository.quiz.QuizRepository
 import kotlinx.coroutines.flow.Flow
-import retrofit2.Response
 import javax.inject.Inject
 
 class GetDistinctQuizUseCase @Inject constructor(

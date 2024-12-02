@@ -1,6 +1,6 @@
 package com.example.myapplication.domain.usecase.chaptercleared
 
-import com.example.myapplication.domain.repository.chaptercleared.ChapterClearedRepository
+import com.example.myapplication.repository.chaptercleared.ChapterClearedRepository
 import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
 import retrofit2.Response

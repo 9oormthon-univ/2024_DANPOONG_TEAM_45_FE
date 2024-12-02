@@ -6,6 +6,7 @@ import com.example.myapplication.data.repository.remote.request.login.UserDTO
 import com.example.myapplication.data.repository.remote.request.login.UserListDTO
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.login.LogInKakaoResponse
+import com.example.myapplication.repository.login.LoginRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
