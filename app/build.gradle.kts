@@ -1,8 +1,5 @@
 plugins {
     alias(libs.plugins.multi.module.android.application)
-    id("androidx.navigation.safeargs.kotlin")
-    id("com.google.dagger.hilt.android")
-    id("com.google.devtools.ksp")
 }
 
 android {
@@ -10,6 +7,26 @@ android {
 
     buildFeatures {
         dataBinding = true
+    }
+    signingConfigs {
+        create("release") {
+            storeFile = file("/keystore/moomoo.jks")  // 키스토어 파일 경로
+            storePassword = "990329"  // 키스토어 비밀번호
+            keyAlias = "moomoo"  // 키 별칭
+            keyPassword = "990329"  // 키 비밀번호
+        }
+    }
+
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = true  // 난독화 활성화
+            isShrinkResources = true  // 리소스 축소
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            signingConfig = signingConfigs.getByName("release")  // 릴리즈 서명 구성 연결
+        }
     }
 }
 
@@ -40,19 +57,6 @@ dependencies {
     // datastore
     implementation (libs.androidx.datastore.preferences)
 
-    // okHttp
-    implementation(libs.okhttp)
-    implementation(platform(libs.okhttp.bom))
-    implementation (libs.logging.interceptor)
-    implementation (libs.okhttp.urlconnection)
-
-    // retrofit
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-
-    // gson
-    implementation(libs.gson)
-
     // splash
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.core.ktx)
@@ -73,8 +77,7 @@ dependencies {
     //lottie
     implementation (libs.lottie)
 
-    //room
-    implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx)
+
+    implementation (libs.androidx.profileinstaller)
+
 }

@@ -72,7 +72,7 @@ private fun BuildType.configureReleaseBuildType(
     buildConfigField("String", "BASE_URL", "\"RELEASE_API_URL\"")
 
 
-    isMinifyEnabled = true
+    isMinifyEnabled = false
     proguardFiles(
         commonExtension.getDefaultProguardFile("proguard-android-optimize.txt"),
         "proguard-rules.pro"
