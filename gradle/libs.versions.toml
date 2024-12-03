@@ -1,5 +1,6 @@
 [versions]
 
+profileinstaller = "1.4.1"
 projectApplicationId = "com.example.myapplication"
 projectVersionName = "1.0"
 projectVersionCode = "1"
@@ -41,6 +42,7 @@ jetbrainsKotlinJvm = "1.9.24"
 ksp = "1.9.24-1.0.20"
 
 [libraries]
+androidx-profileinstaller = { module = "androidx.profileinstaller:profileinstaller", version.ref = "profileinstaller" }
 desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
