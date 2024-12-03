@@ -34,7 +34,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
     }
 }
 
-private fun Project.configureDependencies() {
+fun Project.configureDependencies() {
     dependencies {
         // Hilt Dependencies (KSP)
         add("implementation", "com.google.dagger:hilt-android:2.52")
@@ -45,6 +45,7 @@ private fun Project.configureDependencies() {
         add("ksp", "androidx.room:room-compiler:2.6.1")
         add("implementation", "androidx.room:room-ktx:2.6.1")
 
+        //data store
         add("implementation", "androidx.datastore:datastore-preferences:1.1.1")
 
         // Retrofit

@@ -13,6 +13,9 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             pluginManager.run {
                 apply("com.android.application")
                 apply("org.jetbrains.kotlin.android")
+                plugins.apply("com.google.devtools.ksp")
+                plugins.apply("com.google.dagger.hilt.android")
+                plugins.apply("androidx.navigation.safeargs.kotlin")
             }
 
             extensions.configure<ApplicationExtension> {
@@ -26,7 +29,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 }
 
                 configureKotlinAndroid(this)
-
+                configureDependencies()
                 configureBuildTypes(
                     commonExtension = this,
                     extensionType = ExtensionType.APPLICATION
