@@ -13,8 +13,8 @@ import javax.inject.Inject
 data class LoginRepositoryImpl @Inject constructor(
     private val logInDataSource: LogInDataSource
 ) : LoginRepository {
-    override suspend fun postKakaoLogin(logInKakaoDto: LogInKakaoDto): Flow<LogInKakaoResponse> =
-        logInDataSource.postKakaoLogin(logInKakaoDto)
+    override suspend fun postKakaoLogin(loginKaKaoDto: LogInKakaoDto): Flow<LogInKakaoResponse> =
+        logInDataSource.postKakaoLogin(loginKaKaoDto)
 
     override suspend fun patchUsers(userDTO: UserDTO): Flow<BaseResponse<Any>> =
         logInDataSource.patchUsers(userDTO)
