@@ -25,9 +25,6 @@ object DBModule {
         ).fallbackToDestructiveMigration()
             .build()
 
-        // 여기서 로그 찍기
-        Log.d("DatabaseState", "Is database open (initialization): ${database.isOpen}")
-
         return database
     }
 
