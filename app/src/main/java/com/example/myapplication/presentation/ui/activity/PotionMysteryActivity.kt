@@ -46,6 +46,7 @@ class PotionMysteryActivity :
                 2 -> loadCropImage(R.drawable.potion2)
                 3 -> loadCropImage(R.drawable.potion3)
                 4 -> loadCropImage(R.drawable.potion4)
+                5 -> loadCropImage(R.drawable.ic_cactus_hero)
                 else -> 1
             }
         }
