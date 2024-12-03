@@ -19,3 +19,20 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# 카카오 SDK 모델 클래스의 필드 보존
+-keep class com.kakao.sdk.**.model.* { *; }
+
+# Gson TypeAdapter를 상속하는 모든 클래스 보존
+-keep class * extends com.google.gson.TypeAdapter
+
+# LogInKakaoDto의 idToken 필드를 보존
+-keep class com.example.myapplication.data.**{*;}
+
+# 경고 무시 규칙
+-dontwarn org.bouncycastle.jsse.**
+-dontwarn org.conscrypt.*
+-dontwarn org.openjsse.**
+
+
+
