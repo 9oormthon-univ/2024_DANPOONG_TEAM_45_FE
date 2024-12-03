@@ -5,17 +5,14 @@ import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.airbnb.lottie.LottieAnimationView
 import com.example.myapplication.R
 import com.example.myapplication.data.repository.remote.response.BaseResponse
-import com.example.myapplication.data.repository.remote.response.chapter.DistinctChapterResponse
 import com.example.myapplication.data.repository.remote.response.home.DistinctHomeIdResponse
 import com.example.myapplication.databinding.FragmentHomeBinding
 import com.example.myapplication.domain.model.ChatMessage
@@ -28,7 +25,6 @@ import com.example.myapplication.presentation.ui.activity.PotionMysteryActivity
 import com.example.myapplication.presentation.viewmodel.AiViewModel
 import com.example.myapplication.presentation.viewmodel.HomeViewModel
 import com.example.myapplication.presentation.widget.extention.TokenManager
-import com.example.myapplication.presentation.widget.extention.loadCropImage
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -39,10 +35,11 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) ,
+class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     AdapterItemClickedListener {
 
     private val homeViewModel: HomeViewModel by viewModels()
+
     @Inject
     lateinit var tokenManager: TokenManager
 
@@ -51,6 +48,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) ,
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var aiViewModel: AiViewModel
     override fun setLayout() {
+        //임시
+        binding.fragmentHomeTodayMissionTv.setOnClickListener {
+            startActivity(Intent(requireContext(), PotionMysteryActivity::class.java).apply {
+                putExtra("potion", 5)
+            })
+        }
         initViewModel()
         initAdapter() // chattingAdapter 초기화
         initList()    // 초기화 이후 호출
@@ -59,8 +62,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) ,
         initHome()
         onClickBtn()
         setupBackPressedDispatcher()
-        observeLifeCycle()
         initializePersistentBottomSheet()
+        initLifeCycle()
     }
 
     override fun onStart() {
@@ -69,7 +72,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) ,
         initHome()
     }
 
-    private fun setLottieAnimation(){
+    private fun setLottieAnimation() {
         binding.fragmentHomeCharacterIv.setMaxProgress(0.90f) // 최대 진행도를 99%로 설정, 깜빡임 프레임 드랍 이슈 해결
         binding.fragmentHomeTitleTv.setRawInputType(R.raw.mini)
         binding.fragmentHomeCharacterIv.playAnimation() // 애니메이션 시작
@@ -79,8 +82,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) ,
         lifecycleScope.launch {
             try {
                 stateManage(tokenManager.getCountToken.first().toString().toInt())
-                Log.d("결과", tokenManager.getCountToken.first().toString())
-            }catch (e : Exception){
+            } catch (e: Exception) {
                 stateManage(0)
             }
         }
@@ -92,17 +94,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) ,
             val today = getOnlyDate()
             val prepareDay = tokenManager.getDateToken.first().toString()
             if (today != prepareDay) {
-                Log.d("결과","$today ,${prepareDay}")
                 tokenManager.saveCountToken("0")
                 tokenManager.saveDateToken(today)
             }
         }
     }
+
     private fun getOnlyDate(): String {
         val today = LocalDateTime.now()
         return today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
     }
-    private fun observeLifeCycle() {
+
+    private fun initLifeCycle() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 homeViewModel.getDistinctHome.collectLatest {
@@ -118,14 +121,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) ,
                                     setCharacterDrawable(stringToEnum(character.type))
                                 )*/
                                 setLottieAnimation()
-                                fragmentHomeCactusStateProgressPb.progress = character.activityPoints%100
-                                fragmentHomeCactusStatePercentageTv.text = (character.activityPoints%100).toString() + "%"
+                                fragmentHomeCactusStateProgressPb.progress =
+                                    character.activityPoints % 100
+                                fragmentHomeCactusStatePercentageTv.text =
+                                    (character.activityPoints % 100).toString() + "%"
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun observeLifeCycle() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 aiViewModel.ai.collectLatest {
@@ -177,19 +185,22 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) ,
 
     private fun stateManage(count: Int) {
         when (count) {
-            0-> {
+            0 -> {
                 binding.fragmentHomeTodayTakeRewordBt.visibility = View.GONE
                 binding.fragmentHomeTodayMissionStamp1Iv.isSelected = false
                 binding.fragmentHomeTodayMissionStamp2Iv.isSelected = false
             }
+
             1 -> {
                 binding.fragmentHomeTodayMissionStamp1Iv.isSelected = false
                 binding.fragmentHomeTodayMissionStamp2Iv.isSelected = true
             }
+
             2 -> {
                 binding.fragmentHomeTodayMissionStamp1Iv.isSelected = true
                 binding.fragmentHomeTodayMissionStamp2Iv.isSelected = true
             }
+
             else -> {
                 binding.fragmentHomeTodayTakeRewordBt.visibility = View.VISIBLE
                 binding.fragmentHomeTodayTakeRewordBt.isSelected = false
@@ -220,7 +231,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) ,
         binding.fragmentHomeTodayTakeRewordBt.setOnClickListener {
             if (it.isSelected) {
                 val intent = Intent(requireContext(), PotionMysteryActivity::class.java).apply {
-                    putExtra("potion",2)
+                    putExtra("potion", 2)
                     lifecycleScope.launch {
                         tokenManager.saveCountToken("3")
                     }
@@ -284,6 +295,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) ,
                 chatList = newChatList  // 기존 리스트를 새로운 리스트로 교체
                 binding.layoutChatBottomSheetSendEt.text.clear()  // 입력 필드를 초기화
                 aiViewModel.postAi(message)
+                observeLifeCycle()
                 stateChangeChatType(ChatOwner.LEFT)
             }
         }
@@ -323,25 +335,27 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) ,
 
     //뒤로가기 클릭 시 바텀 네비 사라짐
     private fun setupBackPressedDispatcher() {
-        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                when (bottomSheetBehavior.state) {
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-                    }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    when (bottomSheetBehavior.state) {
+                        BottomSheetBehavior.STATE_EXPANDED -> {
+                            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                        }
 
-                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                        binding.mainEt.visibility = View.GONE
-                    }
+                        BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                            binding.mainEt.visibility = View.GONE
+                        }
 
-                    else -> {
-                        isEnabled = false
-                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                        else -> {
+                            isEnabled = false
+                            requireActivity().onBackPressedDispatcher.onBackPressed()
+                        }
                     }
                 }
-            }
-        })
+            })
     }
 
     //클릭 시 서버로 채팅 전달
