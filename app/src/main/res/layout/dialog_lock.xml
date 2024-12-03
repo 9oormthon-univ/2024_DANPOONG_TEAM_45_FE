@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="42dp"
+        android:layout_marginEnd="42dp"
+        android:background="@drawable/shape_square_rounded_20dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <!-- 첫 번째 텍스트 (힌트) -->
+        <TextView
+            android:id="@+id/tv_gameplay_fail_title"
+            style="@style/pretandard_semi_bold.16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="앗, 다시 생각해볼까?"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- 두 번째 텍스트 (힌트) -->
+        <TextView
+            android:id="@+id/tv_gameplay_fail_subtitle"
+            style="@style/pretandard_regular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="어려우면 힌트를 확인해봐"
+            android:textColor="@color/gray6"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_gameplay_fail_title" />
+
+        <!-- 다시하기 버튼 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_dialog_biginner_quiz_fail"
+            style="@style/pretandard_semi_bold"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="26dp"
+            android:layout_marginBottom="18dp"
+            android:background="@drawable/shape_square_rounded_30dp"
+            android:backgroundTint="@color/mint0"
+            android:text="돌아가기"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_gameplay_fail_subtitle" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
