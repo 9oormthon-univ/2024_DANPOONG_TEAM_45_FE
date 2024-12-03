@@ -21,7 +21,7 @@ class GlobalApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-        KakaoSdk.init(this, resources.getString(R.string.appKey))
+        KakaoSdk.init(this, BuildConfig.API_KEY)
     }
 
     companion object {
