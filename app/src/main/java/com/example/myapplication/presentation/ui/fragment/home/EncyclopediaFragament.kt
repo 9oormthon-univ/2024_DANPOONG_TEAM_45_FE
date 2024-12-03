@@ -87,9 +87,9 @@ class EncyclopediaFragament : BaseFragment<FragmentEncyclopediaBinding>(R.layout
                 ShareClient.instance.shareDefault(
                     requireContext(),
                     feedTemplate
-                ) { result, error ->
-                    if (error != null) {
-                        Log.e("카카오톡 공유", "공유 실패", error)
+                ) { result, errors ->
+                    if (errors != null) {
+                        Log.e("카카오톡 공유", "공유 실패", errors)
                     } else if (result != null) {
                         startActivity(result.intent) // 카카오톡 실행
                     }
