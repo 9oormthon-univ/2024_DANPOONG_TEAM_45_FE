@@ -1,6 +1,6 @@
 # 컨벤션 플러그인
 
-`build-logic` 폴더는 프로젝트-specific 컨벤션 플러그인을 정의하며, 이는 공통 모듈 구성을 위한 단일 소스의 진리를 유지하는 데 사용됩니다.
+`build-logic` 폴더는 프로젝트-specific 컨벤션 플러그인을 정의하며, 이는 공통 모듈 구성을 위한 단일 소스를 유지하는 데 사용됩니다.
 
 이 접근 방식은 주로
 [https://developer.squareup.com/blog/herding-elephants/](https://developer.squareup.com/blog/herding-elephants/)
