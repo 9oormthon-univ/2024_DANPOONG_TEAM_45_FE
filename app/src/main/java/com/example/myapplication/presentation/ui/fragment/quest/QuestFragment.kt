@@ -27,7 +27,7 @@ class QuestFragment : BaseFragment<FragmentQuestBinding>(R.layout.fragment_quest
     lateinit var chapterDao: ChapterDao
     private lateinit var islandAdapter: IslandMultiAdapter
     private val chapterViewModel: ChapterViewModel by viewModels()
-
+private lateinit var customDialog2: CustomDialog2
     override fun setLayout() {
         initAdapter()
         observeLifeCycle()
@@ -68,13 +68,23 @@ class QuestFragment : BaseFragment<FragmentQuestBinding>(R.layout.fragment_quest
     override fun click(item: Any) {
         var name = ""
         var id = 0
+
+        Log.d("okhttp", "${item}")
         when (item) {
             is IslandDto.IslandLeft -> {
+                if(item.locked){
+                    showDialog()
+                    return
+                }
                 name = item.name
                 id = item.id
             }
 
             is IslandDto.IslandRight -> {
+                if(item.locked){
+                    showDialog()
+                    return
+                }
                 name = item.name
                 id = item.id
             }
@@ -87,4 +97,10 @@ class QuestFragment : BaseFragment<FragmentQuestBinding>(R.layout.fragment_quest
             }
         )
     }
+
+    private fun showDialog(){
+        customDialog2 = CustomDialog2("이전 섬을 클리어 해주세요!","이 섬에는 아직 들어갈 수 없어요\uD83D\uDE22")
+        customDialog2.show(requireActivity().supportFragmentManager, "CustomDialog")
+    }
+
 }

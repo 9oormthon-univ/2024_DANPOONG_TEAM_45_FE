@@ -30,6 +30,7 @@ class QuestChapterFragment :
     private lateinit var adapter: QuizAdapter
     private val loginViewModel: LoginViewModel by viewModels()
     private val chapterViewModel: ChapterViewModel by viewModels()
+    private lateinit var customDialog2: CustomDialog2
 
     override fun setLayout() {
         initBiginnerItem()
@@ -64,7 +65,7 @@ class QuestChapterFragment :
         }
         adapter = QuizAdapter(this@QuestChapterFragment)
         val id = arguments?.getString("selectId")
-        Log.d("okhttp","$id")
+        Log.d("okhttp", "$id")
         parseId = id?.toInt() ?: 0
         chapterViewModel.getDistinctChapter(parseId)
         chapterViewModel.fetchQuizzesForChapter(parseId)
@@ -98,17 +99,24 @@ class QuestChapterFragment :
                 }
 
                 launch {
-                    chapterViewModel.getDistinctChapter.collectLatest{
-                        if(it.payload?.isRewardButtonActive == true){
-                            visibleRewardOn()
-                        }else{
-                            val clearCount = it.payload?.quizzes?.count { count ->
-                                count.isCleared
+                    chapterViewModel.getDistinctChapter.collectLatest {
+                        when (it.result.code) {
+                            200 -> {
+                                if (it.payload?.isRewardButtonActive == true) {
+                                    visibleRewardOn()
+                                } else {
+                                    val clearCount = it.payload?.quizzes?.count { count ->
+                                        count.isCleared
+                                    }
+                                    val questionCount = it.payload?.quizzes?.size
+                                    if (clearCount == questionCount) {
+                                        visibleRewardOff()
+                                    } else {
+                                        allOff()
+                                    }
+                                }
                             }
-                            val questionCount = it.payload?.quizzes?.size
-                            if(clearCount == questionCount){
-                                visibleRewardOff()
-                            }else{
+                            else ->{
                                 allOff()
                             }
                         }
@@ -180,8 +188,18 @@ class QuestChapterFragment :
         }
     }
 
+    private fun setDialog(title: String, subtitle: String) {
+        customDialog2 = CustomDialog2(title, subtitle)
+        customDialog2.show(requireActivity().supportFragmentManager, "CustomDialog")
+    }
+
+
     override fun click(item: Any) {
         item as QuestDto
+        if (!item.isOpen) {
+            setDialog("이전 단계를 클리어 해주세요!", "이 퀘스트는 아직 열리지 않았어요\uD83D\uDE22")
+            return
+        }
         val intent = Intent(requireActivity(), QuestIntroActivity::class.java).apply {
             val islandName = when (item.id) {
                 1, 2 -> getString(R.string.biginner_island)  // "초심자의 섬"

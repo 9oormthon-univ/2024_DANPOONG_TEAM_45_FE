@@ -49,6 +49,7 @@ open class Quiz3Fragment :
         binding.btnBiginnerProblem3Answer1Off.setOnClickListener {
             selectAllAnswers(it)  // 모든 답변을 선택 해제
             selectedNumber = 1
+            confirmCorrectQuestion()
             buttonSet(true)
         }
         // 2번
@@ -62,6 +63,7 @@ open class Quiz3Fragment :
         binding.btnBiginnerProblem3Answer3Off.setOnClickListener {
             selectAllAnswers(it)  // 모든 답변을 선택 해제
             selectedNumber = 3
+            confirmCorrectQuestion()
             buttonSet(true)
         }
 
@@ -69,6 +71,7 @@ open class Quiz3Fragment :
         binding.btnBiginnerProblem3Answer4Off.setOnClickListener {
             selectAllAnswers(it)  // 모든 답변을 선택 해제
             selectedNumber = 4
+            confirmCorrectQuestion()
             buttonSet(true)
         }
     }
