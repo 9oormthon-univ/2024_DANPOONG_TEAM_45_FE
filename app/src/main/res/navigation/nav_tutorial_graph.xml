@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_tutorial_graph"
+    app:startDestination="@id/tutorialFragment1">
+
+    <fragment
+        android:id="@+id/tutorialFragment1"
+        android:name="com.example.myapplication.presentation.ui.fragment.tutorial.Tutorial1Fragment"
+        android:label="TutorialFragment"
+        tools:layout="@layout/fragment_tutorial1" />
+
+</navigation>
