@@ -29,16 +29,16 @@ class TutorialActivity: BaseActivity<ActivityTutorialBinding>(R.layout.activity_
 
     private fun nextFragmentWithIndex() {
         when (buttonPosition) {
-//            1 -> {
-//                navController.navigate(
-//                    R.id.quiz2Fragment, null,
-//                    NavOptions.Builder()
-//                        .setPopUpTo(R.id.quiz1Fragment, true)  // 시작 프래그먼트 제거
-//                        .setLaunchSingleTop(true)
-//                        .build()
-//                )
-//            }
-//
+            1 -> {
+                navController.navigate(
+                    R.id.tutorialFragment2, null,
+                    NavOptions.Builder()
+                        .setPopUpTo(R.id.tutorialFragment1, true)  // 시작 프래그먼트 제거
+                        .setLaunchSingleTop(true)
+                        .build()
+                )
+            }
+
 //            2 -> {
 //                navController.navigate(
 //                    R.id.quiz3Fragment, null,
@@ -57,10 +57,8 @@ class TutorialActivity: BaseActivity<ActivityTutorialBinding>(R.layout.activity_
 
     //버튼 이동
     private fun nextFragment() {
-        binding.activityTutorialFcv.setOnClickListener {
-            if (it.isSelected) {
-                nextFragmentWithIndex()
-            }
+        binding.activityTutorialConstraint.setOnClickListener {
+            nextFragmentWithIndex()
         }
     }
 

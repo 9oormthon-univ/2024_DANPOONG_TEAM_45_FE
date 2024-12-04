@@ -9,6 +9,17 @@
         android:id="@+id/tutorialFragment1"
         android:name="com.example.myapplication.presentation.ui.fragment.tutorial.Tutorial1Fragment"
         android:label="TutorialFragment"
-        tools:layout="@layout/fragment_tutorial1" />
+        tools:layout="@layout/fragment_tutorial1" >
+        <action
+            android:id="@+id/action_tutorialFragment1_to_tutorialFragment2"
+            app:destination="@id/tutorialFragment2" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/tutorialFragment2"
+        android:name="com.example.myapplication.presentation.ui.fragment.tutorial.Tutorial2Fragment"
+        android:label="TutorialFragment"
+        tools:layout="@layout/fragment_tutorial2" />
+
 
 </navigation>
