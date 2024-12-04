@@ -17,6 +17,7 @@ class TutorialActivity: BaseActivity<ActivityTutorialBinding>(R.layout.activity_
 
     override fun setLayout() {
         setNavController()
+        buttonNumSetting()
         nextFragment()
     }
 
@@ -25,6 +26,24 @@ class TutorialActivity: BaseActivity<ActivityTutorialBinding>(R.layout.activity_
         val navHostFragment =
             supportFragmentManager.findFragmentById(binding.activityTutorialFcv.id) as NavHostFragment
         navController = navHostFragment.navController
+    }
+
+    private fun buttonNumSetting() {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.tutorialFragment1 -> {
+                    buttonPosition = 1
+                }
+
+                R.id.tutorialFragment2 -> {
+                    buttonPosition = 2
+                }
+
+                R.id.tutorialFragment3 -> {
+                    buttonPosition = 3
+                }
+            }
+        }
     }
 
     private fun nextFragmentWithIndex() {
@@ -39,15 +58,15 @@ class TutorialActivity: BaseActivity<ActivityTutorialBinding>(R.layout.activity_
                 )
             }
 
-//            2 -> {
-//                navController.navigate(
-//                    R.id.quiz3Fragment, null,
-//                    NavOptions.Builder()
-//                        .setPopUpTo(R.id.quiz2Fragment, true)  // 이전 프래그먼트 제거
-//                        .setLaunchSingleTop(true)
-//                        .build()
-//                )
-//            }
+            2 -> {
+                navController.navigate(
+                    R.id.tutorialFragment3, null,
+                    NavOptions.Builder()
+                        .setPopUpTo(R.id.tutorialFragment2, true)  // 이전 프래그먼트 제거
+                        .setLaunchSingleTop(true)
+                        .build()
+                )
+            }
 //
 //            3 -> {
 //                quizViewModel.postQuizClear(1)
