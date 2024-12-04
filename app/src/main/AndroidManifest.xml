@@ -71,6 +71,7 @@
         <activity android:name=".presentation.ui.activity.PotionMysteryActivity" />
         <activity android:name=".presentation.ui.activity.GameActivity" />
         <activity android:name=".presentation.ui.activity.AdminActivity" />
+        <activity android:name=".presentation.ui.activity.TutorialActivity" />
     </application>
 
 </manifest>

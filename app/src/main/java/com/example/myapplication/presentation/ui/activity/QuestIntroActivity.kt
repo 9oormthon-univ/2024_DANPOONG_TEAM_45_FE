@@ -50,7 +50,7 @@ class QuestIntroActivity :
                 this.finish()
             }
             else if (gameId == 2) {
-                val intent = Intent(this, QuizBlockActivity::class.java)
+                val intent = Intent(this, TutorialActivity::class.java)
                 startActivity(intent)
                 this.finish()
             }
