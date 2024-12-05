@@ -1,5 +1,6 @@
 package com.example.myapplication.presentation.ui.activity
 
+import android.content.Intent
 import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
@@ -42,34 +43,22 @@ class TutorialActivity: BaseActivity<ActivityTutorialBinding>(R.layout.activity_
             when (destination.id) {
                 R.id.tutorialFragment1 -> {
                     buttonPosition = 1
-
-                    binding.ibGamestoryOn.visibility = View.GONE
-                    binding.ibGamestoryMsg.visibility = View.GONE
-                    binding.ibGamestoryImg.visibility = View.GONE
-                    binding.ibGamestoryTxt.visibility = View.GONE
                 }
 
                 R.id.tutorialFragment2 -> {
                     buttonPosition = 2
-
-                    binding.ibGamestoryOn.visibility = View.VISIBLE
-                    binding.ibGamestoryMsg.visibility = View.VISIBLE
-                    binding.ibGamestoryImg.visibility = View.VISIBLE
-                    binding.ibGamestoryTxt.visibility = View.VISIBLE
-
-                    binding.ibBulbBtn.visibility = View.GONE
                 }
 
                 R.id.tutorialFragment3 -> {
                     buttonPosition = 3
-
-                    binding.ibBulbBtn.visibility = View.VISIBLE
                 }
 
                 R.id.tutorialFragment4 -> {
                     buttonPosition = 4
+                }
 
-                    binding.ibGameplayWhenStartBtn.visibility = View.GONE
+                R.id.tutorialFragment5 -> {
+                    buttonPosition = 5
                 }
             }
         }
@@ -105,6 +94,21 @@ class TutorialActivity: BaseActivity<ActivityTutorialBinding>(R.layout.activity_
                         .setLaunchSingleTop(true)
                         .build()
                 )
+            }
+
+            4 -> {
+                navController.navigate(
+                    R.id.tutorialFragment5, null,
+                    NavOptions.Builder()
+                        .setPopUpTo(R.id.tutorialFragment4, true)  // 이전 프래그먼트 제거
+                        .setLaunchSingleTop(true)
+                        .build()
+                )
+            }
+
+            5 -> {
+                val intent = Intent(this, QuizBlockActivity::class.java)
+                startActivity(intent)
             }
         }
     }
