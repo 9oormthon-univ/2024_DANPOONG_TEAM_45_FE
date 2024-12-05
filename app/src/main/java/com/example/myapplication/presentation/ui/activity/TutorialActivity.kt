@@ -62,6 +62,14 @@ class TutorialActivity: BaseActivity<ActivityTutorialBinding>(R.layout.activity_
 
                 R.id.tutorialFragment3 -> {
                     buttonPosition = 3
+
+                    binding.ibBulbBtn.visibility = View.VISIBLE
+                }
+
+                R.id.tutorialFragment4 -> {
+                    buttonPosition = 4
+
+                    binding.ibGameplayWhenStartBtn.visibility = View.GONE
                 }
             }
         }
@@ -88,10 +96,16 @@ class TutorialActivity: BaseActivity<ActivityTutorialBinding>(R.layout.activity_
                         .build()
                 )
             }
-//
-//            3 -> {
-//                quizViewModel.postQuizClear(1)
-//            }
+
+            3 -> {
+                navController.navigate(
+                    R.id.tutorialFragment4, null,
+                    NavOptions.Builder()
+                        .setPopUpTo(R.id.tutorialFragment3, true)  // 이전 프래그먼트 제거
+                        .setLaunchSingleTop(true)
+                        .build()
+                )
+            }
         }
     }
 
