@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/fragment_tutorial1_background"
-        android:background="@drawable/iv_tutorial_background">
+        android:background="#95000000">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -21,7 +21,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginLeft="70dp"
-            android:layout_marginTop="63dp"
+            android:layout_marginTop="53dp"
             android:background="@drawable/selector_bulb"
             android:clickable="true"
             android:text=""
