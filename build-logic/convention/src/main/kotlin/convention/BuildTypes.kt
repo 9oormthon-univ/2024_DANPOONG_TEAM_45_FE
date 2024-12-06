@@ -76,8 +76,11 @@ private fun BuildType.configureReleaseBuildType(
 
 
     isMinifyEnabled = false
+    isShrinkResources = false  // 리소스 축소
+
     proguardFiles(
         commonExtension.getDefaultProguardFile("proguard-android-optimize.txt"),
         "proguard-rules.pro"
     )
 }
+
