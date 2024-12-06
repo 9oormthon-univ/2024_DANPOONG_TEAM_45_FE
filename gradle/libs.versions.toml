@@ -1,5 +1,4 @@
 [versions]
-
 profileinstaller = "1.4.1"
 projectApplicationId = "com.example.myapplication"
 projectVersionName = "1.0"
