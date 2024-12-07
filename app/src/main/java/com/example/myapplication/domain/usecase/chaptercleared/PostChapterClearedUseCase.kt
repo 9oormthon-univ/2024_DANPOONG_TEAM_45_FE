@@ -1,10 +1,8 @@
 package com.example.myapplication.domain.usecase.chaptercleared
 
 import com.example.myapplication.data.repository.remote.response.BaseResponse
-import com.example.myapplication.domain.repository.chaptercleared.ChapterClearedRepository
+import com.example.myapplication.repository.chaptercleared.ChapterClearedRepository
 import kotlinx.coroutines.flow.Flow
-import okhttp3.ResponseBody
-import retrofit2.Response
 import javax.inject.Inject
 
 class PostChapterClearedUseCase @Inject constructor(

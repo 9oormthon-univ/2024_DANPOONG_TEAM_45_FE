@@ -1,7 +1,7 @@
 package com.example.myapplication.domain.usecase.chaptercleared
 
 import com.example.myapplication.data.repository.remote.response.chaptercleared.ClearChapterStateResponse
-import com.example.myapplication.domain.repository.chaptercleared.ChapterClearedRepository
+import com.example.myapplication.repository.chaptercleared.ChapterClearedRepository
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import javax.inject.Inject

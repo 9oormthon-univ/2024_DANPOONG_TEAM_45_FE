@@ -4,6 +4,7 @@ import com.example.myapplication.data.repository.remote.datasource.remote.IsChap
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.chaptercleared.ClearChapterStateListResponse
 import com.example.myapplication.data.repository.remote.response.chaptercleared.ClearChapterStateResponse
+import com.example.myapplication.repository.chaptercleared.ChapterClearedRepository
 import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
 import retrofit2.Response

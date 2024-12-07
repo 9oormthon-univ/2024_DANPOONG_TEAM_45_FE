@@ -1,6 +1,5 @@
 package com.example.myapplication.data.mapper
 
-import android.util.Log
 import com.example.myapplication.R
 import com.example.myapplication.data.repository.local.ChapterDTO
 import com.example.myapplication.data.repository.local.QuizDTO
@@ -47,7 +46,7 @@ fun AllChapterResponse.toDomain(): List<IslandDto> {
 fun decideIsClear(list: List<DistinctChapterResponse>, id: Int): Boolean {
     // 첫 번째 챕터는 항상 잠금 해제
     if (id == 1) {
-        return false
+        return true
     }
     // 이전 챕터의 상태 확인
     val previousCleared = list[id - 2].isCleared // id - 2로 이전 챕터 참조
@@ -55,7 +54,6 @@ fun decideIsClear(list: List<DistinctChapterResponse>, id: Int): Boolean {
 }
 
 fun locked(isCleared: Boolean, number: Int): Int {
-    Log.d("okhttp", "locked() 호출 - isCleared: $isCleared, number: $number")
     return if (isCleared) {
         when (number) {
             0 -> R.drawable.iv_biginner_island
@@ -86,7 +84,7 @@ fun QuizResponse.toDomain(): QuestDto {
         isCleared = this.isCleared,
         isOpen = false,
 
-    )
+        )
     return item
 }
 
@@ -165,7 +163,7 @@ fun DistinctChapterResponse.toQuizzes(chapterId: Int): List<QuizDTO> {
     }
 }
 
-fun QuizDTO.toQuestDto(): QuestDto{
+fun QuizDTO.toQuestDto(): QuestDto {
     val item = QuestDto(
         gameName = titles[this.quizId - 1],
         gameType = decideType(this.quizId),

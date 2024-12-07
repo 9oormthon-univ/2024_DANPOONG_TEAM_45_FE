@@ -3,6 +3,7 @@ package com.example.myapplication.data.repository.remote.api
 import com.example.myapplication.data.repository.remote.request.character.CharacterDTO
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.character.CharacterAllResponse
+import com.example.myapplication.data.repository.remote.response.character.CharacterRandomListResponse
 import com.example.myapplication.data.repository.remote.response.character.CharacterRandomResponse
 import com.example.myapplication.data.repository.remote.response.character.CharacterResponse
 import com.example.myapplication.data.repository.remote.response.character.CommitCharacterResponse
@@ -56,12 +57,19 @@ interface CharacterApi {
     suspend fun getAllCharacter(
     ): CharacterAllResponse
 
-    @GET("/character/pickup/random")
+    //캐릭터 랜덤 뽑기
+    @GET("/v1/api/character/pickup/random")
     suspend fun getRandomCactus(
     ): BaseResponse<CharacterRandomResponse>
+
     //캐릭터 삭제
     @DELETE("/character")
     suspend fun deleteCharacter(
         @Path("id") id: String
     ): Response<ResponseBody>
+
+    //도감 조회
+    @GET("/v1/api/character/guidebook")
+    suspend fun getGuideBook(
+    ): BaseResponse<CharacterRandomListResponse>
 }

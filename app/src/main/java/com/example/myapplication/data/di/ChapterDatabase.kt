@@ -7,7 +7,7 @@ import com.example.myapplication.data.repository.local.QuizDTO
 import com.example.myapplication.data.repository.local.dao.ChapterDao
 import com.example.myapplication.data.repository.local.dao.QuizDao
 
-@Database(entities = [ChapterDTO::class, QuizDTO::class], version = 1)
+@Database(entities = [ChapterDTO::class, QuizDTO::class], version = 1, exportSchema = false)
 abstract class ChapterDatabase : RoomDatabase() {
     abstract fun chapterDao(): ChapterDao
     abstract fun quizDao(): QuizDao

@@ -195,6 +195,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                 saveRefreshToken(refreshToken)
                 saveUserProfile(userProfile)
                 saveUserNickname(userNickname)
+                deleteCountToken()
             }
             homeViewModel.getDistinctHome()
         }

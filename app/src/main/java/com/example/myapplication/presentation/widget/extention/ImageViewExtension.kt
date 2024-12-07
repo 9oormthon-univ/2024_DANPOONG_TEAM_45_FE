@@ -7,6 +7,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
 
 
 fun ImageView.loadImage(context: Context, imageView: ImageView, source: Any) {
@@ -31,6 +32,14 @@ fun ImageView.loadCropRoundedSquareImage(
 fun ImageView.loadCropImage(source: Any) {
     Glide.with(this.context)
         .load(source)
+        .centerCrop()
+        .into(this)
+}
+
+fun ImageView.loadCropPotionImage(source: Any) {
+    Glide.with(this.context)
+        .load(source)
+        .override(300,300)
         .centerCrop()
         .into(this)
 }

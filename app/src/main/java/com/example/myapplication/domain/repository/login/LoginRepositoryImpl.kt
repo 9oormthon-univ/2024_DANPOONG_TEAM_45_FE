@@ -6,14 +6,15 @@ import com.example.myapplication.data.repository.remote.request.login.UserDTO
 import com.example.myapplication.data.repository.remote.request.login.UserListDTO
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.login.LogInKakaoResponse
+import com.example.myapplication.repository.login.LoginRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 data class LoginRepositoryImpl @Inject constructor(
     private val logInDataSource: LogInDataSource
 ) : LoginRepository {
-    override suspend fun postKakaoLogin(logInKakaoDto: LogInKakaoDto): Flow<LogInKakaoResponse> =
-        logInDataSource.postKakaoLogin(logInKakaoDto)
+    override suspend fun postKakaoLogin(loginKaKaoDto: LogInKakaoDto): Flow<LogInKakaoResponse> =
+        logInDataSource.postKakaoLogin(loginKaKaoDto)
 
     override suspend fun patchUsers(userDTO: UserDTO): Flow<BaseResponse<Any>> =
         logInDataSource.patchUsers(userDTO)

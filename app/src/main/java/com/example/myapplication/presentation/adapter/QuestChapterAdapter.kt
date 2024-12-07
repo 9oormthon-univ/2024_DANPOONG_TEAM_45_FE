@@ -86,7 +86,6 @@ class QuestChapterAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.d("QuestProblemAdapter", "Binding item at position $position")
         holder.bind(questGameList[position])
     }
 

@@ -1,11 +1,8 @@
 package com.example.myapplication.domain.usecase.ai
 
-import com.example.myapplication.data.repository.remote.request.ai.AiDTO
 import com.example.myapplication.data.repository.remote.response.BaseResponse
-import com.example.myapplication.domain.repository.ai.AiRepository
+import com.example.myapplication.repository.ai.AiRepository
 import kotlinx.coroutines.flow.Flow
-import okhttp3.ResponseBody
-import retrofit2.Response
 import javax.inject.Inject
 
 class PostAiUseCase @Inject constructor(

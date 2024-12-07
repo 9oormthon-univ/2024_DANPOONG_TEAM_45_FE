@@ -4,6 +4,6 @@ import com.example.myapplication.data.repository.remote.request.character.Charac
 
 data class HomePayload(
     val id : Int = 0,
-    val character : DistinctCharacterResponse = DistinctCharacterResponse(),
+    val character : Character = Character(),
     val userPicture : String = ""
 )

@@ -37,9 +37,6 @@ class ChattingAdapter(
             is ChatMessage.LEFT -> (binding as ItemLeftBinding).aiItem = item
             is ChatMessage.RIGHT -> (binding as ItemRightBinding).aiItem = item
         }
-        binding.root.setOnClickListener{
-            itemClickedListener.onClick(item)
-        }
     }
 
 }

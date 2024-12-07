@@ -7,10 +7,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.myapplication.R
+import com.example.myapplication.data.mapper.toDomain
 import com.example.myapplication.data.repository.remote.response.home.HomePayload
 import com.example.myapplication.databinding.FragmentFriendBinding
 import com.example.myapplication.domain.model.FriendsEntity
-import com.example.myapplication.domain.model.toDomain
 import com.example.myapplication.presentation.adapter.FriendAdapter
 import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.presentation.viewmodel.HomeViewModel
@@ -45,8 +45,11 @@ class FriendFragment : BaseFragment<FragmentFriendBinding>(R.layout.fragment_fri
     private fun observeLifeCycle() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-                homeViewModel.getAllHome.collectLatest { it ->
+                homeViewModel.getAllHome.collectLatest {
                     item = formatItem(it.result.toMutableList())
+                    item.mapIndexed { index, item ->
+                        item.rank = (index+1).toString()
+                    }
                     settingItem()
                 }
             }

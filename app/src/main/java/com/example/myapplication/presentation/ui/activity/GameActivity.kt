@@ -2,13 +2,7 @@ package com.example.myapplication.presentation.ui.activity
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import com.example.myapplication.R
-import com.example.myapplication.databinding.ActivityGameBinding
-
 import android.app.AlertDialog
-import android.content.ClipData
-import android.content.ClipDescription.MIMETYPE_TEXT_PLAIN
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -19,41 +13,37 @@ import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.DRAG_FLAG_GLOBAL
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
-import androidx.core.view.DragStartHelper
-import androidx.draganddrop.DropHelper
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.myapplication.R
 import com.example.myapplication.data.mapper.toBlockDTO
 import com.example.myapplication.data.mapper.toBlockDTOList
 import com.example.myapplication.data.repository.remote.response.quiz.Answer
 import com.example.myapplication.data.repository.remote.response.quiz.Question
+import com.example.myapplication.databinding.ActivityGameBinding
 import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.presentation.viewmodel.ChapterViewModel
 import com.example.myapplication.presentation.viewmodel.CharacterViewModel
 import com.example.myapplication.presentation.viewmodel.QuizViewModel
-import com.example.myapplication.presentation.widget.extention.loadCropImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), GameInterface, FireConditionInterface {
+class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), GameInterface,
+    FireConditionInterface {
 
     private var targetBlockMap = mutableMapOf<Int, Int?>()
 
@@ -232,6 +222,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                     )
                 )
             }
+
             5 -> {
                 setVisibilityForViews(
                     visibleViews = listOf(
@@ -245,6 +236,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                     )
                 )
             }
+
             6 -> {
                 setVisibilityForViews(
                     visibleViews = listOf(
@@ -260,6 +252,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                     )
                 )
             }
+
             else -> {
                 setVisibilityForViews(
                     visibleViews = listOf(
@@ -307,8 +300,8 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         frameLayout.addView(overlayTextView, 1)
     }
 
-    override fun addBlock(block: BlockDTO) {
-        when (block.blockType) {
+    override fun addBlock(blockDTO: BlockDTO) {
+        when (blockDTO.blockType) {
             resources.getString(R.string.block_type_normal) -> {
                 // FrameLayout 생성
                 val newBlock = FrameLayout(this).apply {
@@ -336,7 +329,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                         else -> setImageResource(R.drawable.iv_gameblock_basic_type1)
                     }
 
-                    if (block.blockDescript == resources.getString(R.string.game_fanning)) {
+                    if (blockDTO.blockDescript == resources.getString(R.string.game_fanning)) {
                         setImageResource(R.drawable.iv_gameblock_basic_type3)
                     }
                 }
@@ -350,7 +343,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                         gravity = Gravity.START
                         setMargins(20, 12, 0, 5)
                     }
-                    text = block.blockDescript
+                    text = blockDTO.blockDescript
                     setTextColor(ContextCompat.getColor(context, R.color.white)) // 텍스트 색상
                     textSize = 12f
                 }
@@ -363,7 +356,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                 binding.linearLayoutBlockGameList.addView(newBlock)
 
                 dragSources.add(newBlock)
-                newBlock.tag = block  // BlockDTO를 tag로 설정
+                newBlock.tag = blockDTO  // BlockDTO를 tag로 설정
             }
 
             resources.getString(R.string.block_type_repeat) -> {
@@ -404,7 +397,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                         setMargins(0, 0, 29.dpToPx(), 0) // 마진 설정
                     }
                     inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
-                    setText(block.repeat.toString())
+                    setText(blockDTO.repeat.toString())
                     setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
                     textSize = 10.51f
                 }
@@ -430,7 +423,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                 // `LinearLayout`에 새 `FrameLayout` 추가
                 binding.linearLayoutBlockGameList.addView(newBlock)
                 dragSources.add(newBlock)
-                newBlock.tag = block  // BlockDTO를 tag로 설정
+                newBlock.tag = blockDTO  // BlockDTO를 tag로 설정
             }
         }
 
@@ -474,11 +467,11 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     private fun repeatAddMoveWay() {
         if (repeatIdx != -1 && isRepeat) {
             Log.d("repeat index", repeatIdx.toString())
-            val repeatEditText = dropTargets[repeatIdx]?.getTag(R.id.ib_gameplay_btn) as? EditText
+            val repeatEditText = dropTargets[repeatIdx].getTag(R.id.ib_gameplay_btn) as? EditText
             val targetTextView = dropTargets[repeatIdx].getTag(R.id.ib_game_state_done) as? TextView
-            var tempStr = mappingStrToResourceId(targetTextView?.text.toString())
+            val tempStr = mappingStrToResourceId(targetTextView?.text.toString())
 
-            if (repeatEditText?.text.toString().toInt() > 0 && tempStr != null) {
+            if (repeatEditText?.text.toString().toInt() > 0) {
                 for (i in 0 until repeatEditText?.text.toString().toInt() - 1) {
                     moveWay.add(repeatIdx, tempStr)
                 }
@@ -539,8 +532,19 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         val blockMove = blockDTO?.blockDescript
 
         when (blockType) {
-            resources.getString(R.string.block_type_normal) -> handleNormalBlockDrop(target, draggedBlock, dropId)
-            resources.getString(R.string.block_type_repeat) -> handleRepeatBlockDrop(target, draggedBlock, dragId, dropId)
+            resources.getString(R.string.block_type_normal) -> handleNormalBlockDrop(
+                target,
+                draggedBlock,
+                dropId
+            )
+
+            resources.getString(R.string.block_type_repeat) -> handleRepeatBlockDrop(
+                target,
+                draggedBlock,
+                dragId,
+                dropId
+            )
+
             else -> Log.e("block type error", "블록 타입이 정해지지 않았습니다.")
         }
 
@@ -565,7 +569,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                 }
                 // TextView를 target에 새로 추가
                 val overlayTextView = TextView(this).apply {
-                    text = draggedTextView!!.text
+                    text = draggedTextView.text
                     textSize = 12f
                     setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
                     setPadding(45, 90, 0, 0)
@@ -587,7 +591,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
                 // TextView를 target에 새로 추가
                 val overlayTextView = TextView(this).apply {
-                    text = draggedTextView!!.text
+                    text = draggedTextView.text
                     textSize = 12f
                     setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
                     setPadding(20, 25, 0, 0)
@@ -597,7 +601,12 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         }
     }
 
-    private fun handleRepeatBlockDrop(target: View, draggedBlock: FrameLayout, dragId: Int, dropId: Int) {
+    private fun handleRepeatBlockDrop(
+        target: View,
+        draggedBlock: FrameLayout,
+        dragId: Int,
+        dropId: Int
+    ) {
         isRepeat = true
 
         target.layoutParams = target.layoutParams.apply {
@@ -684,7 +693,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         }
     }
 
-        private fun mappingStrToResourceId(string: String): Int {
+    private fun mappingStrToResourceId(string: String): Int {
         val resourceMap = mapOf(
             resources.getString(R.string.game_move_straight) to R.string.game_move_straight,
             resources.getString(R.string.game_move_up) to R.string.game_move_up,
@@ -698,15 +707,11 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
     private fun handleBlockMove(blockMove: String, newdropId: Int, dropId: Int) {
         val move = mappingStrToResourceId(blockMove)
-        if (move != null) {
-            if (move == R.string.game_repeat) {
-                moveWay[dropId] = move
-                repeatIdx = dropId
-            } else {
-                moveWay[newdropId] = move
-            }
+        if (move == R.string.game_repeat) {
+            moveWay[dropId] = move
+            repeatIdx = dropId
         } else {
-            moveWay[newdropId] = -1
+            moveWay[newdropId] = move
         }
     }
 
@@ -747,7 +752,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     private fun handleSuccess() {
         isQuizClearedViewModel.postQuizClear(curGameId)
         if (curGameId == 7) { // 마지막 퀴즈이면 챕터 클리어 POST
-            Log.d("okhttp","클리어")
+            Log.d("okhttp", "클리어")
             isChapterClearedViewModel.postChapterClear(chapterId)
         }
         showSuccessDialog()
@@ -970,19 +975,23 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                     deltaX = 1f
                     deltaY = 0f
                 }
+
                 R.string.game_move_up -> {
                     deltaX = 0f
                     deltaY = -1f
                 }
+
                 R.string.game_move_down -> {
                     deltaX = 0f
                     deltaY = 1f
                 }
+
                 R.string.game_repeat -> {
                     deltaX = 0f
                     deltaY = 0f
                     moveStep(index + 1)
                 }
+
                 R.string.game_fanning -> {
                     deltaX = 0f
                     deltaY = 0f
@@ -994,6 +1003,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                         moveStep(index + 1)
                     }, 1000)
                 }
+
                 else -> {
                     deltaX = 0f
                     deltaY = 0f

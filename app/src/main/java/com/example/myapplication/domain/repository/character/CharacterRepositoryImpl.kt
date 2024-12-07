@@ -4,6 +4,7 @@ import com.example.myapplication.data.repository.remote.datasource.remote.Charac
 import com.example.myapplication.data.repository.remote.request.character.CharacterDTO
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.character.CharacterAllResponse
+import com.example.myapplication.data.repository.remote.response.character.CharacterRandomListResponse
 import com.example.myapplication.data.repository.remote.response.character.CharacterRandomResponse
 import com.example.myapplication.data.repository.remote.response.character.CharacterResponse
 import com.example.myapplication.data.repository.remote.response.character.CommitCharacterResponse
@@ -45,4 +46,7 @@ class CharacterRepositoryImpl @Inject constructor(
     override suspend fun getRandomCactus(
     ): Flow<BaseResponse<CharacterRandomResponse>> =
         characterDataSource.getRandomCactus()
+
+    override suspend fun getGuideBook():Flow<BaseResponse<CharacterRandomListResponse>> =
+        characterDataSource.getGuideBook()
 }

@@ -1,6 +1,7 @@
 package com.example.myapplication.data.di
 
 import android.util.Log
+import com.example.myapplication.BuildConfig
 import com.example.myapplication.presentation.widget.extention.AccessTokenInterceptor
 import com.example.myapplication.presentation.widget.extention.TokenManager
 import dagger.Module
@@ -69,7 +70,7 @@ object NetworkModule {
         return Retrofit.Builder()
             .addConverterFactory(gsonConverterFactory)
             .client(okHttpClient)
-            .baseUrl("https://codinglandapp.link")
+            .baseUrl(BuildConfig.BASE_URL)
             .build()
     }
 }
