@@ -32,14 +32,10 @@ class TokenManager @Inject constructor(
         private val TUTORIAL_1 = stringPreferencesKey("tut1")
         private val TUTORIAL_2 = stringPreferencesKey("tut2")
         private val COMPLETE = stringPreferencesKey("complete")
+        private val CHECK_BOOK = stringPreferencesKey("check_book")
+        private val PICK = stringPreferencesKey("pick")
     }
 
-    suspend fun deleteHome() {
-        dataStore.edit { preferences ->
-            preferences[USER_KEY] = ""
-            preferences[CHARACTER_KEY] = ""
-        }
-    }
 
     val getAccessToken: Flow<String?> = dataStore.data
         .map { preferences ->
@@ -69,16 +65,6 @@ class TokenManager @Inject constructor(
         }
     }
 
-    val getChapterIsCleared: Flow<String?> = dataStore.data
-        .map { preferences ->
-            preferences[CHAPTER_KEY]
-        }
-
-    suspend fun saveChapterIsCleared(isCleared: String) {
-        dataStore.edit { preferences ->
-            preferences[CHAPTER_KEY] = isCleared
-        }
-    }
 
     val getUserNickname: Flow<String?> = dataStore.data
         .map { preferences ->
@@ -161,6 +147,12 @@ class TokenManager @Inject constructor(
         }
     }
 
+    suspend fun deleteCountToken() {
+        dataStore.edit { preferences ->
+            preferences[COUNT_KEY] = "0"
+        }
+    }
+
     val getCountToken: Flow<String?> = dataStore.data
         .map { preferences ->
             preferences[COUNT_KEY]
@@ -172,10 +164,6 @@ class TokenManager @Inject constructor(
         }
     }
 
-    val getTut1: Flow<String?> = dataStore.data
-        .map { preferences ->
-            preferences[TUTORIAL_1]
-        }
 
     suspend fun saveTut2(token: String) {
         dataStore.edit { preferences ->
@@ -183,20 +171,23 @@ class TokenManager @Inject constructor(
         }
     }
 
-    val getTut2: Flow<String?> = dataStore.data
-        .map { preferences ->
-            preferences[TUTORIAL_2]
-        }
 
-    suspend fun saveComplete(token: String) {
+    suspend fun saveCheckBook(token: String) {
         dataStore.edit { preferences ->
-            preferences[COMPLETE] = token
+            preferences[CHECK_BOOK] = token
         }
     }
 
-    val getComplete: Flow<String?> = dataStore.data
+    val getCheckBook: Flow<String?> = dataStore.data
         .map { preferences ->
-            preferences[COMPLETE]
+            preferences[CHECK_BOOK]
         }
+
+    suspend fun deleteCheckBook() {
+        dataStore.edit { preferences ->
+            preferences[CHECK_BOOK] = ""
+        }
+    }
+
 
 }

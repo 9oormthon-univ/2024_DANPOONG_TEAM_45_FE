@@ -17,14 +17,16 @@ import com.example.myapplication.data.repository.remote.response.home.DistinctHo
 import com.example.myapplication.databinding.FragmentHomeBinding
 import com.example.myapplication.domain.model.ChatMessage
 import com.example.myapplication.domain.model.ChatOwner
-import com.example.myapplication.domain.model.home.CharacterType
 import com.example.myapplication.presentation.adapter.AdapterItemClickedListener
 import com.example.myapplication.presentation.adapter.ChattingAdapter
 import com.example.myapplication.presentation.base.BaseFragment
+import com.example.myapplication.presentation.ui.activity.HeroCactusActivity
 import com.example.myapplication.presentation.ui.activity.PotionMysteryActivity
 import com.example.myapplication.presentation.viewmodel.AiViewModel
+import com.example.myapplication.presentation.viewmodel.CharacterViewModel
 import com.example.myapplication.presentation.viewmodel.HomeViewModel
 import com.example.myapplication.presentation.widget.extention.TokenManager
+import com.example.myapplication.presentation.widget.extention.loadCropImage
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -39,6 +41,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     AdapterItemClickedListener {
 
     private val homeViewModel: HomeViewModel by viewModels()
+    private val characterViewModel: CharacterViewModel by viewModels()
 
     @Inject
     lateinit var tokenManager: TokenManager
@@ -57,7 +60,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
         initViewModel()
         initAdapter() // chattingAdapter 초기화
         initList()    // 초기화 이후 호출
-        setLottieAnimation()
         initCount()
         initHome()
         onClickBtn()
@@ -70,12 +72,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
         super.onStart()
         initCount()
         initHome()
-    }
-
-    private fun setLottieAnimation() {
-        binding.fragmentHomeCharacterIv.setMaxProgress(0.90f) // 최대 진행도를 99%로 설정, 깜빡임 프레임 드랍 이슈 해결
-        binding.fragmentHomeTitleTv.setRawInputType(R.raw.mini)
-        binding.fragmentHomeCharacterIv.playAnimation() // 애니메이션 시작
     }
 
     private fun initHome() {
@@ -108,23 +104,71 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     private fun initLifeCycle() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-                homeViewModel.getDistinctHome.collectLatest {
+                homeViewModel.getDistinctHome.collectLatest { response ->
                     with(binding) {
-                        val character = it.payload?.character
-                        saveId(it)
-                        when (it.result.code) {
+                        val character = response.payload?.character
+                        saveId(response)
+                        when (response.result.code) {
                             200 -> {
-                                fragmentHomeTitleTv.text = "${character!!.name}무무를 눌러서\n대화를 해보세요!"
-                                fragmentHomeCactusStateLevelTv.text =
-                                    "LV.${character.level}"
-                                /*fragmentHomeCharacterIv.loadCropImage(
-                                    setCharacterDrawable(stringToEnum(character.type))
-                                )*/
-                                setLottieAnimation()
-                                fragmentHomeCactusStateProgressPb.progress =
-                                    character.activityPoints % 100
-                                fragmentHomeCactusStatePercentageTv.text =
-                                    (character.activityPoints % 100).toString() + "%"
+                                if (character?.type == "LEVEL_HIGH" &&
+                                    tokenManager.getCheckBook.first() != "check"
+                                ) {
+                                    // 추가된 로그
+                                    Log.d("HomeFragment", "Conditions met for pick()")
+                                    characterViewModel.getRandomCactus()
+
+                                    // Flow 명시적 수집
+                                    launch {
+                                        characterViewModel.getRandomCactus
+                                            .collect { randomCactusResponse ->
+                                                Log.d("HomeFragment", "Random Cactus Response: $randomCactusResponse")
+
+                                                if (randomCactusResponse.result.code == 200 &&
+                                                    randomCactusResponse.payload != null) {
+
+                                                    val name = randomCactusResponse.payload?.cactusName
+                                                    val star = randomCactusResponse.payload?.cactusRank
+
+                                                    val img = when (name) {
+                                                        "마법사 선인장" -> R.drawable.ic_cactus_magic
+                                                        "영웅 선인장" -> R.drawable.ic_cactus_hero
+                                                        else -> 0
+                                                    }
+
+                                                    if (img != 0) {
+                                                        startActivity(
+                                                            Intent(requireContext(), HeroCactusActivity::class.java).apply {
+                                                                putExtra("cactusImage", img)
+                                                                putExtra("cactusName", name)
+                                                                putExtra("star", star)
+                                                            }
+                                                        )
+                                                    } else {
+                                                        Log.e("HomeFragment", "Invalid image for cactus")
+                                                    }
+                                                } else {
+                                                    Log.e("HomeFragment", "Invalid random cactus response")
+                                                }
+                                            }
+                                    }
+                                } else {
+                                    fragmentHomeTitleTv.text =
+                                        "${character!!.name}무무를 눌러서\n대화를 해보세요!"
+                                    fragmentHomeCactusStateLevelTv.text =
+                                        "LV.${character.level}"
+                                    changeToCactusType(
+                                        character.type,
+                                        character.cactusType
+                                    )
+                                    changeToCactusName(
+                                        character.type,
+                                        character.cactusType
+                                    )
+                                    fragmentHomeCactusStateProgressPb.progress =
+                                        character.activityPoints % 100
+                                    fragmentHomeCactusStatePercentageTv.text =
+                                        (character.activityPoints % 100).toString() + "%"
+                                }
                             }
                         }
                     }
@@ -133,7 +177,41 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
         }
     }
 
+
     private fun observeLifeCycle() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                characterViewModel.getRandomCactus.collectLatest {
+                    Log.d("getRandomCactus", "Response: $it")
+                    if (it.result.code == 200 && it.payload != null) {
+
+                        val name = it.payload?.cactusName
+                        val star = it.payload?.cactusRank
+
+
+                        if (name != null) { // 유효한 이미지 리소스인지 확인
+                            startActivity(
+                                Intent(requireContext(), HeroCactusActivity::class.java).apply {
+                                    putExtra("cactusName", name)
+                                    putExtra("star", star)
+                                }
+                            )
+                        } else {
+                            Log.e(
+                                "getRandomCactus",
+                                "Invalid image resource for cactus name: $name"
+                            )
+                        }
+                    } else {
+                        Log.e("getRandomCactus", "Invalid response or null payload: $it")
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun observeChatLifeCycle(){
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 aiViewModel.ai.collectLatest {
@@ -165,21 +243,82 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
             }
         }
     }
+    private fun changeToCactusType(type: String, cactusType: String) {
+        when (cactusType) {
+            "KING_CACTUS" -> {
+                setLottieFile(type)
+            }
 
-    private fun stringToEnum(value: String): CharacterType {
-        return when (value) { // 서버에서 온 값을 소문자로 변환
-            "LEVEL_LOW" -> CharacterType.LEVEL_LOW
-            "LEVEL_MEDIUM" -> CharacterType.LEVEL_MEDIUM
-            "LEVEL_HIGH" -> CharacterType.LEVEL_HIGH
-            else -> CharacterType.LEVEL_LOW // 매핑되지 않는 값 처리
+            "HERO_CACTUS", "MAGICIAN" -> {
+                setImageFile(cactusType)
+            }
         }
     }
 
-    private fun setCharacterDrawable(characterType: CharacterType): Int {
-        return when (characterType) {
-            CharacterType.LEVEL_LOW -> R.drawable.ic_cactus_1
-            CharacterType.LEVEL_MEDIUM -> R.drawable.ic_cactus_2
-            CharacterType.LEVEL_HIGH -> R.drawable.ic_cactus_3
+    private fun changeToCactusName(type: String, cactusType: String) {
+        when (cactusType) {
+            "KING_CACTUS" -> {
+                setKingName(type)
+            }
+
+            "HERO_CACTUS" -> {
+                setSpecialName(cactusType)
+            }
+
+            "MAGICIAN" -> {
+                setSpecialName(cactusType)
+            }
+        }
+    }
+
+    private fun setKingName(type: String?) {
+        val name = when (type) {
+            "LEVEL_LOW" -> "미니 선인장"
+            "LEVEL_MEDIUM" -> "꽃 선인장"
+            "LEVEL_HIGH" -> "킹 선인장"
+            else -> ""
+        }
+        with(binding) {
+            fragmentHomeCactusNameTv.text = name
+        }
+    }
+
+    private fun setLottieFile(type: String?) {
+        val raw = when (type) {
+            "LEVEL_LOW" -> R.raw.mini
+            "LEVEL_MEDIUM" -> R.raw.flower
+            "LEVEL_HIGH" -> R.raw.king
+            else -> 0
+        }
+        with(binding.fragmentHomeCharacterIv) {
+            visibility = View.VISIBLE
+            binding.fragmentHomeCharacterIv2.visibility = View.GONE
+            setAnimation(raw)
+            setMaxProgress(0.90f)
+            playAnimation()
+        }
+    }
+
+    private fun setImageFile(type: String?) {
+        binding.fragmentHomeCharacterIv.visibility = View.GONE
+        binding.fragmentHomeCharacterIv2.visibility = View.VISIBLE
+        val img = when (type) {
+            "HERO_CACTUS" -> R.drawable.ic_cactus_hero
+            "MAGICIAN" -> R.drawable.ic_cactus_magic
+            else -> 0
+        }
+        Log.d("okhttp", img.toString())
+        binding.fragmentHomeCharacterIv2.loadCropImage(img)
+    }
+
+    private fun setSpecialName(type: String?) {
+        val name = when (type) {
+            "HERO_CACTUS" -> "영웅 선인장"
+            "MAGICIAN" -> "마법사 선인장"
+            else -> ""
+        }
+        with(binding) {
+            fragmentHomeCactusNameTv.text = name
         }
     }
 
@@ -295,12 +434,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
                 chatList = newChatList  // 기존 리스트를 새로운 리스트로 교체
                 binding.layoutChatBottomSheetSendEt.text.clear()  // 입력 필드를 초기화
                 aiViewModel.postAi(message)
-                observeLifeCycle()
+                observeChatLifeCycle()
                 stateChangeChatType(ChatOwner.LEFT)
             }
         }
 
-        binding.fragmentHomeCharacterIv.setOnClickListener {
+        binding.fragmentHomeCharacterFl.setOnClickListener {
             // BottomSheet의 peek_height만큼 보여주기
             binding.mainEt.visibility = View.VISIBLE
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED

@@ -64,7 +64,7 @@ class QuizClearActivity : BaseActivity<ActivityQuizClearBinding>(R.layout.activi
 
             loginViewModel.getCompleteTraining()
             binding.btnNextstageSeeMoomoo.setOnClickListener {
-                increaseExp(300)
+                increaseExp(50)
             }
         }
         binding.ivNextStageCancel.setOnClickListener {

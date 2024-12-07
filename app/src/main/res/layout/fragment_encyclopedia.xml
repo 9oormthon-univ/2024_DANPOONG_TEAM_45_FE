@@ -56,6 +56,7 @@
             app:layout_constraintTop_toBottomOf="@+id/fragment_encyclopedia_tb" />
 
         <TextView
+            android:id="@+id/fragment_encyclopedia_tv"
             android:layout_width="118dp"
             android:layout_height="35dp"
             android:layout_marginStart="190dp"
@@ -68,70 +69,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/fragment_encyclopedia_tb" />
 
-        <androidx.cardview.widget.CardView
-            android:layout_marginTop="30dp"
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fragment_encyclopedia_card_rv"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/fragment_share_card_bt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_collected_cactus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="1dp">
+            app:layout_constraintTop_toBottomOf="@id/fragment_encyclopedia_tv"
+            tools:itemCount="3"
+            tools:listitem="@layout/item_card" />
 
-            <FrameLayout
-                android:id="@+id/framelayout_my_cactus_card"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/iv_book_card"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:src="@drawable/iv_book_card" />
-
-                <ImageView
-                    android:id="@+id/iv_collected_cactus2"
-                    android:layout_width="60dp"
-                    android:layout_height="23dp"
-                    android:layout_gravity="center|top"
-                    android:layout_marginTop="58dp"
-                    android:background="@drawable/shape_square_rounded_8dp_gray9"
-                    android:elevation="3dp" />
-
-                <TextView
-                    android:layout_width="60dp"
-                    android:layout_height="23dp"
-                    android:layout_gravity="center|top"
-                    android:layout_marginTop="60dp"
-                    android:elevation="3dp"
-                    android:fontFamily="@font/pretendard_semibold"
-                    android:text="레어도 ★"
-                    android:textAlignment="center"
-                    android:textColor="@color/main0"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|top"
-                    android:layout_marginTop="80dp"
-                    android:elevation="3dp"
-                    android:fontFamily="@font/pretendard_semibold"
-                    android:text="킹 선인장"
-                    android:textAlignment="center"
-                    android:textColor="#006466"
-                    android:textSize="28sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|bottom"
-                    android:elevation="3dp"
-                    android:src="@drawable/ic_cactus_3_small" />
-            </FrameLayout>
-
-        </androidx.cardview.widget.CardView>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/fragment_share_card_bt"
