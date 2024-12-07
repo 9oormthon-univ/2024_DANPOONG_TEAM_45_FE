@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fragment_tutorial1_background"
+        android:background="#99000000">
+
+        <ImageView
+            android:id="@+id/gameplay_background"
+            android:layout_width="225dp"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:src="@drawable/iv_gameplay_layout_background_2"
+            android:visibility="invisible"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/iv_tutorial_msg"
+            android:layout_marginStart="30dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintStart_toStartOf="@+id/ib_gamestory_msg"
+            app:layout_constraintBottom_toTopOf="@+id/ib_gamestory_msg"/>
+
+        <ImageButton
+            android:id="@+id/ib_gamestory_on"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ib_gameplay_story_btn_on"
+            app:layout_constraintBottom_toTopOf="@+id/gameplay_background"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ib_gamestory_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/iv_game_story_msg"
+            app:layout_constraintBottom_toBottomOf="@+id/ib_gamestory_on"
+            app:layout_constraintEnd_toStartOf="@+id/ib_gamestory_on">
+
+            <ImageView
+                android:id="@+id/ib_gamestory_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="6dp"
+                android:src="@drawable/ic_momo_bubble"
+                app:layout_constraintBottom_toTopOf="@+id/ib_gamestory_msg_txt"
+                app:layout_constraintStart_toStartOf="@+id/ib_gamestory_msg_txt"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/ib_gamestory_txt"
+                style="@style/pretandard_bold.12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="무무의 메시지"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="@+id/ib_gamestory_img"
+                app:layout_constraintStart_toEndOf="@+id/ib_gamestory_img"
+                app:layout_constraintTop_toTopOf="@+id/ib_gamestory_img" />
+
+            <TextView
+                android:id="@+id/ib_gamestory_msg_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="16dp"
+                android:text="무무가 아침 일정을 잘 마치도록 도와줘\n일어나기 > 세수하기 > 아침먹기 > 준비하기\n순서로 부탁할게! 해줄 수 있지?"
+                android:textColor="@color/gray3"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/ib_gamestory_msg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/ib_gamestory_msg" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

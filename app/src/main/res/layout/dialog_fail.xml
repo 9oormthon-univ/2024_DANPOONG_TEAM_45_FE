@@ -1,46 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/background_custom_dialog"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="20dp"
-    android:minWidth="300dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- 첫 번째 텍스트 (힌트) -->
-    <TextView
-        android:id="@+id/tv_gameplay_fail_title"
-        android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="16sp"
-        android:textColor="@color/gray3"
-        android:fontFamily="@font/pretendard_semibold"
-        android:text="앗, 다시 생각해볼까?" />
+        android:layout_gravity="center"
+        android:layout_marginStart="42dp"
+        android:layout_marginEnd="42dp"
+        android:background="@drawable/shape_square_rounded_20dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
 
-    <!-- 두 번째 텍스트 (힌트) -->
-    <TextView
-        android:id="@+id/tv_gameplay_fail_subtitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginTop="5dp"
-        android:textSize="12sp"
-        android:textColor="@color/gray6"
-        android:fontFamily="@font/pretendard_regular"
-        android:text="어려우면 힌트를 확인해봐" />
+        <!-- 첫 번째 텍스트 (힌트) -->
+        <TextView
+            android:id="@+id/tv_gameplay_fail_title"
+            style="@style/pretandard_semi_bold.16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="앗, 다시 생각해볼까?"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- 다시하기 버튼 -->
-    <androidx.appcompat.widget.AppCompatButton
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_dialog_biginner_quiz_fail"
-        android:text="다시하기"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/shape_square_rounded_30dp"
-        android:backgroundTint="@color/pink1"/>
-</LinearLayout>
+        <!-- 두 번째 텍스트 (힌트) -->
+        <TextView
+            android:id="@+id/tv_gameplay_fail_subtitle"
+            style="@style/pretandard_regular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="어려우면 힌트를 확인해봐"
+            android:textColor="@color/gray6"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_gameplay_fail_title" />
+
+        <!-- 다시하기 버튼 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_dialog_biginner_quiz_fail"
+            style="@style/pretandard_semi_bold"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="26dp"
+            android:layout_marginBottom="18dp"
+            android:background="@drawable/shape_square_rounded_30dp"
+            android:backgroundTint="@color/pink1"
+            android:text="다시하기"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_gameplay_fail_subtitle" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

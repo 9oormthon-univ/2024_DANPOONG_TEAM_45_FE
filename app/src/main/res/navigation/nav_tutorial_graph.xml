@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_tutorial_graph"
+    app:startDestination="@id/tutorialFragment1">
+
+    <fragment
+        android:id="@+id/tutorialFragment1"
+        android:name="com.example.myapplication.presentation.ui.fragment.tutorial.Tutorial1Fragment"
+        android:label="TutorialFragment"
+        tools:layout="@layout/fragment_tutorial1" >
+        <action
+            android:id="@+id/action_tutorialFragment1_to_tutorialFragment2"
+            app:destination="@id/tutorialFragment2" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/tutorialFragment2"
+        android:name="com.example.myapplication.presentation.ui.fragment.tutorial.Tutorial2Fragment"
+        android:label="TutorialFragment"
+        tools:layout="@layout/fragment_tutorial2" >
+        <action
+            android:id="@+id/action_tutorialFragment2_to_tutorialFragment3"
+            app:destination="@id/tutorialFragment3" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/tutorialFragment3"
+        android:name="com.example.myapplication.presentation.ui.fragment.tutorial.Tutorial3Fragment"
+        android:label="TutorialFragment"
+        tools:layout="@layout/fragment_tutorial3" >
+        <action
+            android:id="@+id/action_tutorialFragment3_to_tutorialFragment4"
+            app:destination="@id/tutorialFragment4" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/tutorialFragment4"
+        android:name="com.example.myapplication.presentation.ui.fragment.tutorial.Tutorial4Fragment"
+        android:label="TutorialFragment"
+        tools:layout="@layout/fragment_tutorial4" >
+        <action
+            android:id="@+id/action_tutorialFragment4_to_tutorialFragment5"
+            app:destination="@id/tutorialFragment5" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/tutorialFragment5"
+        android:name="com.example.myapplication.presentation.ui.fragment.tutorial.Tutorial5Fragment"
+        android:label="TutorialFragment"
+        tools:layout="@layout/fragment_tutorial5" />
+</navigation>

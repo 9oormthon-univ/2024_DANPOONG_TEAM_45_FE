@@ -10,6 +10,8 @@ import android.content.ClipData
 import android.content.ClipDescription.MIMETYPE_TEXT_PLAIN
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Handler
 import android.os.Looper
 import android.text.InputType
@@ -19,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.DRAG_FLAG_GLOBAL
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -98,7 +101,7 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         initBlock()
         initGame()
         gameFunction(binding)
-        setupDropTargets(dropTargets, this)
+        setupDropTargets(dropTargets, this, targetBlockMap, dragSources)
 
         isQuizClearedViewModel.quizDistinct(curGameId)
     }
@@ -155,13 +158,8 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     }
 
     override fun initGame() {
-        binding.ivGameCharacter.bringToFront() // 게임 캐릭터를 최상단으로 설정
         initStory()
-
-        // 캐릭터 관련 초기화
-        moveXCnt = 0
-        moveYCnt = 0
-        moveWay = MutableList(10) { 0 }
+        initCharacterMove()
         runOnUiThread {
             initCharacter(curGameId, binding)
         }
@@ -170,9 +168,48 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         setupGameBackground(curGameId)
 
         // 블록 초기화
+        initDragBlock()
+        initRepeatBlock()
+
+        blockVisibility(binding.ibGameplayBtn, binding.ibGamestopBtn)
+        setUpStory()
+    }
+
+    private fun initCharacterMove() {
+        binding.ivGameCharacter.bringToFront() // 게임 캐릭터를 최상단으로 설정
+        moveXCnt = 0
+        moveYCnt = 0
+        moveWay = MutableList(10) { 0 }
+    }
+
+    private fun initDragBlock() {
         targetBlockMap = mutableMapOf()
         dragSources.forEach { it.visibility = View.VISIBLE }
-        initRepeatBlock()
+    }
+
+    private fun initRepeatBlock() {
+        dropTargets.forEach { target ->
+            resetFrameLayoutVisibility(target)
+            if (target is FrameLayout) {
+                initFrameLayout(target)
+            } else {
+                Log.e("DropTarget", "Target is not a FrameLayout: ${target.id}")
+            }
+        }
+    }
+
+    private fun setUpStory() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            setVisibilityForViews(
+                visibleViews = emptyList(),
+                hiddenViews = listOf(
+                    binding.ibGamestoryMsg,
+                    binding.ibGamestoryMsgTxt
+                )
+            )
+
+            blockVisibility(binding.ibGamestoryOff, binding.ibGamestoryOn)
+        }, 10000)  // 10초 후 메시지 사라짐
     }
 
     private fun setVisibilityForViews(visibleViews: List<View>, hiddenViews: List<View>) {
@@ -240,52 +277,34 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         }
     }
 
-    private fun initRepeatBlock() {
-        dropTargets.forEach { target ->
-            // 기존 ImageView 리셋
-            val removeTarget1 = target.getTag(R.id.ib_biginner_game1_space1) as? ImageView
-            val removeTarget2 = target.getTag(R.id.ib_biginner_game1_space2) as? ImageView
-            val removeTarget3 = target.getTag(R.id.ib_gamestop_btn) as? ImageView
-            val removeTarget4 = target.getTag(R.id.ib_gameplay_btn) as? EditText
-            val removeTarget5 = target.getTag(R.id.ib_game_state_done) as? TextView
-
-            removeTarget1?.visibility = View.GONE
-            removeTarget2?.visibility = View.GONE
-            removeTarget3?.visibility = View.GONE
-            removeTarget4?.visibility = View.GONE
-            removeTarget5?.visibility = View.GONE
-
-            dropTargets.forEach { target ->
-                // target이 FrameLayout인지 확인
-                if (target is FrameLayout) {
-                    // 첫 번째 자식이 ImageView인지 확인 후 처리
-                    val targetImageView = target.getChildAt(0) as? ImageView
-                    targetImageView?.setImageDrawable(
-                        ContextCompat.getDrawable(this, R.drawable.shape_square_rounded_16dp)
-                    )
-
-                    // 기존 TextView를 제거
-                    if (target.childCount > 1) {
-                        target.removeViewAt(1)
-                    }
-
-                    // 새로운 TextView 추가
-                    val overlayTextView = TextView(this).apply {
-                        text = "" // 초기 텍스트 설정
-                    }
-                    target.addView(overlayTextView, 1)
-                } else {
-                    Log.e("DropTarget", "Target is not a FrameLayout: ${target.id}")
-                }
+    private fun resetFrameLayoutVisibility(target: View) {
+        listOf(
+            R.id.ib_biginner_game1_space1 to ImageView::class.java,
+            R.id.ib_biginner_game1_space2 to ImageView::class.java,
+            R.id.ib_gamestop_btn to ImageView::class.java,
+            R.id.ib_gameplay_btn to EditText::class.java,
+            R.id.ib_game_state_done to TextView::class.java
+        ).forEach { (tagId, viewClass) ->
+            (target.getTag(tagId) as? View)?.takeIf { viewClass.isInstance(it) }?.apply {
+                visibility = View.GONE
             }
         }
+    }
 
-        blockVisibility(binding.ibGameplayBtn, binding.ibGamestopBtn)
-        Handler(Looper.getMainLooper()).postDelayed({
-            binding.ibGamestoryMsg.visibility = View.GONE
-            binding.ibGamestoryMsgTxt.visibility = View.GONE
-            blockVisibility(binding.ibGamestoryOff, binding.ibGamestoryOn)
-        }, 10000)  // 10초 후 메시지 사라짐
+    private fun initFrameLayout(frameLayout: FrameLayout) {
+        // 첫 번째 자식이 ImageView인지 확인 후 이미지 초기화
+        (frameLayout.getChildAt(0) as? ImageView)?.setImageDrawable(
+            ContextCompat.getDrawable(frameLayout.context, R.drawable.shape_square_rounded_16dp)
+        )
+
+        // 기존 TextView 제거 및 새 TextView 추가
+        if (frameLayout.childCount > 1) {
+            frameLayout.removeViewAt(1)
+        }
+        val overlayTextView = TextView(frameLayout.context).apply {
+            text = "" // 초기 텍스트 설정
+        }
+        frameLayout.addView(overlayTextView, 1)
     }
 
     override fun addBlock(block: BlockDTO) {
@@ -468,14 +487,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         }
     }
 
-    private fun setViewsVisibility(visibleViews: List<View>, goneViews: List<View>) {
-        visibleViews.forEach { it.visibility = View.VISIBLE }
-        goneViews.forEach { it.visibility = View.GONE }
-    }
-
     private fun onStoryState(isState: Boolean) {
         if (isState) {
-            setViewsVisibility(
+            setVisibilityForViews(
                 visibleViews = listOf(
                     binding.ibGamestoryImg,
                     binding.ibGamestoryTxt,
@@ -483,12 +497,12 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                     binding.ibGamestoryMsgTxt,
                     binding.ibGamestoryOn
                 ),
-                goneViews = listOf(binding.ibGamestoryOff)
+                hiddenViews = listOf(binding.ibGamestoryOff)
             )
         } else {
-            setViewsVisibility(
+            setVisibilityForViews(
                 visibleViews = listOf(binding.ibGamestoryOff),
-                goneViews = listOf(
+                hiddenViews = listOf(
                     binding.ibGamestoryImg,
                     binding.ibGamestoryTxt,
                     binding.ibGamestoryMsg,
@@ -501,9 +515,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
 
     private fun initStory() {
         Handler(Looper.getMainLooper()).postDelayed({
-            setViewsVisibility(
+            setVisibilityForViews(
                 visibleViews = listOf(binding.ibGamestoryOff),
-                goneViews = listOf(
+                hiddenViews = listOf(
                     binding.ibGamestoryImg,
                     binding.ibGamestoryTxt,
                     binding.ibGamestoryMsg,
@@ -515,8 +529,6 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     }
 
     // drag and drop ------------------------------------------------
-
-
     override fun handleImageDrop(target: View, dragId: Int, dropId: Int) {
         targetBlockMap[dropId] = dragId
         dragSources[dragId].visibility = View.GONE
@@ -527,161 +539,152 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         val blockMove = blockDTO?.blockDescript
 
         when (blockType) {
-            resources.getString(R.string.block_type_normal) -> {
-                // 드래그된 View (FrameLayout)에서 ImageView와 TextView를 가져옴
-                val draggedImageView = draggedBlock.getChildAt(0) as ImageView
-                val draggedTextView = draggedBlock.getChildAt(1) as TextView
-
-                if (target is FrameLayout) {
-                    // 기존에 "repeat" 블록이 있는지 확인
-                    val repeatImageView = target.getTag(R.id.ib_gamestop_btn) as? ImageView
-                    if (repeatImageView != null) {
-                        // repeat 블록이 이미 존재하면 newImageView3의 visibility를 VISIBLE로 변경
-                        repeatIdx = dropId
-                        repeatImageView.visibility = View.VISIBLE
-                        if (target.childCount > 1) {
-                            target.removeViewAt(1)
-                        }
-                        // TextView를 target에 새로 추가
-                        val overlayTextView = TextView(this).apply {
-                            text = draggedTextView!!.text
-                            textSize = 12f
-                            setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
-                            setPadding(45, 90, 0, 0)
-                        }
-                        target.setTag(R.id.ib_game_state_done, overlayTextView)
-                        target.addView(overlayTextView, 1)
-                        overlayTextView.bringToFront()
-                        overlayTextView.invalidate()
-                        target.requestLayout()
-                    } else {
-                        // 기존 ImageView를 target에 덮어씌우기
-                        val targetImageView = target.getChildAt(0) as ImageView
-                        targetImageView.setImageDrawable(draggedImageView.drawable)
-
-                        // 기존 TextView가 있다면 제거
-                        if (target.childCount > 1) {
-                            target.removeViewAt(1)
-                        }
-
-                        // TextView를 target에 새로 추가
-                        val overlayTextView = TextView(this).apply {
-                            text = draggedTextView!!.text
-                            textSize = 12f
-                            setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
-                            setPadding(20, 25, 0, 0)
-                        }
-                        target.addView(overlayTextView, 1)
-                    }
-                }
-            }
-
-            resources.getString(R.string.block_type_repeat) -> {
-                isRepeat = true
-
-                target.layoutParams = target.layoutParams.apply {
-                    height = dragSources[dragId].height
-                    width = dragSources[dragId].width
-                }
-
-                for (dropTarget in dropTargets) {
-                    if (dropTarget != dropTargets[dropId] && dragId == 0) {
-                        dropTarget.visibility = View.VISIBLE
-                    }
-                }
-
-                // REPEAT 블록 처리 (드래그된 블록의 ImageView 및 EditText 처리)
-                val draggedImageView1 = draggedBlock.getChildAt(0) as ImageView
-                val draggedImageView2 = draggedBlock.getChildAt(1) as ImageView
-                val draggedImageView3 = draggedBlock.getChildAt(2) as ImageView
-                val draggedEditText = draggedBlock.getChildAt(3) as EditText
-
-                if (target is FrameLayout) {
-                    // 기존 EditText가 있다면 제거
-                    if (target.childCount > 2) {
-                        target.removeViewAt(2)
-                    }
-
-                    // newImageView1 추가
-                    val newImageView1 = ImageView(this).apply {
-                        layoutParams = FrameLayout.LayoutParams(
-                            FrameLayout.LayoutParams.WRAP_CONTENT,
-                            FrameLayout.LayoutParams.WRAP_CONTENT
-                        ).apply {
-                            setMargins(0, 0, 0, 0)
-                        }
-                        setImageDrawable(draggedImageView1.drawable)
-                    }
-                    target.addView(newImageView1)
-                    target.setTag(R.id.ib_biginner_game1_space1, newImageView1)
-
-                    // newImageView2 추가
-                    val newImageView2 = ImageView(this).apply {
-                        layoutParams = FrameLayout.LayoutParams(
-                            FrameLayout.LayoutParams.WRAP_CONTENT,
-                            FrameLayout.LayoutParams.WRAP_CONTENT
-                        ).apply {
-                            setMargins(35, 15, 0, 0)
-                        }
-                        setImageDrawable(draggedImageView2.drawable)
-                        alpha = 0.9f
-                    }
-                    target.addView(newImageView2)
-                    target.setTag(R.id.ib_biginner_game1_space2, newImageView2)
-
-                    // newImageView3 추가
-                    val newImageView3 = ImageView(this).apply {
-                        layoutParams = FrameLayout.LayoutParams(
-                            FrameLayout.LayoutParams.WRAP_CONTENT,
-                            FrameLayout.LayoutParams.WRAP_CONTENT
-                        ).apply {
-                            setMargins(35, 75, 0, 0)
-                        }
-                        setImageDrawable(draggedImageView3.drawable)
-                        alpha = 0.8f
-                        visibility = View.GONE // 기본값을 GONE으로 설정
-                    }
-                    target.addView(newImageView3)
-                    target.setTag(R.id.ib_gamestop_btn, newImageView3) // newImageView3를 tag로 저장
-
-                    // EditText 추가
-                    val newEditText = EditText(this).apply {
-                        setText(draggedEditText.text)
-                        setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
-                        inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
-                        textSize = 10.51f
-                        layoutParams = FrameLayout.LayoutParams(
-                            FrameLayout.LayoutParams.WRAP_CONTENT,
-                            FrameLayout.LayoutParams.WRAP_CONTENT
-                        ).apply {
-                            setMargins(30, 0, 0, 0)
-                        }
-                        setPadding(30, 0, 0, 0)
-                    }
-                    target.addView(newEditText)
-                    target.setTag(R.id.ib_gameplay_btn, newEditText)
-                }
-
-            }
-
-            else -> {
-                // 블록 타입이 정의되지 않았을 경우 처리
-                Log.e("block type error", "블록 타입이 정해지지 않았습니다.")
-            }
-
+            resources.getString(R.string.block_type_normal) -> handleNormalBlockDrop(target, draggedBlock, dropId)
+            resources.getString(R.string.block_type_repeat) -> handleRepeatBlockDrop(target, draggedBlock, dragId, dropId)
+            else -> Log.e("block type error", "블록 타입이 정해지지 않았습니다.")
         }
 
-        var newdropId: Int
-        if (repeatIdx == dropId) {
-            newdropId = dropId + 1
-        } else {
-            newdropId = dropId
-        }
-        handleBlockMove(blockMove!!, newdropId, dropId)
-
+        val newDropId = if (repeatIdx == dropId) dropId + 1 else dropId
+        handleBlockMove(blockMove!!, newDropId, dropId)
     }
 
-    private fun mappingStrToResourceId(string: String): Int {
+    private fun handleNormalBlockDrop(target: View, draggedBlock: FrameLayout, dropId: Int) {
+        // 드래그된 View (FrameLayout)에서 ImageView와 TextView를 가져옴
+        val draggedImageView = draggedBlock.getChildAt(0) as ImageView
+        val draggedTextView = draggedBlock.getChildAt(1) as TextView
+
+        if (target is FrameLayout) {
+            // 기존에 "repeat" 블록이 있는지 확인
+            val repeatImageView = target.getTag(R.id.ib_gamestop_btn) as? ImageView
+            if (repeatImageView != null) {
+                // repeat 블록이 이미 존재하면 newImageView3의 visibility를 VISIBLE로 변경
+                repeatIdx = dropId
+                repeatImageView.visibility = View.VISIBLE
+                if (target.childCount > 1) {
+                    target.removeViewAt(1)
+                }
+                // TextView를 target에 새로 추가
+                val overlayTextView = TextView(this).apply {
+                    text = draggedTextView!!.text
+                    textSize = 12f
+                    setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
+                    setPadding(45, 90, 0, 0)
+                }
+                target.setTag(R.id.ib_game_state_done, overlayTextView)
+                target.addView(overlayTextView, 1)
+                overlayTextView.bringToFront()
+                overlayTextView.invalidate()
+                target.requestLayout()
+            } else {
+                // 기존 ImageView를 target에 덮어씌우기
+                val targetImageView = target.getChildAt(0) as ImageView
+                targetImageView.setImageDrawable(draggedImageView.drawable)
+
+                // 기존 TextView가 있다면 제거
+                if (target.childCount > 1) {
+                    target.removeViewAt(1)
+                }
+
+                // TextView를 target에 새로 추가
+                val overlayTextView = TextView(this).apply {
+                    text = draggedTextView!!.text
+                    textSize = 12f
+                    setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
+                    setPadding(20, 25, 0, 0)
+                }
+                target.addView(overlayTextView, 1)
+            }
+        }
+    }
+
+    private fun handleRepeatBlockDrop(target: View, draggedBlock: FrameLayout, dragId: Int, dropId: Int) {
+        isRepeat = true
+
+        target.layoutParams = target.layoutParams.apply {
+            height = dragSources[dragId].height
+            width = dragSources[dragId].width
+        }
+
+        for (dropTarget in dropTargets) {
+            if (dropTarget != dropTargets[dropId] && dragId == 0) {
+                dropTarget.visibility = View.VISIBLE
+            }
+        }
+
+        // REPEAT 블록 처리 (드래그된 블록의 ImageView 및 EditText 처리)
+        val draggedImageView1 = draggedBlock.getChildAt(0) as ImageView
+        val draggedImageView2 = draggedBlock.getChildAt(1) as ImageView
+        val draggedImageView3 = draggedBlock.getChildAt(2) as ImageView
+        val draggedEditText = draggedBlock.getChildAt(3) as EditText
+
+        if (target is FrameLayout) {
+            // 기존 EditText가 있다면 제거
+            if (target.childCount > 2) {
+                target.removeViewAt(2)
+            }
+
+            // newImageView1 추가
+            val newImageView1 = ImageView(this).apply {
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(0, 0, 0, 0)
+                }
+                setImageDrawable(draggedImageView1.drawable)
+            }
+            target.addView(newImageView1)
+            target.setTag(R.id.ib_biginner_game1_space1, newImageView1)
+
+            // newImageView2 추가
+            val newImageView2 = ImageView(this).apply {
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(35, 15, 0, 0)
+                }
+                setImageDrawable(draggedImageView2.drawable)
+                alpha = 0.9f
+            }
+            target.addView(newImageView2)
+            target.setTag(R.id.ib_biginner_game1_space2, newImageView2)
+
+            // newImageView3 추가
+            val newImageView3 = ImageView(this).apply {
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(35, 75, 0, 0)
+                }
+                setImageDrawable(draggedImageView3.drawable)
+                alpha = 0.8f
+                visibility = View.GONE // 기본값을 GONE으로 설정
+            }
+            target.addView(newImageView3)
+            target.setTag(R.id.ib_gamestop_btn, newImageView3) // newImageView3를 tag로 저장
+
+            // EditText 추가
+            val newEditText = EditText(this).apply {
+                setText(draggedEditText.text)
+                setTextColor(ContextCompat.getColor(this@GameActivity, R.color.white))
+                inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+                textSize = 10.51f
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(30, 0, 0, 0)
+                }
+                setPadding(30, 0, 0, 0)
+            }
+            target.addView(newEditText)
+            target.setTag(R.id.ib_gameplay_btn, newEditText)
+        }
+    }
+
+        private fun mappingStrToResourceId(string: String): Int {
         val resourceMap = mapOf(
             resources.getString(R.string.game_move_straight) to R.string.game_move_straight,
             resources.getString(R.string.game_move_up) to R.string.game_move_up,
@@ -766,6 +769,23 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         // 다이얼로그 만들기
         val dialog = dialogBuilder.create()
 
+        // 다이얼로그 창 설정
+        dialog?.window?.apply {
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            requestFeature(Window.FEATURE_NO_TITLE)
+
+            // 양쪽 42dp 마진 적용
+            val params = ViewGroup.LayoutParams(
+                (resources.displayMetrics.widthPixels * 0.9).toInt(), // 화면 폭의 90%
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            val sumMargin = 84
+
+            attributes = (attributes).apply {
+                width = (resources.displayMetrics.widthPixels - sumMargin.dpToPx()) // 양쪽 42dp 마진
+            }
+        }
+
         val title = dialogView.findViewById<TextView>(R.id.dialog_button_two_title)
         val subTitle = dialogView.findViewById<TextView>(R.id.dialog_button_two_subtitle)
         val stopBtn = dialogView.findViewById<Button>(R.id.dialog_button_stop)
@@ -803,6 +823,23 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
         // 다이얼로그 만들기
         val dialog = dialogBuilder.create()
 
+        // 다이얼로그 창 설정
+        dialog?.window?.apply {
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            requestFeature(Window.FEATURE_NO_TITLE)
+
+            // 양쪽 42dp 마진 적용
+            val params = ViewGroup.LayoutParams(
+                (resources.displayMetrics.widthPixels * 0.9).toInt(), // 화면 폭의 90%
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            val sumMargin = 84
+
+            attributes = (attributes).apply {
+                width = (resources.displayMetrics.widthPixels - sumMargin.dpToPx()) // 양쪽 42dp 마진
+            }
+        }
+
         val failTitle = dialogView.findViewById<TextView>(R.id.tv_gameplay_fail_title)
         val failSubTitle = dialogView.findViewById<TextView>(R.id.tv_gameplay_fail_subtitle)
         val retryBtn = dialogView.findViewById<Button>(R.id.btn_dialog_biginner_quiz_fail)
@@ -823,11 +860,17 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
     private fun showExitDialog() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_success, null)
 
+
         val dialogBuilder = AlertDialog.Builder(this)
             .setView(dialogView)
             .setCancelable(false)
 
         val dialog = dialogBuilder.create()
+
+        dialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT,
+        )
 
         val title = dialogView.findViewById<TextView>(R.id.dialog_button_two_title)
         val subTitle = dialogView.findViewById<TextView>(R.id.dialog_button_two_subtitle)

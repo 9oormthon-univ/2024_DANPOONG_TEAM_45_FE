@@ -9,7 +9,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
 import com.example.myapplication.data.mapper.toDomain
-import com.example.myapplication.data.repository.remote.response.chapter.AllChapterResponse
+import com.example.myapplication.data.repository.local.dao.ChapterDao
 import com.example.myapplication.databinding.FragmentQuestBinding
 import com.example.myapplication.presentation.adapter.IslandMultiAdapter
 import com.example.myapplication.presentation.base.BaseFragment
@@ -17,10 +17,14 @@ import com.example.myapplication.presentation.viewmodel.ChapterViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class QuestFragment : BaseFragment<FragmentQuestBinding>(R.layout.fragment_quest),
     ItemClickListener {
+
+    @Inject
+    lateinit var chapterDao: ChapterDao
     private lateinit var islandAdapter: IslandMultiAdapter
     private val chapterViewModel: ChapterViewModel by viewModels()
 
@@ -42,12 +46,13 @@ class QuestFragment : BaseFragment<FragmentQuestBinding>(R.layout.fragment_quest
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 chapterViewModel.getAllChapter.collectLatest {
+                    chapterViewModel.fetchAndSaveChapters(it.payload?.result ?: emptyList())
                     val islandList = it.payload?.toDomain()
                     when (it.result.code) {
                         200 -> {
                             islandAdapter.submitList(islandList)
                             binding.fragmentQuestRv.adapter = islandAdapter
-                            Log.d("okhttp","${islandList}")
+                            Log.d("okhttp", "${islandList}")
                         }
                     }
                 }
@@ -68,6 +73,7 @@ class QuestFragment : BaseFragment<FragmentQuestBinding>(R.layout.fragment_quest
                 name = item.name
                 id = item.id
             }
+
             is IslandDto.IslandRight -> {
                 name = item.name
                 id = item.id
