@@ -51,15 +51,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var aiViewModel: AiViewModel
     override fun setLayout() {
-        //임시
-        binding.fragmentHomeTodayMissionTv.setOnClickListener {
-            startActivity(Intent(requireContext(), PotionMysteryActivity::class.java).apply {
-                putExtra("potion", 5)
-            })
-        }
         initViewModel()
-        initAdapter() // chattingAdapter 초기화
-        initList()    // 초기화 이후 호출
+        initAdapter()
+        initList()
         initCount()
         initHome()
         onClickBtn()
@@ -397,7 +391,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
 
     //채팅 초기화
     private fun initChat() {
-        val initList = chatList
+        val initList = chatList.distinct()
         chattingAdapter.submitList(initList)
         stateChangeChatType(ChatOwner.LEFT)
     }
