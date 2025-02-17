@@ -4,7 +4,9 @@ import com.example.myapplication.data.repository.remote.request.quiz.EditQuizDto
 import com.example.myapplication.data.repository.remote.request.quiz.QuizDto
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.quiz.AllQuizResponse
+import com.example.myapplication.data.repository.remote.response.quiz.DailyCompleteResponse
 import com.example.myapplication.data.repository.remote.response.quiz.DistinctQuizResponse
+import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -46,4 +48,12 @@ interface QuizApi {
     suspend fun getAllQuiz(
     ): BaseResponse<AllQuizResponse>
 
+    //퀘스트 진행도 확인
+    @GET("/v1/api/dailyQuestProgress")
+    suspend fun getCompleteQuest(
+    ) : BaseResponse<DailyCompleteResponse>
+
+    @POST("/v1/api/dailyQuestProgress")
+    suspend fun postCompleteQuest(
+    ) : BaseResponse<Any>
 }

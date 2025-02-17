@@ -149,6 +149,26 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="20dp"/>
 
+        <TextView
+            android:id="@+id/fragment_user_exit_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="회원 탈퇴"
+            style="@style/pretandard_semi_bold.16sp"
+            app:layout_constraintStart_toStartOf="@id/fragment_setting_profile_iv"
+            app:layout_constraintTop_toBottomOf="@id/fragment_question_tv"
+            android:layout_marginTop="34dp"/>
+
+        <ImageView
+            android:id="@+id/exit_arrow_point"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_front"
+            app:layout_constraintTop_toTopOf="@id/fragment_user_exit_tv"
+            app:layout_constraintBottom_toBottomOf="@id/fragment_user_exit_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="20dp"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
