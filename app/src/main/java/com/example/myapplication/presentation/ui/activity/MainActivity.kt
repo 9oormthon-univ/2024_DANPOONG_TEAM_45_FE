@@ -8,6 +8,7 @@ import com.example.myapplication.databinding.ActivityMainBinding
 import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.presentation.widget.extention.TokenManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint

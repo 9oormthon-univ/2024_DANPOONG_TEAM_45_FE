@@ -25,6 +25,7 @@ import com.example.myapplication.presentation.ui.activity.PotionMysteryActivity
 import com.example.myapplication.presentation.viewmodel.AiViewModel
 import com.example.myapplication.presentation.viewmodel.CharacterViewModel
 import com.example.myapplication.presentation.viewmodel.HomeViewModel
+import com.example.myapplication.presentation.viewmodel.QuizViewModel
 import com.example.myapplication.presentation.widget.extention.TokenManager
 import com.example.myapplication.presentation.widget.extention.loadCropImage
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -42,6 +43,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
 
     private val homeViewModel: HomeViewModel by viewModels()
     private val characterViewModel: CharacterViewModel by viewModels()
+    private val quizViewModel: QuizViewModel by viewModels()
 
     @Inject
     lateinit var tokenManager: TokenManager
@@ -51,48 +53,45 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var aiViewModel: AiViewModel
     override fun setLayout() {
+        Log.d("홈 create", "df")
         initViewModel()
         initAdapter()
-        initList()
         initCount()
         initHome()
+        initList()
         onClickBtn()
         setupBackPressedDispatcher()
         initializePersistentBottomSheet()
         initLifeCycle()
     }
 
-    override fun onStart() {
-        super.onStart()
-        initCount()
-        initHome()
-    }
-
     private fun initHome() {
         lifecycleScope.launch {
-            try {
-                stateManage(tokenManager.getCountToken.first().toString().toInt())
-            } catch (e: Exception) {
-                stateManage(0)
-            }
-        }
-        homeViewModel.getDistinctHome()
-    }
-
-    private fun initCount() {
-        lifecycleScope.launch {
-            val today = getOnlyDate()
-            val prepareDay = tokenManager.getDateToken.first().toString()
-            if (today != prepareDay) {
-                tokenManager.saveCountToken("0")
-                tokenManager.saveDateToken(today)
-            }
+            homeViewModel.getDistinctHome()
         }
     }
 
     private fun getOnlyDate(): String {
         val today = LocalDateTime.now()
         return today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+    }
+
+    private fun initCount() {
+        quizViewModel.getCompleteQuiz()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                quizViewModel.quizComplete.collectLatest { response ->
+                        Log.e("날짜", "${getOnlyDate()} ${response}")
+                    if(response.payload?.isCompleted == true){
+                        stateManage(3)
+                    }else {
+                        if (getOnlyDate() == response.payload?.date) {
+                            response.payload?.solvedCount?.let { stateManage(it) }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun initLifeCycle() {
@@ -104,24 +103,30 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
                         saveId(response)
                         when (response.result.code) {
                             200 -> {
+                                Log.d("HomeFragment", "${tokenManager.getCheckBook.first()}")
                                 if (character?.type == "LEVEL_HIGH" &&
                                     tokenManager.getCheckBook.first() != "check"
                                 ) {
                                     // 추가된 로그
-                                    Log.d("HomeFragment", "Conditions met for pick()")
                                     characterViewModel.getRandomCactus()
 
                                     // Flow 명시적 수집
                                     launch {
                                         characterViewModel.getRandomCactus
                                             .collect { randomCactusResponse ->
-                                                Log.d("HomeFragment", "Random Cactus Response: $randomCactusResponse")
+                                                Log.d(
+                                                    "HomeFragment",
+                                                    "Random Cactus Response: $randomCactusResponse"
+                                                )
 
                                                 if (randomCactusResponse.result.code == 200 &&
-                                                    randomCactusResponse.payload != null) {
+                                                    randomCactusResponse.payload != null
+                                                ) {
 
-                                                    val name = randomCactusResponse.payload?.cactusName
-                                                    val star = randomCactusResponse.payload?.cactusRank
+                                                    val name =
+                                                        randomCactusResponse.payload?.cactusName
+                                                    val star =
+                                                        randomCactusResponse.payload?.cactusRank
 
                                                     val img = when (name) {
                                                         "마법사 선인장" -> R.drawable.ic_cactus_magic
@@ -131,17 +136,26 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
 
                                                     if (img != 0) {
                                                         startActivity(
-                                                            Intent(requireContext(), HeroCactusActivity::class.java).apply {
+                                                            Intent(
+                                                                requireContext(),
+                                                                HeroCactusActivity::class.java
+                                                            ).apply {
                                                                 putExtra("cactusImage", img)
                                                                 putExtra("cactusName", name)
                                                                 putExtra("star", star)
                                                             }
                                                         )
                                                     } else {
-                                                        Log.e("HomeFragment", "Invalid image for cactus")
+                                                        Log.e(
+                                                            "HomeFragment",
+                                                            "Invalid image for cactus"
+                                                        )
                                                     }
                                                 } else {
-                                                    Log.e("HomeFragment", "Invalid random cactus response")
+                                                    Log.e(
+                                                        "HomeFragment",
+                                                        "Invalid random cactus response"
+                                                    )
                                                 }
                                             }
                                     }
@@ -182,7 +196,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
                         val name = it.payload?.cactusName
                         val star = it.payload?.cactusRank
 
-
                         if (name != null) { // 유효한 이미지 리소스인지 확인
                             startActivity(
                                 Intent(requireContext(), HeroCactusActivity::class.java).apply {
@@ -205,7 +218,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
 
     }
 
-    private fun observeChatLifeCycle(){
+    private fun observeChatLifeCycle() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 aiViewModel.ai.collectLatest {
@@ -237,6 +250,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
             }
         }
     }
+
     private fun changeToCactusType(type: String, cactusType: String) {
         when (cactusType) {
             "KING_CACTUS" -> {
@@ -365,9 +379,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
             if (it.isSelected) {
                 val intent = Intent(requireContext(), PotionMysteryActivity::class.java).apply {
                     putExtra("potion", 2)
-                    lifecycleScope.launch {
-                        tokenManager.saveCountToken("3")
-                    }
+                    quizViewModel.postCompleteQuiz()
                 }
                 startActivity(intent)
             }
