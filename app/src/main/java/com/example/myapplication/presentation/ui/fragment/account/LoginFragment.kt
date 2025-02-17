@@ -51,11 +51,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     private fun showProgress() {
         binding.lottieProgressBar.visibility = View.VISIBLE
-        binding.lottieProgressBar.playAnimation() // 애니메이션 실행
+        binding.lottieProgressBar.playAnimation()
     }
 
     private fun hideProgress() {
-        binding.lottieProgressBar.cancelAnimation() // 애니메이션 중단
+        binding.lottieProgressBar.cancelAnimation()
         binding.lottieProgressBar.visibility = View.GONE
     }
 
@@ -97,7 +97,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         runBlocking {
             tokenManager.deleteAccessToken()
         }
-
     }
 
     //뷰 모델 초기화
@@ -200,4 +199,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
             homeViewModel.getDistinctHome()
         }
     }
+
+    
 }
