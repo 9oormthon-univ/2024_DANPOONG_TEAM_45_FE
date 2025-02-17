@@ -5,6 +5,7 @@ import com.example.myapplication.data.repository.remote.request.quiz.EditQuizDto
 import com.example.myapplication.data.repository.remote.request.quiz.QuizDto
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.quiz.AllQuizResponse
+import com.example.myapplication.data.repository.remote.response.quiz.DailyCompleteResponse
 import com.example.myapplication.data.repository.remote.response.quiz.DistinctQuizResponse
 import com.example.myapplication.repository.quiz.QuizRepository
 import kotlinx.coroutines.flow.Flow
@@ -35,6 +36,12 @@ data class QuizRepositoryImpl @Inject constructor(
 
     override suspend fun getQuizAll(): Flow<BaseResponse<AllQuizResponse>> =
         quizDataSource.getQuizAll()
+
+    override suspend fun getCompleteQuest():  Flow<BaseResponse<DailyCompleteResponse>> =
+        quizDataSource.getCompleteQuest()
+
+    override suspend fun postCompleteQuest(): Flow<BaseResponse<Any>> =
+        quizDataSource.postCompleteQuest()
 
 
 }

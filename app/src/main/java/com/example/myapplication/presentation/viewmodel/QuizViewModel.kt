@@ -8,10 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
 import com.example.myapplication.data.repository.remote.request.quiz.QuizDto
 import com.example.myapplication.data.repository.remote.response.BaseResponse
+import com.example.myapplication.data.repository.remote.response.quiz.DailyCompleteResponse
 import com.example.myapplication.data.repository.remote.response.quiz.DistinctQuizResponse
 import com.example.myapplication.data.repository.remote.response.quizcleared.ClearStateListResponse
 import com.example.myapplication.domain.usecase.quiz.DeleteQuizUseCase
+import com.example.myapplication.domain.usecase.quiz.GetCompleteQuizUseCase
 import com.example.myapplication.domain.usecase.quiz.GetDistinctQuizUseCase
+import com.example.myapplication.domain.usecase.quiz.PostCompleteQuizUseCase
 import com.example.myapplication.domain.usecase.quiz.PostCreateQuizUseCase
 import com.example.myapplication.domain.usecase.quizcleared.GetQuizAllUseCase
 import com.example.myapplication.domain.usecase.quizcleared.PostQuizClearedUseCase
@@ -28,7 +31,9 @@ class QuizViewModel @Inject constructor(
     private val deleteQuizUseCase: DeleteQuizUseCase,
     private val quizDistinctQuizUseCase: GetDistinctQuizUseCase,
     private val quizClearedUseCase: PostQuizClearedUseCase,
-    private val getQuizAllUseCase: GetQuizAllUseCase
+    private val getQuizAllUseCase: GetQuizAllUseCase,
+    private val getCompleteQuizUseCase: GetCompleteQuizUseCase,
+    private val postCompleteQuizUseCase: PostCompleteQuizUseCase
 ) : ViewModel() {
     private val _postCreateQuiz = MutableStateFlow(BaseResponse<Any>())
     val postCreateQuiz: StateFlow<BaseResponse<Any>> = _postCreateQuiz
@@ -47,6 +52,12 @@ class QuizViewModel @Inject constructor(
 
     private val _moveWay = MutableLiveData<MutableList<Int>>()
     val moveWay: LiveData<MutableList<Int>> get() = _moveWay
+
+    private val _quizComplete = MutableStateFlow(BaseResponse<DailyCompleteResponse>())
+    val quizComplete : StateFlow<BaseResponse<DailyCompleteResponse>> = _quizComplete
+
+    private val _postQuizComplete = MutableStateFlow(BaseResponse<Any>())
+    val postQuizComplete : StateFlow<BaseResponse<Any>> = _postQuizComplete
 
     //퀴즈 생성 - 관리자
     fun postCreateQuiz(quizDto: QuizDto) {
@@ -109,6 +120,30 @@ class QuizViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 Log.e("실패", "getQuizAll")
+            }
+        }
+    }
+
+    fun postCompleteQuiz(){
+        viewModelScope.launch {
+            try{
+                postCompleteQuizUseCase().collect{
+                    _postQuizComplete.value = it
+                }
+            }catch (e : Exception){
+                Log.e("실패", "getCompleteQuiz")
+            }
+        }
+    }
+
+    fun getCompleteQuiz(){
+        viewModelScope.launch {
+            try{
+                getCompleteQuizUseCase().collect{
+                    _quizComplete.value = it
+                }
+            }catch (e : Exception){
+                Log.e("실패", "getCompleteQuiz")
             }
         }
     }

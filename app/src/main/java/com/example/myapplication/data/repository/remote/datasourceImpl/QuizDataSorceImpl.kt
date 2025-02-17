@@ -7,6 +7,7 @@ import com.example.myapplication.data.repository.remote.request.quiz.EditQuizDto
 import com.example.myapplication.data.repository.remote.request.quiz.QuizDto
 import com.example.myapplication.data.repository.remote.response.BaseResponse
 import com.example.myapplication.data.repository.remote.response.quiz.AllQuizResponse
+import com.example.myapplication.data.repository.remote.response.quiz.DailyCompleteResponse
 import com.example.myapplication.data.repository.remote.response.quiz.DistinctQuizResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -55,5 +56,18 @@ class QuizDataSorceImpl @Inject constructor(
         Log.e("getQuizAll 에러", e.message.toString())
     }
 
+    override suspend fun getCompleteQuest():  Flow<BaseResponse<DailyCompleteResponse>> = flow {
+        val result = quizApi.getCompleteQuest()
+        emit(result)
+    }.catch { e ->
+        Log.e("getQuizAll 에러", e.message.toString())
+    }
+
+    override suspend fun postCompleteQuest(): Flow<BaseResponse<Any>> = flow {
+        val result = quizApi.postCompleteQuest()
+        emit(result)
+    }.catch { e ->
+        Log.e("getQuizAll 에러", e.message.toString())
+    }
 
 }
