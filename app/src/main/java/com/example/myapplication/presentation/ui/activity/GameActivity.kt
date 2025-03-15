@@ -218,7 +218,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                         binding.ivGameGum,
                         binding.ivGameWay3,
                         binding.ivGameFire,
-                        binding.ivGameWay4
+                        binding.ivGameWay4,
+                        binding.ivLakeRock,
+                        binding.ivLakeRock2
                     )
                 )
             }
@@ -232,7 +234,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                     hiddenViews = listOf(
                         binding.ivGameWay3,
                         binding.ivGameFire,
-                        binding.ivGameWay4
+                        binding.ivGameWay4,
+                        binding.ivLakeRock,
+                        binding.ivLakeRock2
                     )
                 )
             }
@@ -248,6 +252,46 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                         binding.ivGameWay2,
                         binding.ivGameGum,
                         binding.ivGameFan,
+                        binding.ivGameWay4,
+                        binding.ivLakeRock,
+                        binding.ivLakeRock2
+                    )
+                )
+            }
+
+            7 -> {
+                setVisibilityForViews(
+                    visibleViews = listOf(
+                        binding.ivGameWay4,
+                        binding.ivGameFire,
+                    ),
+                    hiddenViews = listOf(
+                        binding.ivGameWay,
+                        binding.ivGameWay2,
+                        binding.ivGameGum,
+                        binding.ivGameWay3,
+                        binding.ivLakeRock,
+                        binding.ivLakeRock2
+                    )
+                )
+            }
+
+            // 호수의 섬
+            8 -> {
+                binding.ivCandyBackground.visibility = View.INVISIBLE
+                binding.ivLakeBackground.visibility = View.VISIBLE
+
+                setVisibilityForViews(
+                    visibleViews = listOf(
+                        binding.ivGameWay,
+                        binding.ivLakeRock,
+                        binding.ivLakeRock2
+                    ),
+                    hiddenViews = listOf(
+                        binding.ivGameWay2,
+                        binding.ivGameGum,
+                        binding.ivGameWay3,
+                        binding.ivGameFire,
                         binding.ivGameWay4
                     )
                 )
@@ -263,7 +307,9 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                         binding.ivGameWay,
                         binding.ivGameWay2,
                         binding.ivGameGum,
-                        binding.ivGameWay3
+                        binding.ivGameWay3,
+                        binding.ivLakeRock,
+                        binding.ivLakeRock2
                     )
                 )
             }
