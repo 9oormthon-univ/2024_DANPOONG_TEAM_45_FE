@@ -745,7 +745,8 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
             resources.getString(R.string.game_move_up) to R.string.game_move_up,
             resources.getString(R.string.game_move_down) to R.string.game_move_down,
             resources.getString(R.string.game_repeat) to R.string.game_repeat,
-            resources.getString(R.string.game_fanning) to R.string.game_fanning
+            resources.getString(R.string.game_fanning) to R.string.game_fanning,
+            resources.getString(R.string.game_jump) to R.string.game_jump
         )
 
         return resourceMap[string] ?: R.string.game_wave
@@ -1047,6 +1048,15 @@ class GameActivity : BaseActivity<ActivityGameBinding>(R.layout.activity_game), 
                     Handler(Looper.getMainLooper()).postDelayed({
                         binding.ivGameFan.visibility = View.GONE
                         moveStep(index + 1)
+                    }, 1000)
+                }
+
+                R.string.game_jump -> {
+                    binding.ivGameCharacter.visibility = View.GONE
+                    deltaX = 2f
+                    deltaY = 0f
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        binding.ivGameCharacter.visibility = View.VISIBLE
                     }, 1000)
                 }
 

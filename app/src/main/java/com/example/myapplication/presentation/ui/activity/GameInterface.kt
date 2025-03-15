@@ -72,6 +72,12 @@ interface GameInterface {
                 fan.translationX = -540f
                 fan.translationY = 0f
             }
+
+            // 호수의 섬
+            8, 9 -> {
+                character.translationX = -320f
+                character.translationY = 0f
+            }
         }
     }
     // drag 아이템 제거
