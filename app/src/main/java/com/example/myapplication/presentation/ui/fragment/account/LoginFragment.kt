@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -18,6 +17,7 @@ import com.example.myapplication.databinding.FragmentLoginBinding
 import com.example.myapplication.presentation.adapter.LoginBannerViewPagerAdapter
 import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.presentation.ui.activity.MainActivity
+import com.example.myapplication.presentation.ui.state.UiState
 import com.example.myapplication.presentation.viewmodel.HomeViewModel
 import com.example.myapplication.presentation.viewmodel.LoginViewModel
 import com.example.myapplication.presentation.widget.extention.TokenManager
@@ -32,31 +32,43 @@ import javax.inject.Inject
 class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
     @Inject
     lateinit var tokenManager: TokenManager
-    private lateinit var loginViewModel: LoginViewModel
     private lateinit var onBoardingViewPagerAdapter: LoginBannerViewPagerAdapter
 
+    private val loginViewModel: LoginViewModel by viewModels()
     private val homeViewModel: HomeViewModel by viewModels()
 
     //화면 진입 시 토큰 저장소 초기화
     override fun onStart() {
         super.onStart()
-        initRemainToken()
+        runBlocking {
+            loginViewModel.initRemainToken()
+        }
     }
 
     override fun setLayout() {
+        observeStateLifeCycle()
+        observeRemainUserLifeCycle()
+        observeKakaoLoginLifeCycle()
         initPager()
-        initViewModel()
         setOnclickBtn()
     }
 
-    private fun showProgress() {
-        binding.lottieProgressBar.visibility = View.VISIBLE
-        binding.lottieProgressBar.playAnimation()
-    }
+    private fun observeStateLifeCycle() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                loginViewModel.loginState.collectLatest { state ->
+                    when (state) {
+                        is UiState.Failed -> {
+                            hideProgress()
+                            Toast.makeText(requireContext(), "에러", Toast.LENGTH_SHORT).show()
+                        }
 
-    private fun hideProgress() {
-        binding.lottieProgressBar.cancelAnimation()
-        binding.lottieProgressBar.visibility = View.GONE
+                        UiState.Loading -> showProgress()
+                        is UiState.Success -> hideProgress()
+                    }
+                }
+            }
+        }
     }
 
     //뷰 페이저 + 인디케이터 배너 아이템 세팅
@@ -92,28 +104,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         }
     }
 
-    //잔여 토큰 초기화
-    private fun initRemainToken() {
-        runBlocking {
-            tokenManager.deleteAccessToken()
-        }
-    }
-
-    //뷰 모델 초기화
-    private fun initViewModel() {
-        loginViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
-    }
-
     //카카오 로그인 버튼
     private fun setOnclickBtn() {
         binding.activityAccountKakaoLoginBt.setOnClickListener {
             userKakaoLogin()
-            showProgress()
         }
     }
-
-    //엑세스 토큰 전송
-    private fun sendKakaoAccessToken(kakaoAccessToken: String) = LogInKakaoDto(kakaoAccessToken)
 
     //카카오 유저 로그인
     private fun userKakaoLogin() {
@@ -122,15 +118,17 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                 Log.e("카카오", "로그인 실패", error)
                 Toast.makeText(requireContext(), "로그인 실패", Toast.LENGTH_SHORT).show()
             } else if (token != null) {
-                observeLifeCycle()
                 loginViewModel.postKakaoLogin(sendKakaoAccessToken(token.accessToken))
                 Log.i("카카오", "로그인 성공 ${token.accessToken}")
             }
         }
     }
 
+    //엑세스 토큰 전송
+    private fun sendKakaoAccessToken(kakaoAccessToken: String) = LogInKakaoDto(kakaoAccessToken)
+
     //토큰 수령 시 다음 화면으로 넘어감
-    private fun observeLifeCycle() {
+    private fun observeKakaoLoginLifeCycle() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch {
@@ -139,30 +137,51 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                             BaseLoadingState.IDLE -> {}
                             BaseLoadingState.LOADING -> {}
                             BaseLoadingState.SUCCESS -> {
-                                with(it.payload) { saveToken(accessToken, refreshToken, picture, nickname) }
+                                with(it.payload) {
+                                    loginViewModel.saveToken(
+                                        accessToken,
+                                        refreshToken,
+                                        picture,
+                                        nickname
+                                    )
+                                }
                             }
+
                             BaseLoadingState.ERROR -> {}
                         }
-                    }
-                }//launch
-                launch {
-                    homeViewModel.getDistinctHome.collectLatest {
-                        val result = it
-                        Log.d("결과 정보", "${it.result}")
-                        when (result.status) {
-                            BaseLoadingState.IDLE -> {}
-                            BaseLoadingState.LOADING -> {}
-                            BaseLoadingState.SUCCESS -> { callResultCode(it.result.code) }
-                            BaseLoadingState.ERROR -> {}
-                        }
-                        hideProgress()
                     }
                 }//launch
             }//repeatOnLifeCycle
         }
     }
 
-    private fun callResultCode(code : Int){
+    private fun observeRemainUserLifeCycle() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                launch {
+                    loginViewModel.getDistinctHome.collect {
+                        val result = it
+                        Log.d("결과 정보", "${it.result} ${loginViewModel.loginState.value}")
+                        when (result.status) {
+                            BaseLoadingState.IDLE -> {}
+                            BaseLoadingState.LOADING -> {}
+                            BaseLoadingState.SUCCESS -> {
+                                if (loginViewModel.loginState.value is UiState.Success) {
+                                    callResultCode(it.result.code)
+                                }
+                            }
+
+                            BaseLoadingState.ERROR -> {}
+                        }
+                    }
+                }//launch
+            }
+        }
+    }
+
+
+    private fun callResultCode(code: Int) {
+        Log.d("오류",code.toString())
         when (code) {
             200 -> {
                 goToMain()
@@ -182,23 +201,15 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         findNavController().navigate(R.id.action_loginFragment_to_onboardingFragment)
     }
 
-    private suspend fun saveToken(
-        accessToken: String,
-        refreshToken: String,
-        userProfile: String,
-        userNickname: String
-    ) {
-        lifecycleScope.launch {
-            with(tokenManager) {
-                saveAccessToken(accessToken)
-                saveRefreshToken(refreshToken)
-                saveUserProfile(userProfile)
-                saveUserNickname(userNickname)
-                deleteCountToken()
-            }
-            homeViewModel.getDistinctHome()
-        }
+
+    private fun showProgress() {
+        binding.lottieProgressBar.visibility = View.VISIBLE
+        binding.lottieProgressBar.playAnimation()
     }
 
-    
+    private fun hideProgress() {
+        binding.lottieProgressBar.cancelAnimation()
+        binding.lottieProgressBar.visibility = View.GONE
+    }
+
 }

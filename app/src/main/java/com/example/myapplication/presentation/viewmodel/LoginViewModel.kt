@@ -2,20 +2,26 @@ package com.example.myapplication.presentation.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.base.BaseLoadingState
 import com.example.myapplication.data.repository.remote.request.login.LogInKakaoDto
 import com.example.myapplication.data.repository.remote.request.login.UserListDTO
 import com.example.myapplication.data.repository.remote.response.BaseResponse
+import com.example.myapplication.data.repository.remote.response.home.DistinctHomeIdResponse
 import com.example.myapplication.data.repository.remote.response.login.LogInKakaoResponse
+import com.example.myapplication.domain.usecase.home.GetDistinctHomeUseCase
 import com.example.myapplication.domain.usecase.login.CheckTrainingUseCase
 import com.example.myapplication.domain.usecase.login.DeleteUserUseCase
 import com.example.myapplication.domain.usecase.login.GetCompleteTrainingUseCase
 import com.example.myapplication.domain.usecase.login.GetUserAllUseCase
 import com.example.myapplication.domain.usecase.login.PostKakaoLoginUseCase
+import com.example.myapplication.presentation.ui.state.UiState
+import com.example.myapplication.presentation.widget.extention.TokenManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,8 +31,16 @@ class LoginViewModel @Inject constructor(
     private val getCompleteTrainingUseCase: GetCompleteTrainingUseCase,
     private val getTrainingUseCase: CheckTrainingUseCase,
     private val getUserAllUseCase: GetUserAllUseCase,
-    private val deleteUserUseCase: DeleteUserUseCase
+    private val deleteUserUseCase: DeleteUserUseCase,
+    private val tokenManager: TokenManager,
+    private val getDistinctHomeUseCase: GetDistinctHomeUseCase
 ) : ViewModel() {
+    private val _getDistinctHome = MutableStateFlow(BaseResponse<DistinctHomeIdResponse>())
+    val getDistinctHome: StateFlow<BaseResponse<DistinctHomeIdResponse>> = _getDistinctHome
+
+    private val _loginUiState = MutableStateFlow<UiState<Unit>>(UiState.Loading)
+    val loginState: StateFlow<UiState<Unit>> = _loginUiState.asStateFlow()
+
     private val _kakaoLogin = MutableStateFlow(LogInKakaoResponse())
     val kakaoLogin: StateFlow<LogInKakaoResponse> = _kakaoLogin
 
@@ -42,9 +56,20 @@ class LoginViewModel @Inject constructor(
     private val _deleteUser = MutableStateFlow(BaseResponse<Any>())
     val deleteUser: StateFlow<BaseResponse<Any>> = _deleteUser
 
+
+    //잔여 토큰 초기화
+    fun initRemainToken() {
+        viewModelScope.launch {
+            _loginUiState.value = UiState.Loading
+            tokenManager.deleteAccessToken()
+            _loginUiState.value = UiState.Success(Unit)
+        }
+    }
+
     fun postKakaoLogin(logInKakaoDto: LogInKakaoDto) {
         viewModelScope.launch {
             try {
+                _loginUiState.value = UiState.Loading
                 // 로딩 상태로 초기화
                 _kakaoLogin.value = _kakaoLogin.value.copy(state = BaseLoadingState.LOADING)
 
@@ -59,6 +84,7 @@ class LoginViewModel @Inject constructor(
                             // 실패 상태로 업데이트
                             _kakaoLogin.value =
                                 _kakaoLogin.value.copy(state = BaseLoadingState.ERROR)
+                            _loginUiState.value = UiState.Failed
                             Log.e("postKakaoLogin", "응답 실패: ${response.result.message}")
                         }
                     }
@@ -67,23 +93,50 @@ class LoginViewModel @Inject constructor(
                 Log.e("postKakaoLogin", "로그인 실패: ${e.message}", e)
                 // 에러 상태로 업데이트
                 _kakaoLogin.value = _kakaoLogin.value.copy(state = BaseLoadingState.ERROR)
+                _loginUiState.value = UiState.Failed
             }
         }
     }
 
-    fun getTraining() {
+    fun getDistinctHome() {
         viewModelScope.launch {
+            // 로딩 상태로 초기화
+            _getDistinctHome.value = _getDistinctHome.value.copy(status = BaseLoadingState.LOADING)
             try {
-                getTrainingUseCase().collect { response ->
-                    _training.value = BaseResponse(
+                getDistinctHomeUseCase().collect { response ->
+                    // 성공 상태로 업데이트
+                    _loginUiState.value = UiState.Success(Unit)
+                    _getDistinctHome.value = _getDistinctHome.value.copy(
                         result = response.result,
                         payload = response.payload,
-                        status = BaseLoadingState.SUCCESS // 상태를 업데이트한 새로운 객체 생성
+                        status = BaseLoadingState.SUCCESS
                     )
+                    Log.e("getDistinctHome", "에러: ${_getDistinctHome.value}")
                 }
             } catch (e: Exception) {
-                Log.e("실패", "getTraining", e)
+                Log.e("getDistinctHome", "에러: ${e.message}", e)
+                // 에러 상태로 업데이트
+                _getDistinctHome.value =
+                    _getDistinctHome.value.copy(status = BaseLoadingState.ERROR)
             }
+        }
+    }
+
+    suspend fun saveToken(
+        accessToken: String,
+        refreshToken: String,
+        userProfile: String,
+        userNickname: String
+    ) {
+        viewModelScope.launch {
+            with(tokenManager) {
+                saveAccessToken(accessToken)
+                saveRefreshToken(refreshToken)
+                saveUserProfile(userProfile)
+                saveUserNickname(userNickname)
+                deleteCountToken()
+            }
+            getDistinctHome()
         }
     }
 
@@ -92,18 +145,6 @@ class LoginViewModel @Inject constructor(
             try {
                 getCompleteTrainingUseCase().collect {
                     _completeTraining.value = it
-                }
-            } catch (e: Exception) {
-                Log.e("실패", "postKakaoLogin")
-            }
-        }
-    }
-
-    fun getUserAll() {
-        viewModelScope.launch {
-            try {
-                getUserAllUseCase().collect {
-                    _getUserAll.value = it
                 }
             } catch (e: Exception) {
                 Log.e("실패", "postKakaoLogin")

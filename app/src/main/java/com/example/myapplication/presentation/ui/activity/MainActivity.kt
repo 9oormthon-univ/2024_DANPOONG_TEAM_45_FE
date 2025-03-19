@@ -14,8 +14,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
-    @Inject
-    lateinit var tokenManager: TokenManager
     private lateinit var navController: NavController
 
     override fun setLayout() {

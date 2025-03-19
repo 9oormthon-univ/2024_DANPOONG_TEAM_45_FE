@@ -36,10 +36,8 @@ class HomeViewModel @Inject constructor(
     private val _getDistinctHome = MutableStateFlow(BaseResponse<DistinctHomeIdResponse>())
     val getDistinctHome: StateFlow<BaseResponse<DistinctHomeIdResponse>> = _getDistinctHome
 
-
     private val _patchHome = MutableStateFlow(BaseResponse<Any>())
     val patchHome: StateFlow<BaseResponse<Any>> = _patchHome
-
 
     private val _postHome = MutableStateFlow(BaseResponse<Any>())
     val postHome: StateFlow<BaseResponse<Any>> = _postHome
