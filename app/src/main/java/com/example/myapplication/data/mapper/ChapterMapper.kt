@@ -114,8 +114,8 @@ val titles = mutableListOf(
     "불 진압하기",
     "사탕의 섬을 구해라!",
     "바위점프!",
-    "모험 준비하기",
-    "모험의 끝으로"
+    "수많은 바위 넘기",
+    "물 양동이 대소동"
 )
 
 val subtitles = mutableListOf(
@@ -126,8 +126,9 @@ val subtitles = mutableListOf(
     "무무가 껌을 밟지 않도록 도와주세요",
     "사탕의 섬에 불이 났어요!",
     "사탕의 섬이 녹아내리고 있어요",
-    "초보 모험가를 위한 기초 훈련!",
-    "본격적으로 모험을 준비해봐요!"
+    "호수의 섬에서의 첫 퀘스트!",
+    "무무가 바위를 넘어갈 수 있게 도와주세요",
+    "무무가 가는 길을 물 양동이가 방해해요"
 )
 
 val images = mutableListOf(
@@ -139,7 +140,8 @@ val images = mutableListOf(
     R.drawable.iv_candy_background_game4,
     R.drawable.iv_candy_background_game5,
     R.drawable.iv_background_lake_game1,
-    R.drawable.iv_background_lake_game2
+    R.drawable.iv_background_lake_game2,
+    R.drawable.iv_background_lake_game3
 )
 
 fun DistinctChapterResponse.toChapter(): ChapterDTO {
