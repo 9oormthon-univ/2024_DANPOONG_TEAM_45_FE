@@ -42,7 +42,6 @@ class OnboardingFragment : BaseFragment<FragmentOnboardingBinding>(R.layout.frag
         onClickView()
         textChange()
     }
-
     private fun onClickView() {
         binding.root.setOnClickListener {
             hideKeyboard()
