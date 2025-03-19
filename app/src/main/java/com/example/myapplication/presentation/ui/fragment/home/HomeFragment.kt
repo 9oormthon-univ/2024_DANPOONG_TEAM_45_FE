@@ -52,6 +52,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     private lateinit var chattingAdapter: ChattingAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var aiViewModel: AiViewModel
+
     override fun setLayout() {
         Log.d("홈 create", "df")
         initViewModel()
