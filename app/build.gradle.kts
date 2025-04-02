@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.myapplication"
-
+    ndkVersion = "25.2.9519653"
     buildFeatures {
         dataBinding = true
     }
@@ -16,4 +16,8 @@ android {
             signingConfig = signingConfigs.getByName("release")  // 릴리즈 서명 구성 연결
         }
     }
+}
+
+dependencies{
+    implementation(project(":unityLibrary"))
 }
