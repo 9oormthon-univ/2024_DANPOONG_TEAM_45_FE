@@ -54,7 +54,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     private lateinit var aiViewModel: AiViewModel
 
     override fun setLayout() {
-        Log.d("홈 create", "df")
         initViewModel()
         initAdapter()
         initCount()
@@ -82,7 +81,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 quizViewModel.quizComplete.collectLatest { response ->
-                        Log.e("날짜", "${getOnlyDate()} ${response}")
+                        Log.e("날짜", "${getOnlyDate()} $response")
                     if(response.payload?.isCompleted == true){
                         stateManage(3)
                     }else {
