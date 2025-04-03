@@ -17,3 +17,7 @@ local.properties
 /app/src/main/res/layout/activity_admin.xml
 /app/src/main/java/com/example/myapplication/presentation/ui/activity/AdminActivity.kt
 /app/keystore
+
+# UnityLibrary 빌드 파일
+unityLibrary/build/
+unityLibrary/src/main/jniLibs/
