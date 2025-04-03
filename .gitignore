@@ -21,3 +21,4 @@ local.properties
 # Unity 빌드 캐시, 바이너리
 unityLibrary/build/
 unityLibrary/src/main/jniLibs/
+unityLibrary/src/main/IL2CppOutputProject/
