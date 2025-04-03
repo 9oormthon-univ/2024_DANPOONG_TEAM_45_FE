@@ -18,6 +18,6 @@ local.properties
 /app/src/main/java/com/example/myapplication/presentation/ui/activity/AdminActivity.kt
 /app/keystore
 
-# UnityLibrary 빌드 파일
+# Unity 빌드 캐시, 바이너리
 unityLibrary/build/
 unityLibrary/src/main/jniLibs/
