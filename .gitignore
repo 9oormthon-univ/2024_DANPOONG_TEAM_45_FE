@@ -17,3 +17,8 @@ local.properties
 /app/src/main/res/layout/activity_admin.xml
 /app/src/main/java/com/example/myapplication/presentation/ui/activity/AdminActivity.kt
 /app/keystore
+
+# Unity 빌드 캐시, 바이너리
+unityLibrary/build/
+unityLibrary/src/main/jniLibs/
+unityLibrary/src/main/IL2CppOutputProject/
