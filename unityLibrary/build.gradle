@@ -11,7 +11,7 @@ dependencies {
 
 android {
     namespace "com.unity3d.player"
-    ndkVersion "29.0.13113456"
+//    ndkVersion "29.0.13113456"
     compileSdk 35
     buildToolsVersion = "34.0.0"
 
@@ -70,6 +70,10 @@ def GetIl2CppSymbolPath(String workingDir, String abi) {
     return "${workingDir}/symbols/${abi}/libil2cpp.so";
 }
 
+def getNdkDir() {
+    return android.ndkDirectory.toString()
+}
+
 def BuildIl2CppImpl(String workingDir, String configuration, String architecture, String abi, String[] staticLibraries) {
     def commandLineArgs = []
     commandLineArgs.add("--compile-cpp")
@@ -88,7 +92,8 @@ def BuildIl2CppImpl(String workingDir, String configuration, String architecture
     commandLineArgs.add("--data-folder=${workingDir}/src/main/Il2CppOutputProject/Source/il2cppOutput/data")
     commandLineArgs.add("--generatedcppdir=${workingDir}/src/main/Il2CppOutputProject/Source/il2cppOutput")
     commandLineArgs.add("--cachedirectory=${workingDir}/build/il2cpp_${abi}_${configuration}/il2cpp_cache")
-    commandLineArgs.add("--tool-chain-path=${android.ndkDirectory}")
+//    commandLineArgs.add("--tool-chain-path=${android.ndkDirectory}")
+    commandLineArgs.add("--tool-chain-path=${getNdkDir()}")
 
     staticLibraries.eachWithIndex {fileName, i->
         commandLineArgs.add("--additional-libraries=${workingDir}/src/main/jniStaticLibs/${abi}/${fileName}")
