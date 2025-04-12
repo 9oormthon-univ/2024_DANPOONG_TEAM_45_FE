@@ -162,10 +162,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home)
                                 saveId(response)
                                 // 카투스 성장 완료된 경우
                                 if (character?.type == "LEVEL_HIGH" &&
-                                    character.activityPoints >= 200
+                                    character.level >= 10
                                 ) {
                                     // 새로운 선인장 획득
                                     characterViewModel.getRandomCactus()
+                                    characterViewModel.postIncreaseActivity(character.id, 50)
                                     launch {
                                         characterViewModel.getRandomCactus
                                             .collect { randomCactusResponse ->
@@ -190,6 +191,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home)
                                                                 putExtra("star", star)
                                                             }
                                                         )
+                                                        requireActivity().finish()
                                                     }
                                                 }
                                             }

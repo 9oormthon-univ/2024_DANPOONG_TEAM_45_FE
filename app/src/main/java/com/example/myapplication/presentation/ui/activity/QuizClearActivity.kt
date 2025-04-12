@@ -16,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -30,39 +31,40 @@ class QuizClearActivity : BaseActivity<ActivityQuizClearBinding>(R.layout.activi
 
     override fun setLayout() {
         initView()
-        setOnClickBtn()
         observeLifeCycle()
     }
 
     private fun initView() {
-        val judgmentStage2 = intent.getBooleanExtra("game2Activity", false)
+        val bool = intent.getBooleanExtra("game2Activity", false)
         lifecycleScope.launch {
             cid = tokenManager.getCharacterId.first().toString()
         }
-        if (!judgmentStage2) { increaseExp(300) }
-        // 모험 준비하기 클리어
-        else {
-            increaseExp(50)
-            loginViewModel.getCompleteTraining()
-        }
-    }
-
-    private fun increaseExp(exp : Int){
-        with(binding) {
-            tvNextPracticeMoomoo.text = "무무가 멋지게 성장하고 있어요 :)"
-            btnNextstageSeeMoomoo.text = "무무 보러가기"
-            btnNextstageSeeMoomoo.setOnClickListener {
-                increaseExp(exp)
+        if (!bool) {
+            binding.tvNextPracticeMoomoo.text = "무무가 멋지게 성장하고 있어요 :)"
+            binding.btnNextstageSeeMoomoo.text = "무무 보러가기"
+            binding.btnNextstageSeeMoomoo.setOnClickListener {
+                //믈약
+                increaseExp(300)
             }
         }
-        characterViewModel.postIncreaseActivity(cid.toInt(), exp)
-    }
+        // 모험 준비하기 클리어
+        else {
+            binding.tvNextPracticeMoomoo.text = "이제 더 큰 도전을 위한 준비가 되었어요"
+            binding.btnNextstageSeeMoomoo.text = "보상받으러 가기"
 
-    private fun setOnClickBtn(){
+            loginViewModel.getCompleteTraining()
+            binding.btnNextstageSeeMoomoo.setOnClickListener {
+                increaseExp(50)
+            }
+        }
         binding.ivNextStageCancel.setOnClickListener {
             binding.btnNextstageSeeMoomoo.visibility = View.GONE
             finish()
         }
+    }
+
+    private fun increaseExp(exp : Int){
+        characterViewModel.postIncreaseActivity(cid.toInt(), exp)
     }
 
     private fun observeLifeCycle() {

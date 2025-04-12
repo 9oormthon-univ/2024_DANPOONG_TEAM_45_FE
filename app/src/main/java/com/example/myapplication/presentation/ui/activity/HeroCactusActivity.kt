@@ -1,5 +1,6 @@
 package com.example.myapplication.presentation.ui.activity
 
+import android.content.Intent
 import android.util.Log
 import android.view.Gravity
 import android.widget.Toast
@@ -40,6 +41,7 @@ class HeroCactusActivity : BaseActivity<ActivityHeroCactusBinding>(R.layout.acti
 
     private fun setOnClick() {
         binding.ivActivityPotionMysteryCancel.setOnClickListener {
+            startActivity(Intent(this,MainActivity::class.java))
             finish()
         }
     }
