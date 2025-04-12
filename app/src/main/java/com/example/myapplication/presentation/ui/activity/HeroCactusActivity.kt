@@ -48,9 +48,5 @@ class HeroCactusActivity : BaseActivity<ActivityHeroCactusBinding>(R.layout.acti
         val toast = Toast.makeText(this, "새로운 선인장이 등록되었어요! 도감을 확인해 주세요!", Toast.LENGTH_SHORT)
         toast.setGravity(Gravity.TOP, 0, 0)
         toast.show()
-
-        runBlocking {
-            tokenManager.saveCheckBook("check")
-        }
     }
 }
