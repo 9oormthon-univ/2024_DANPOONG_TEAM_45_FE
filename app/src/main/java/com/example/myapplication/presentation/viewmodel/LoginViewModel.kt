@@ -72,7 +72,7 @@ class LoginViewModel @Inject constructor(
                 _loginUiState.value = UiState.Loading
                 // 로딩 상태로 초기화
                 _kakaoLogin.value = _kakaoLogin.value.copy(state = BaseLoadingState.LOADING)
-
+                Log.d("ㅅ","${loginState.value}")
                 postKakaoLoginUseCase(logInKakaoDto).collect { response ->
                     when (response.result.code) {
                         200 -> {
@@ -84,7 +84,7 @@ class LoginViewModel @Inject constructor(
                             // 실패 상태로 업데이트
                             _kakaoLogin.value =
                                 _kakaoLogin.value.copy(state = BaseLoadingState.ERROR)
-                            _loginUiState.value = UiState.Failed
+                            _loginUiState.value  = UiState.Failed
                             Log.e("postKakaoLogin", "응답 실패: ${response.result.message}")
                         }
                     }
