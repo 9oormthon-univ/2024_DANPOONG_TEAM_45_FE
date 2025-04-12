@@ -35,7 +35,6 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
     private lateinit var navController: NavController
     private var buttonPosition = 1
     lateinit var customDialog: CustomDialog
-    val chapterViewModel: ChapterViewModel by viewModels()
     val quizViewModel: QuizViewModel by viewModels()
 
     val titleList = listOf(
@@ -77,31 +76,31 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
             when (destination.id) {
                 R.id.quiz1Fragment -> {
                     buttonPosition = 1
-                    moveToolBarLevel()
-                    bindingTitle(buttonPosition - 1)
+                    matchNavigationWithFragment()
                 }
 
                 R.id.quiz2Fragment -> {
                     buttonPosition = 2
-                    moveToolBarLevel()
-                    bindingTitle(buttonPosition - 1)
+                    matchNavigationWithFragment()
                 }
 
                 R.id.quiz3Fragment -> {
                     buttonPosition = 3
-                    moveToolBarLevel()
-                    bindingTitle(buttonPosition - 1)
+                    matchNavigationWithFragment()
                 }
             }
         }
     }
 
+    private fun matchNavigationWithFragment(){
+        moveToolBarLevel()
+        bindingTitle(buttonPosition - 1)
+    }
+
     //버튼 이동
     private fun nextFragment() {
         binding.fragmentQuizBt.setOnClickListener {
-            if (it.isSelected) {
-                moveFragment()
-            }
+            if (it.isSelected) { moveFragment() }
         }
     }
 
@@ -162,6 +161,7 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
     private fun moveFragment() {
         if (levelCorrect) {
             showCustomTwoDialog()
+            return
         } else {
             showCustomDialog()
         }
@@ -186,51 +186,30 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
 
     private fun nextFragmentWithIndex() {
         when (buttonPosition) {
-            1 -> {
-                navController.navigate(
-                    R.id.quiz2Fragment, null,
-                    NavOptions.Builder()
-                        .setPopUpTo(R.id.quiz1Fragment, true)  // 시작 프래그먼트 제거
-                        .setLaunchSingleTop(true)
-                        .build()
-                )
-            }
-
-            2 -> {
-                navController.navigate(
-                    R.id.quiz3Fragment, null,
-                    NavOptions.Builder()
-                        .setPopUpTo(R.id.quiz2Fragment, true)  // 이전 프래그먼트 제거
-                        .setLaunchSingleTop(true)
-                        .build()
-                )
-            }
-
-            3 -> {
-                quizViewModel.postQuizClear(1)
-                observeLifeCycle()
-            }
+            1 -> { nextLevel(R.id.quiz2Fragment) }
+            2 -> { nextLevel(R.id.quiz3Fragment) }
+            3 -> { nextLevel(3) }
         }
     }
 
-    private fun observeLifeCycle() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                quizViewModel.quizClear.collectLatest {
-                    when (it.result.code) {
-                        200 -> {
-                            intent.putExtra("game1Activity", true)
-                            intent.putExtra("button state", 2)
-                            startActivity(Intent(this@QuizActivity, QuizClearActivity::class.java))
-                            finish() // QuizActivity 종료
-                        }
-                        else -> {
-                            Log.d("okhttp","$it")
-                            finish()
-                        }
-                    }
-                }
+    private fun nextLevel(id : Int) {
+        if(id == 3){
+            quizViewModel.postQuizClear(1)
+            Intent(this@QuizActivity, QuizClearActivity::class.java).apply {
+                putExtra("game1Activity", true)
+                putExtra("button state", 2)
+                startActivity(this)
+                finish() // QuizActivity 종료
             }
+        }
+        else {
+            navController.navigate(
+                id, null,
+                NavOptions.Builder()
+                    .setPopUpTo(R.id.quiz1Fragment, true)  // 시작 프래그먼트 제거
+                    .setLaunchSingleTop(true)
+                    .build()
+            )
         }
     }
 

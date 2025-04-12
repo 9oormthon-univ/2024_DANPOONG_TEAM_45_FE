@@ -134,7 +134,6 @@ class LoginViewModel @Inject constructor(
                 saveRefreshToken(refreshToken)
                 saveUserProfile(userProfile)
                 saveUserNickname(userNickname)
-                deleteCountToken()
             }
             getDistinctHome()
         }
