@@ -21,19 +21,11 @@ class TokenManager @Inject constructor(
     companion object {
         private val REFRESH_TOKEN_KEY = stringPreferencesKey("refresh_token")
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
-        private val LIST_KEY = stringPreferencesKey("list_key")
         private val USER_NICKNAME_KEY = stringPreferencesKey("nickname_key")
         private val USER_PROFILE_KEY = stringPreferencesKey("profile_key")
         private val CHARACTER_KEY = stringPreferencesKey("character_id")
-        private val CHAPTER_KEY = stringPreferencesKey("chapter_iscleared")
         private val USER_KEY = stringPreferencesKey("user_id")
-        private val DATE_KEY = stringPreferencesKey("date")
-        private val COUNT_KEY = stringPreferencesKey("count")
-        private val TUTORIAL_1 = stringPreferencesKey("tut1")
-        private val TUTORIAL_2 = stringPreferencesKey("tut2")
-        private val COMPLETE = stringPreferencesKey("complete")
-        private val CHECK_BOOK = stringPreferencesKey("check_book")
-        private val PICK = stringPreferencesKey("pick")
+//        private val LIST_KEY = stringPreferencesKey("list_key")
     }
 
 
@@ -99,7 +91,6 @@ class TokenManager @Inject constructor(
         }
     }
 
-
     val getRefreshToken: Flow<String?> = dataStore.data
         .map { preferences ->
             preferences[REFRESH_TOKEN_KEY]
@@ -111,83 +102,22 @@ class TokenManager @Inject constructor(
         }
     }
 
-    // 리스트 저장 함수
-    suspend fun saveList(list: List<String>) {
-        val json = Gson().toJson(list)  // 리스트를 JSON 문자열로 변환
-        dataStore.edit { preferences ->
-            preferences[LIST_KEY] = json
-            Log.d("저장 리스트", "저장된 JSON: $json") // 저장된 JSON 출력
-        }
-    }
+//    // 리스트 저장 함수
+//    suspend fun saveList(list: List<String>) {
+//        val json = Gson().toJson(list)  // 리스트를 JSON 문자열로 변환
+//        dataStore.edit { preferences ->
+//            preferences[LIST_KEY] = json
+//            Log.d("저장 리스트", "저장된 JSON: $json") // 저장된 JSON 출력
+//        }
+//    }
 
-    // 리스트 불러오기 함수
-    fun getList(): Flow<List<String>> {
-        return dataStore.data.map { preferences ->
-            val json = preferences[LIST_KEY] ?: "[]"  // 저장된 JSON 문자열을 가져옴
-            Log.d("가저온 리스트", "저장된 JSON: $json") // 저장된 JSON 출력
-            Gson().fromJson(json, object : TypeToken<List<String>>() {}.type) ?: emptyList()
-        }
-    }
-
-
-    suspend fun saveDateToken(token: String) {
-        dataStore.edit { preferences ->
-            preferences[DATE_KEY] = token
-        }
-    }
-
-    val getDateToken: Flow<String?> = dataStore.data
-        .map { preferences ->
-            preferences[DATE_KEY]
-        }
-
-    suspend fun saveCountToken(token: String) {
-        dataStore.edit { preferences ->
-            preferences[COUNT_KEY] = token
-        }
-    }
-
-    suspend fun deleteCountToken() {
-        dataStore.edit { preferences ->
-            preferences[COUNT_KEY] = "0"
-        }
-    }
-
-    val getCountToken: Flow<String?> = dataStore.data
-        .map { preferences ->
-            preferences[COUNT_KEY]
-        }
-
-    suspend fun saveTut1(token: String) {
-        dataStore.edit { preferences ->
-            preferences[TUTORIAL_1] = token
-        }
-    }
-
-
-    suspend fun saveTut2(token: String) {
-        dataStore.edit { preferences ->
-            preferences[TUTORIAL_2] = token
-        }
-    }
-
-
-    suspend fun saveCheckBook(token: String) {
-        dataStore.edit { preferences ->
-            preferences[CHECK_BOOK] = token
-        }
-    }
-
-    val getCheckBook: Flow<String?> = dataStore.data
-        .map { preferences ->
-            preferences[CHECK_BOOK]
-        }
-
-    suspend fun deleteCheckBook() {
-        dataStore.edit { preferences ->
-            preferences[CHECK_BOOK] = ""
-        }
-    }
-
+//    // 리스트 불러오기 함수
+//    fun getList(): Flow<List<String>> {
+//        return dataStore.data.map { preferences ->
+//            val json = preferences[LIST_KEY] ?: "[]"  // 저장된 JSON 문자열을 가져옴
+//            Log.d("가저온 리스트", "저장된 JSON: $json") // 저장된 JSON 출력
+//            Gson().fromJson(json, object : TypeToken<List<String>>() {}.type) ?: emptyList()
+//        }
+//    }
 
 }

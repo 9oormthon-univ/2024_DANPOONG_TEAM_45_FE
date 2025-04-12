@@ -42,11 +42,6 @@ class QuizClearActivity : BaseActivity<ActivityQuizClearBinding>(R.layout.activi
         if (!bool) {
             binding.tvNextPracticeMoomoo.text = "무무가 멋지게 성장하고 있어요 :)"
             binding.btnNextstageSeeMoomoo.text = "무무 보러가기"
-            runBlocking {
-                tokenManager.saveTut1("running")
-                val score = tokenManager.getCountToken.first().toString().toInt()
-                tokenManager.saveCountToken("${score + 1}")
-            }
             binding.btnNextstageSeeMoomoo.setOnClickListener {
                 //믈약
                 increaseExp(300)
@@ -56,11 +51,6 @@ class QuizClearActivity : BaseActivity<ActivityQuizClearBinding>(R.layout.activi
         else {
             binding.tvNextPracticeMoomoo.text = "이제 더 큰 도전을 위한 준비가 되었어요"
             binding.btnNextstageSeeMoomoo.text = "보상받으러 가기"
-            lifecycleScope.launch {
-                tokenManager.saveTut2("ok")
-                val score = tokenManager.getCountToken.first().toString().toInt()
-                tokenManager.saveCountToken("${score + 1}")
-            }
 
             loginViewModel.getCompleteTraining()
             binding.btnNextstageSeeMoomoo.setOnClickListener {

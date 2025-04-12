@@ -17,7 +17,6 @@ class QuestIntroActivity :
 
         val islandName = intent.getStringExtra("island name")
         val gameId = intent.getIntExtra("game id", -1)
-        Log.d("아이디 ㄴ","${gameId} ${islandName}")
 
         when (islandName) {
             resources.getString(R.string.biginner_island) -> {

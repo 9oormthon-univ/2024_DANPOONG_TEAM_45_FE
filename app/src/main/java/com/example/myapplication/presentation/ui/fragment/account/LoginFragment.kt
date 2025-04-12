@@ -36,7 +36,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private lateinit var onBoardingViewPagerAdapter: LoginBannerViewPagerAdapter
 
     private val loginViewModel: LoginViewModel by viewModels()
-    private val homeViewModel: HomeViewModel by viewModels()
 
     //화면 진입 시 토큰 저장소 초기화
     override fun onStart() {
@@ -54,17 +53,18 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         setOnclickBtn()
     }
 
+    //로그인 상태
     private fun observeStateLifeCycle() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 loginViewModel.loginState.collectLatest { state ->
+                    Log.d("상태", "$state")
                     when (state) {
                         is UiState.Failed -> {
                             hideProgress()
-                            Toast.makeText(requireContext(), "에러", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), "로그인 실패", Toast.LENGTH_SHORT).show()
                         }
-
-                        UiState.Loading -> showProgress()
+                        is UiState.Loading -> showProgress()
                         is UiState.Success -> hideProgress()
                     }
                 }
@@ -111,8 +111,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
             userKakaoLogin()
         }
 
-        binding.unityBt.setOnClickListener{
-            startActivity(Intent(requireContext(),UnityPlayerGameActivity::class.java))
+        binding.unityBt.setOnClickListener {
+            startActivity(Intent(requireContext(), UnityPlayerGameActivity::class.java))
         }
     }
 
@@ -120,7 +120,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private fun userKakaoLogin() {
         UserApiClient.instance.loginWithKakaoTalk(requireContext()) { token, error ->
             if (error != null) {
-                Log.e("카카오", "로그인 실패", error)
+                Log.e("카카오", "로그인 실패0", error)
                 Toast.makeText(requireContext(), "로그인 실패", Toast.LENGTH_SHORT).show()
             } else if (token != null) {
                 loginViewModel.postKakaoLogin(sendKakaoAccessToken(token.accessToken))
@@ -136,8 +136,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private fun observeKakaoLoginLifeCycle() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
+                Log.d("상태s", "${loginViewModel.loginState}")
                 launch {
                     loginViewModel.kakaoLogin.collectLatest {
+                        Log.d("상태", "$it")
                         when (it.state) {
                             BaseLoadingState.IDLE -> {}
                             BaseLoadingState.LOADING -> {}
@@ -152,7 +154,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                                 }
                             }
 
-                            BaseLoadingState.ERROR -> {}
+                            BaseLoadingState.ERROR -> {
+                                hideProgress()
+                            }
                         }
                     }
                 }//launch
@@ -163,10 +167,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private fun observeRemainUserLifeCycle() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
+                Log.d("상태s", "${loginViewModel.loginState}")
                 launch {
                     loginViewModel.getDistinctHome.collect {
                         val result = it
-                        Log.d("결과 정보", "${it.result} ${loginViewModel.loginState.value}")
+                        Log.d("상태", "${it.result} ${loginViewModel.loginState.value}")
                         when (result.status) {
                             BaseLoadingState.IDLE -> {}
                             BaseLoadingState.LOADING -> {}
@@ -176,7 +181,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                                 }
                             }
 
-                            BaseLoadingState.ERROR -> {}
+                            BaseLoadingState.ERROR -> {
+                                hideProgress()
+                                Toast.makeText(requireContext(), "로그인 실패2", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
                         }
                     }
                 }//launch
@@ -186,15 +195,20 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
 
     private fun callResultCode(code: Int) {
-        Log.d("오류",code.toString())
+        Log.d("상태s", "${loginViewModel.loginState}")
         when (code) {
             200 -> {
                 goToMain()
             }
+
             3000 -> {
                 goToOnboarding()
             }
-            else -> {}
+
+            else -> {
+                hideProgress()
+                Toast.makeText(requireContext(), "로그인 실패3", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

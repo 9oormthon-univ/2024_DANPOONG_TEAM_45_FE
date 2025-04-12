@@ -34,7 +34,7 @@ class PotionMysteryActivity :
 
     private fun setBtnClick() {
         binding.activityAccountKakaoLoginBt.setOnClickListener {
-            characterViewModel.postIncreaseActivity(cid.toInt(), 500)
+            characterViewModel.postIncreaseActivity(cid.toInt(), 300)
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
@@ -64,7 +64,6 @@ class PotionMysteryActivity :
                 4 -> {
                     loadCropImage(R.drawable.potion4)
                 }
-
                 else -> 1
             }
         }
@@ -72,12 +71,9 @@ class PotionMysteryActivity :
 
     private fun subTitleBinding() {
         val list = listOf(
-            "무무가 전설의 포션을\n" +
-                    "먹고 폭풍 성장 했어요!",
-            "무무가 신비의 포션을\n" +
-                    "먹고 조금 더 성장 했어요!",
-            "무무가 스위트 파워 포션을\n" +
-                    "먹고 성장 했어요!",
+            "무무가 전설의 포션을\n" + "먹고 폭풍 성장 했어요!",
+            "무무가 신비의 포션을\n" + "먹고 조금 더 성장 했어요!",
+            "무무가 스위트 파워 포션을\n" + "먹고 성장 했어요!",
             "푸른 호수의 물결"
         )
         binding.tvPotionMystery.text = list[pid - 1]

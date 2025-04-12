@@ -1,5 +1,6 @@
 package com.example.myapplication.presentation.ui.activity
 
+import android.content.Intent
 import android.util.Log
 import android.view.Gravity
 import android.widget.Toast
@@ -40,6 +41,7 @@ class HeroCactusActivity : BaseActivity<ActivityHeroCactusBinding>(R.layout.acti
 
     private fun setOnClick() {
         binding.ivActivityPotionMysteryCancel.setOnClickListener {
+            startActivity(Intent(this,MainActivity::class.java))
             finish()
         }
     }
@@ -48,9 +50,5 @@ class HeroCactusActivity : BaseActivity<ActivityHeroCactusBinding>(R.layout.acti
         val toast = Toast.makeText(this, "새로운 선인장이 등록되었어요! 도감을 확인해 주세요!", Toast.LENGTH_SHORT)
         toast.setGravity(Gravity.TOP, 0, 0)
         toast.show()
-
-        runBlocking {
-            tokenManager.saveCheckBook("check")
-        }
     }
 }
