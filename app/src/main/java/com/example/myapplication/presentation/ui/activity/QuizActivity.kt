@@ -39,14 +39,14 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
 
     val titleList = listOf(
         "Q.\n무무가 가야할 방향은\n어디일까요?",
-        "Q.\n맛있는 라면은 어떤 순서로 \n요리 해야할까요?",
-        "Q.\n알고리즘이란 무엇일까요?"
+        "Q.\n알고리즘이란 무엇일까요?",
+        "Q.\n사탕을 아래의 순서로 \n먹을 수 있게 도와주세요",
     )
 
     val subTitleList = listOf(
         "무무가 앞으로 가야 할 방향을 헷갈리고 있어요",
-        "무무가 순서를 잘 기억할 수 있도록 도와주세요!",
-        "아래 4가지 선택지 중 하나를 고르세요."
+        "아래 4가지 선택지 중 하나를 고르세요.",
+        "사탕은 위에서 부터 순서대로 먹을 수 있어요!"
     )
 
     private var levelCorrect = false
@@ -86,6 +86,10 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
 
                 R.id.quiz3Fragment -> {
                     buttonPosition = 3
+                    matchNavigationWithFragment()
+                }
+                R.id.quiz4Fragment -> {
+                    buttonPosition = 4
                     matchNavigationWithFragment()
                 }
             }

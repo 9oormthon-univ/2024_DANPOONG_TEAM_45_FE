@@ -17,7 +17,3 @@ android {
         }
     }
 }
-
-dependencies{
-    implementation(project(":unityLibrary"))
-}

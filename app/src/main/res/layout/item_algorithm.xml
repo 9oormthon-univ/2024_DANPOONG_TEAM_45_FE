@@ -19,30 +19,30 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageButton
-                android:id="@+id/ib_biginner_problem_3_hint_off"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
-                android:adjustViewBounds="true"
-                android:layout_marginEnd="18dp"
-                android:layout_marginBottom="13dp"
-                android:background="@drawable/iv_bulb_gray"
-                android:clickable="true"
-                android:scaleType="fitCenter"
-                app:layout_constraintBottom_toBottomOf="@+id/item_algorithm_frame_iv"
-                app:layout_constraintEnd_toEndOf="@+id/item_algorithm_frame_iv" />
+        <ImageButton
+            android:id="@+id/ib_biginner_problem_3_hint_off"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:adjustViewBounds="true"
+            android:layout_marginEnd="18dp"
+            android:layout_marginBottom="13dp"
+            android:background="@drawable/iv_bulb_gray"
+            android:clickable="true"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/item_algorithm_frame_iv"
+            app:layout_constraintEnd_toEndOf="@+id/item_algorithm_frame_iv" />
 
-            <ImageView
-                android:id="@+id/ib_biginner_problem_3_hint_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_gravity="right|bottom"
-                android:src="@drawable/iv_biginner_quiz3_hint"
-                app:layout_constraintBottom_toBottomOf="@+id/ib_biginner_problem_3_hint_off"
-                app:layout_constraintEnd_toStartOf="@+id/ib_biginner_problem_3_hint_off"
-                app:layout_constraintTop_toTopOf="@+id/ib_biginner_problem_3_hint_off" />
+        <ImageView
+            android:id="@+id/ib_biginner_problem_3_hint_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_gravity="right|bottom"
+            android:src="@drawable/iv_biginner_quiz3_hint"
+            app:layout_constraintBottom_toBottomOf="@+id/ib_biginner_problem_3_hint_off"
+            app:layout_constraintEnd_toStartOf="@+id/ib_biginner_problem_3_hint_off"
+            app:layout_constraintTop_toTopOf="@+id/ib_biginner_problem_3_hint_off" />
 
 
         <LinearLayout
@@ -175,4 +175,3 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
-

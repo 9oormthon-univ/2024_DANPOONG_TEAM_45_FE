@@ -22,7 +22,6 @@ import com.example.myapplication.presentation.viewmodel.HomeViewModel
 import com.example.myapplication.presentation.viewmodel.LoginViewModel
 import com.example.myapplication.presentation.widget.extention.TokenManager
 import com.kakao.sdk.user.UserApiClient
-import com.unity3d.player.UnityPlayerGameActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -109,10 +108,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private fun setOnclickBtn() {
         binding.activityAccountKakaoLoginBt.setOnClickListener {
             userKakaoLogin()
-        }
-
-        binding.unityBt.setOnClickListener {
-            startActivity(Intent(requireContext(), UnityPlayerGameActivity::class.java))
         }
     }
 
