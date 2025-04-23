@@ -88,10 +88,7 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
                     buttonPosition = 3
                     matchNavigationWithFragment()
                 }
-                R.id.quiz4Fragment -> {
-                    buttonPosition = 4
-                    matchNavigationWithFragment()
-                }
+
             }
         }
     }
@@ -174,7 +171,7 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
     private fun showCustomTwoDialog() {
         when (buttonPosition) {
             1 -> setDialog("덕분에 길을 잘 찾아갔어!")
-            2 -> setDialog("너무 맛있는 라면이야!")
+            2 -> setDialog("정말 똑똑하구나!")
             3 -> nextFragmentWithIndex()
         }
     }
@@ -206,11 +203,20 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
                 finish() // QuizActivity 종료
             }
         }
-        else {
+        else if(id == 2) {
             navController.navigate(
                 id, null,
                 NavOptions.Builder()
                     .setPopUpTo(R.id.quiz1Fragment, true)  // 시작 프래그먼트 제거
+                    .setLaunchSingleTop(true)
+                    .build()
+            )
+        }
+        else{
+            navController.navigate(
+                id, null,
+                NavOptions.Builder()
+                    .setPopUpTo(R.id.quiz2Fragment, true)  // 시작 프래그먼트 제거
                     .setLaunchSingleTop(true)
                     .build()
             )

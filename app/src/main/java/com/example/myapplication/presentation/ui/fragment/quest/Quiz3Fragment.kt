@@ -10,10 +10,12 @@ import android.widget.Toast
 import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ItemCandyBinding
+import com.example.myapplication.presentation.ui.activity.QuizActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 open class Quiz3Fragment : BaseFragment<ItemCandyBinding>(R.layout.item_candy) {
+    private var selectedNumber = 0
 
     private val answerOrder = listOf(
         R.drawable.activity_qiuz_order_candy_grape_iv,
@@ -148,10 +150,27 @@ open class Quiz3Fragment : BaseFragment<ItemCandyBinding>(R.layout.item_candy) {
     private fun checkAnswer() {
         if (droppedOrder == answerOrder) {
             Toast.makeText(context, "Correct order!", Toast.LENGTH_LONG).show()
+            selectedNumber = 1
+            confirmCorrectQuestion()
+            buttonSet(true)
             // TODO: 정답 처리 로직 추가 (다음 화면으로 이동 등)
         } else {
             Toast.makeText(context, "Incorrect order. Try again!", Toast.LENGTH_LONG).show()
+            buttonSet(true)
             // TODO: 오답 처리 로직 추가
+        }
+    }
+
+    private fun buttonSet(isState: Boolean) {
+        val av = requireActivity() as QuizActivity
+        av.onButtonState(isState)
+    }
+    private fun confirmCorrectQuestion() {
+        val av = requireActivity() as QuizActivity
+        if (selectedNumber == 1) {
+            av.setReplaceLevelState(true)
+        } else {
+            av.setReplaceLevelState(false)
         }
     }
 }
