@@ -1,6 +1,7 @@
 package com.example.myapplication.presentation.ui.activity
 
 import android.content.Intent
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
@@ -9,8 +10,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityQuizClearBinding
 import com.example.myapplication.presentation.base.BaseActivity
+import com.example.myapplication.presentation.viewmodel.ChapterViewModel
 import com.example.myapplication.presentation.viewmodel.CharacterViewModel
 import com.example.myapplication.presentation.viewmodel.LoginViewModel
+import com.example.myapplication.presentation.viewmodel.QuizViewModel
 import com.example.myapplication.presentation.widget.extention.TokenManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -24,11 +27,12 @@ class QuizClearActivity : BaseActivity<ActivityQuizClearBinding>(R.layout.activi
 
     @Inject
     lateinit var tokenManager: TokenManager
-
+    private val isQuizClearedViewModel : QuizViewModel by viewModels()
     private val loginViewModel: LoginViewModel by viewModels()
     private val characterViewModel: CharacterViewModel by viewModels()
+    private val isChapterClearedViewModel: ChapterViewModel by viewModels()
     var cid = ""
-
+    var cStage = ""
     override fun setLayout() {
         initView()
         observeLifeCycle()
@@ -36,6 +40,7 @@ class QuizClearActivity : BaseActivity<ActivityQuizClearBinding>(R.layout.activi
 
     private fun initView() {
         val bool = intent.getBooleanExtra("game2Activity", false)
+        cStage = intent.getStringExtra("stage") ?: "";
         lifecycleScope.launch {
             cid = tokenManager.getCharacterId.first().toString()
         }
@@ -54,6 +59,9 @@ class QuizClearActivity : BaseActivity<ActivityQuizClearBinding>(R.layout.activi
 
             loginViewModel.getCompleteTraining()
             binding.btnNextstageSeeMoomoo.setOnClickListener {
+                if(cStage.isNotEmpty()){
+                    handleSuccess()
+                }
                 increaseExp(50)
             }
         }
@@ -62,6 +70,17 @@ class QuizClearActivity : BaseActivity<ActivityQuizClearBinding>(R.layout.activi
             finish()
         }
     }
+
+    private fun handleSuccess() {
+        val curStage = cStage.toInt()
+        Log.d("스테이지",curStage.toString())
+        isQuizClearedViewModel.postQuizClear(curStage)
+        if (curStage == 10) { // 마지막 퀴즈이면 챕터 클리어 POST
+            Log.d("okhttp", "클리어")
+            isChapterClearedViewModel.postChapterClear(3)
+        }
+    }
+
 
     private fun increaseExp(exp : Int){
         characterViewModel.postIncreaseActivity(cid.toInt(), exp)
