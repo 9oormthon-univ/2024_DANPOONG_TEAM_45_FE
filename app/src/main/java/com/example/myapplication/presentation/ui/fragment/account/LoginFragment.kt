@@ -110,10 +110,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         binding.activityAccountKakaoLoginBt.setOnClickListener {
             userKakaoLogin()
         }
-
-        binding.unityBt.setOnClickListener {
-            startActivity(Intent(requireContext(), UnityPlayerGameActivity::class.java))
-        }
     }
 
     //카카오 유저 로그인
