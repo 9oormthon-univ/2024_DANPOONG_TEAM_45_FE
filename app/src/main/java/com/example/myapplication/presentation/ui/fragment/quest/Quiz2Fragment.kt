@@ -30,10 +30,6 @@ open class Quiz2Fragment :
         )
     }
 
-    private fun toggleVisibility(view: View) {
-        view.isSelected = !view.isSelected
-    }
-
     private fun btnClick() {
         // 힌트
         binding.ibBiginnerProblem3HintOff.setOnClickListener {
@@ -76,26 +72,11 @@ open class Quiz2Fragment :
         }
     }
 
-
-    private fun hintSelected(view: View) {
-        if (binding.ibBiginnerProblem3HintOff.isSelected) {
-            view.visibility = View.VISIBLE
-        } else {
-            view.visibility = View.GONE
-        }
-    }
-
     private fun selectAllAnswers(view: View) {
         viewList.map {
             it.isSelected = view == it
         }
     }
-
-    private fun buttonSet(isState: Boolean) {
-        val av = requireActivity() as QuizActivity
-        av.onButtonState(isState)
-    }
-
     private fun confirmCorrectQuestion() {
         val av = requireActivity() as QuizActivity
         if (selectedNumber == 2) {
@@ -105,9 +86,15 @@ open class Quiz2Fragment :
         }
     }
 
+    private fun buttonSet(isState: Boolean) {
+        val av = requireActivity() as QuizActivity
+        av.onButtonState(isState)
+    }
 
     override fun onDestroy() {
         super.onDestroy()
         buttonSet(false)
+        val av = requireActivity() as QuizActivity
+        av.setReplaceLevelState(false)
     }
 }

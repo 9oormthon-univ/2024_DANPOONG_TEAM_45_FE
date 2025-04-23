@@ -5,16 +5,12 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import androidx.activity.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
@@ -23,11 +19,10 @@ import com.example.myapplication.databinding.ActivityQuizBinding
 import com.example.myapplication.presentation.base.BaseActivity
 import com.example.myapplication.presentation.ui.fragment.quest.CustomDialog
 import com.example.myapplication.presentation.ui.fragment.quest.DialogClickListener
+import com.example.myapplication.presentation.ui.fragment.quest.Quiz3Fragment
 import com.example.myapplication.presentation.viewmodel.ChapterViewModel
 import com.example.myapplication.presentation.viewmodel.QuizViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
@@ -88,6 +83,7 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
                     buttonPosition = 3
                     matchNavigationWithFragment()
                 }
+
             }
         }
     }
@@ -148,6 +144,14 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
 
         val confirmButton = dialogView.findViewById<Button>(R.id.btn_dialog_biginner_quiz_fail)
         confirmButton.setOnClickListener {
+            // 현재 프래그먼트가 Quiz3Fragment인 경우 resetCandies 호출
+            if (buttonPosition == 3) {
+                val navHostFragment = supportFragmentManager.findFragmentById(binding.activityQuizFcv.id) as NavHostFragment
+                val currentFragment = navHostFragment.childFragmentManager.fragments[0]
+                if (currentFragment is Quiz3Fragment) {
+                    currentFragment.resetCandies()
+                }
+            }
             dialog.dismiss()
         }
         // 다이얼로그 보여주기
@@ -170,7 +174,7 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
     private fun showCustomTwoDialog() {
         when (buttonPosition) {
             1 -> setDialog("덕분에 길을 잘 찾아갔어!")
-            2 -> setDialog("너무 맛있는 라면이야!")
+            2 -> setDialog("정말 똑똑하구나!")
             3 -> nextFragmentWithIndex()
         }
     }
@@ -202,11 +206,20 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
                 finish() // QuizActivity 종료
             }
         }
-        else {
+        else if(id == 2) {
             navController.navigate(
                 id, null,
                 NavOptions.Builder()
                     .setPopUpTo(R.id.quiz1Fragment, true)  // 시작 프래그먼트 제거
+                    .setLaunchSingleTop(true)
+                    .build()
+            )
+        }
+        else{
+            navController.navigate(
+                id, null,
+                NavOptions.Builder()
+                    .setPopUpTo(R.id.quiz2Fragment, true)  // 시작 프래그먼트 제거
                     .setLaunchSingleTop(true)
                     .build()
             )

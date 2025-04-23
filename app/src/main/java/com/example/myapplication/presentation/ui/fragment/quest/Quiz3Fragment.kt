@@ -15,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 open class Quiz3Fragment : BaseFragment<ItemCandyBinding>(R.layout.item_candy) {
+    private var selectedNumber = 0
 
     private val answerOrder = listOf(
         R.drawable.activity_qiuz_order_candy_grape_iv,
@@ -97,7 +98,7 @@ open class Quiz3Fragment : BaseFragment<ItemCandyBinding>(R.layout.item_candy) {
                         if (draggedImageResId != null) {
                             // 이미 캔디가 있는 슬롯이면 아무것도 하지 않음
                             if (target in filledSlots) {
-                                Toast.makeText(context, "This slot is already filled!", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "사탕이 이미 놓여져 있어요!", Toast.LENGTH_SHORT).show()
                                 return@setOnDragListener true
                             }
 
@@ -149,7 +150,11 @@ open class Quiz3Fragment : BaseFragment<ItemCandyBinding>(R.layout.item_candy) {
         }
     }
 
-    private fun resetCandies() {
+    // resetCandies를 public으로 변경하여 외부에서 접근 가능하게 함
+    fun resetCandies() {
+        // 버튼 상태 초기화
+        buttonSet(false)
+
         // 모든 캔디 이미지뷰 다시 보이게 설정
         candies.keys.forEach { it.visibility = View.VISIBLE }
 
@@ -164,20 +169,29 @@ open class Quiz3Fragment : BaseFragment<ItemCandyBinding>(R.layout.item_candy) {
 
         // filledSlots 세트도 초기화
         filledSlots.clear()
-
-        // 사용자에게 피드백 제공
-        Toast.makeText(context, "이미 놓여진 곳에 사탕을 또 배치할 수 없어요 !", Toast.LENGTH_SHORT).show()
     }
 
     private fun checkAnswer() {
         if (droppedOrder == answerOrder) {
-            Toast.makeText(context, "Correct order!", Toast.LENGTH_LONG).show()
-            // TODO 정답 처리
-
+            selectedNumber = 1
+            confirmCorrectQuestion()
+            buttonSet(true)
         } else {
-            Toast.makeText(context, "Incorrect order. Try again!", Toast.LENGTH_LONG).show()
-            // TODO 오답 처리
+            buttonSet(true)
+        }
+    }
 
+    private fun buttonSet(isState: Boolean) {
+        val av = requireActivity() as QuizActivity
+        av.onButtonState(isState)
+    }
+
+    private fun confirmCorrectQuestion() {
+        val av = requireActivity() as QuizActivity
+        if (selectedNumber == 1) {
+            av.setReplaceLevelState(true)
+        } else {
+            av.setReplaceLevelState(false)
             // 모든 캔디 원래 위치로 초기화
             resetCandies()
         }
