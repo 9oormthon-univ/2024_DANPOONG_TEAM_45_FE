@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -11,22 +10,23 @@
     <application
         android:name=".GlobalApplication"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CodingLand"
-        tools:targetApi="31">
+        android:theme="@style/Theme.CodingLand">
         <activity
             android:name=".presentation.ui.activity.QuizBlockActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.ui.activity.MainActivity"
-            android:windowSoftInputMode="adjustPan"
+            android:exported="true"
             android:launchMode="singleTop"
-            android:exported="true" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".presentation.ui.activity.SplashActivity"
             android:exported="true"
@@ -54,6 +54,45 @@
                     android:host="oauth"
                     android:scheme="@string/appKey" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.unity3d.player.UnityPlayerGameActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale|layoutDirection|density"
+            android:enabled="true"
+            android:exported="true"
+            android:hardwareAccelerated="false"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:process=":Unity"
+            android:screenOrientation="fullSensor"
+            android:theme="@style/BaseUnityGameActivityTheme">
+            <!--      <intent-filter>-->
+            <!--        <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--        <action android:name="android.intent.action.MAIN" />-->
+            <!--      </intent-filter>-->
+
+            <meta-data
+                android:name="unityplayer.UnityActivity"
+                android:value="true" />
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="game" />
+            <meta-data
+                android:name="WindowManagerPreference:FreeformWindowSize"
+                android:value="@string/FreeformWindowSize_phone" />
+            <meta-data
+                android:name="WindowManagerPreference:FreeformWindowOrientation"
+                android:value="@string/FreeformWindowOrientation_portrait" />
+            <meta-data
+                android:name="notch_support"
+                android:value="true" />
+
+            <layout
+                android:defaultWidth="1080px"
+                android:defaultHeight="1920px"
+                android:minWidth="720px"
+                android:minHeight="1280px" />
         </activity>
 
         <provider
