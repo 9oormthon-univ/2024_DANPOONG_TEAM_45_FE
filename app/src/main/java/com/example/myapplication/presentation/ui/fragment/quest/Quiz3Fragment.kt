@@ -5,42 +5,42 @@ import android.content.ClipData
 import android.view.DragEvent
 import android.view.MotionEvent
 import android.view.View
-import android.widget.FrameLayout
-import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.Toast
 import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.R
-import com.example.myapplication.databinding.ItemAlgorithmBinding
 import com.example.myapplication.databinding.ItemCandyBinding
-import com.example.myapplication.presentation.ui.activity.QuizActivity
-import com.example.myapplication.presentation.widget.extention.loadCropRoundedSquareImage
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-open class Quiz3Fragment :
-    BaseFragment<ItemCandyBinding>(R.layout.item_candy) {
+open class Quiz3Fragment : BaseFragment<ItemCandyBinding>(R.layout.item_candy) {
 
-    private var selectedNumber = 0
+    private val answerOrder = listOf(
+        R.drawable.activity_qiuz_order_candy_grape_iv,
+        R.drawable.activity_qiuz_order_candy_strawberry_iv,
+        R.drawable.activity_qiuz_order_candy_mellon_iv,
+        R.drawable.activity_qiuz_order_candy_peach_iv,
+        R.drawable.activity_qiuz_order_candy_lemon_iv
+    )  // 포도-딸기-멜론-복숭아-레몬 순서
 
-    private lateinit var viewList: List<View>
+    private val droppedOrder = mutableListOf<Int>() // 드롭된 슬롯의 순서에 맞는 이미지 리소스를 저장
 
     override fun setLayout() {
         initList()
-        //btnClick()
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initList() {
-        val candies = listOf(
-            binding.itemCandyGrapeIv,
-            binding.itemCandyLemonIv,
-            binding.itemCandyPeachIv,
-            binding.itemCandyStrawberryIv,
-            binding.itemCandyMellonIv
+        // 각 이미지뷰와 실제 이미지 리소스 ID를 매핑
+        val candies = mapOf(
+            binding.itemCandyGrapeIv to R.drawable.activity_qiuz_order_candy_grape_iv,
+            binding.itemCandyStrawberryIv to R.drawable.activity_qiuz_order_candy_strawberry_iv,
+            binding.itemCandyMellonIv to R.drawable.activity_qiuz_order_candy_mellon_iv,
+            binding.itemCandyPeachIv to R.drawable.activity_qiuz_order_candy_peach_iv,
+            binding.itemCandyLemonIv to R.drawable.activity_qiuz_order_candy_lemon_iv
         )
 
-        val dropTargets = listOf(
+        val dropTarget = listOf(
             binding.targetSlot1,
             binding.targetSlot2,
             binding.targetSlot3,
@@ -48,11 +48,17 @@ open class Quiz3Fragment :
             binding.targetSlot5
         )
 
+        // 이미 드롭된 슬롯을 추적하는 변수
+        val filledSlots = mutableSetOf<ImageView>()
+
         // 드래그 시작 설정
-        candies.forEach { candy ->
-            candy.setOnTouchListener { v, event ->
+        candies.forEach { (imageView, resourceId) ->
+            // 올바른 태그 설정
+            imageView.tag = resourceId
+
+            imageView.setOnTouchListener { v, event ->
                 if (event.action == MotionEvent.ACTION_DOWN) {
-                    val clipData = ClipData.newPlainText("label", "")
+                    val clipData = ClipData.newPlainText("resourceId", resourceId.toString())
                     val shadowBuilder = View.DragShadowBuilder(v)
                     v.startDragAndDrop(clipData, shadowBuilder, v, 0)
                     true
@@ -62,51 +68,90 @@ open class Quiz3Fragment :
             }
         }
 
-        dropTargets.forEach { target ->
+        // 드롭 타겟 설정
+        dropTarget.forEach { target ->
             target.setOnDragListener { view, event ->
                 when (event.action) {
                     DragEvent.ACTION_DRAG_STARTED -> true
 
                     DragEvent.ACTION_DRAG_ENTERED -> {
-                        view.alpha = 0.5f // 드래그가 들어오면 alpha 감소
+                        view.alpha = 0.5f
                         true
                     }
 
                     DragEvent.ACTION_DRAG_EXITED -> {
-                        view.alpha = 1.0f // 드래그가 나가면 alpha 복구
+                        view.alpha = 1.0f
                         true
                     }
 
                     DragEvent.ACTION_DROP -> {
-                        view.alpha = 1.0f // 드롭 후 alpha 복구
-
-                        // 드래그된 뷰 가져오기
+                        view.alpha = 1.0f
                         val draggedView = event.localState as View
+                        val draggedImageResId = draggedView.tag as? Int
 
-                        // 드롭된 슬롯에 이미지를 추가하는 코드
-                        if (draggedView is ImageView) {
-                            val targetSlot = view as ImageView
-                            // 기존 이미지를 slot에 표시
-                            targetSlot.setImageDrawable(draggedView.drawable)
+                        // 드롭된 이미지 리소스가 유효한지 확인
+                        if (draggedImageResId != null) {
+                            // 이미 캔디가 있는 슬롯이면 아무것도 하지 않음
+                            if (target in filledSlots) {
+                                Toast.makeText(context, "This slot is already filled!", Toast.LENGTH_SHORT).show()
+                                return@setOnDragListener true
+                            }
 
-                            // 원본 이미지를 제거하거나 복제하려면 필요에 따라 처리할 수 있음
-                            draggedView.visibility = View.INVISIBLE // 원본 이미지는 숨김
+                            // 드롭된 슬롯에 이미지 설정
+                            (view as ImageView).setImageResource(draggedImageResId)
 
-                            // 원하는 동작 예시
-                            Toast.makeText(requireContext(), "Candy dropped!", Toast.LENGTH_SHORT).show()
+                            // 슬롯에 캔디 리소스 ID 저장
+                            view.tag = draggedImageResId
+
+                            // 채워진 슬롯 목록에 추가
+                            filledSlots.add(target)
+
+                            // 드래그된 아이템 숨김
+                            draggedView.visibility = View.INVISIBLE
+
+                            // 현재 순서 업데이트
+                            updateDroppedOrder(dropTarget)
+
+                            // 모든 슬롯이 채워졌을 때 정답 확인
+                            if (filledSlots.size == answerOrder.size) {
+                                checkAnswer()
+                            }
                         }
 
                         true
                     }
 
                     DragEvent.ACTION_DRAG_ENDED -> {
-                        view.alpha = 1.0f // 드래그 종료 후 alpha 복구
+                        view.alpha = 1.0f
                         true
                     }
 
                     else -> false
                 }
             }
+        }
+    }
+
+    private fun updateDroppedOrder(dropTargets: List<ImageView>) {
+        // 기존 목록 초기화
+        droppedOrder.clear()
+
+        // 각 슬롯에서 이미지 리소스 ID 가져오기
+        for (target in dropTargets) {
+            val resourceId = target.tag as? Int
+            if (resourceId != null) {
+                droppedOrder.add(resourceId)
+            }
+        }
+    }
+
+    private fun checkAnswer() {
+        if (droppedOrder == answerOrder) {
+            Toast.makeText(context, "Correct order!", Toast.LENGTH_LONG).show()
+            // TODO: 정답 처리 로직 추가 (다음 화면으로 이동 등)
+        } else {
+            Toast.makeText(context, "Incorrect order. Try again!", Toast.LENGTH_LONG).show()
+            // TODO: 오답 처리 로직 추가
         }
     }
 }

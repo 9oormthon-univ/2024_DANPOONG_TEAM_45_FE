@@ -41,6 +41,7 @@
                 <!-- 각 캔디에 ID 추가 -->
                 <ImageView
                     android:id="@+id/item_candy_peach_iv"
+                    android:tag="@drawable/activity_qiuz_order_candy_peach_iv"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:src="@drawable/activity_qiuz_order_candy_peach_iv"
@@ -49,6 +50,7 @@
 
                 <ImageView
                     android:id="@+id/item_candy_mellon_iv"
+                    android:tag="@drawable/activity_qiuz_order_candy_mellon_iv"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:src="@drawable/activity_qiuz_order_candy_mellon_iv"
@@ -57,6 +59,7 @@
 
                 <ImageView
                     android:id="@+id/item_candy_grape_iv"
+                    android:tag="@drawable/activity_qiuz_order_candy_grape_iv"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:src="@drawable/activity_qiuz_order_candy_grape_iv"
@@ -65,6 +68,7 @@
 
                 <ImageView
                     android:id="@+id/item_candy_lemon_iv"
+                    android:tag="@drawable/activity_qiuz_order_candy_lemon_iv"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:src="@drawable/activity_qiuz_order_candy_lemon_iv"
@@ -73,6 +77,7 @@
 
                 <ImageView
                     android:id="@+id/item_candy_strawberry_iv"
+                    android:tag="@drawable/activity_qiuz_order_candy_strawberry_iv"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:src="@drawable/activity_qiuz_order_candy_strawberry_iv"
