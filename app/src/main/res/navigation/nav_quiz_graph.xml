@@ -19,7 +19,7 @@
         android:id="@+id/quiz2Fragment"
         android:name="com.example.myapplication.presentation.ui.fragment.quest.Quiz2Fragment"
         android:label="Quiz2Fragment"
-        tools:layout="@layout/item_ramen_order"
+        tools:layout="@layout/item_algorithm"
         >
 
         <action
@@ -30,16 +30,7 @@
         android:id="@+id/quiz3Fragment"
         android:name="com.example.myapplication.presentation.ui.fragment.quest.Quiz3Fragment"
         android:label="Quiz3Fragment"
-        tools:layout="@layout/item_algorithm"
+        tools:layout="@layout/item_candy"
         >
-        <action
-            android:id="@+id/action_quiz3Fragment_to_quiz4Fragment"
-            app:destination="@id/quiz4Fragment" />
     </fragment>
-    <fragment
-        android:id="@+id/quiz4Fragment"
-        android:name="com.example.myapplication.presentation.ui.fragment.quest.Quiz4Fragment"
-        android:label="Quiz4Fragment"
-        tools:layout="@layout/item_algorithm"
-        />
 </navigation>

@@ -88,10 +88,6 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
                     buttonPosition = 3
                     matchNavigationWithFragment()
                 }
-                R.id.quiz4Fragment -> {
-                    buttonPosition = 4
-                    matchNavigationWithFragment()
-                }
             }
         }
     }

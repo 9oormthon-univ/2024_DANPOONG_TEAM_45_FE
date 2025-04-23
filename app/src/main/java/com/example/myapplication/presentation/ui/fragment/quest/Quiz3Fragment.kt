@@ -10,6 +10,7 @@ import android.widget.Toast
 import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ItemCandyBinding
+import com.example.myapplication.presentation.ui.activity.QuizActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,6 +25,9 @@ open class Quiz3Fragment : BaseFragment<ItemCandyBinding>(R.layout.item_candy) {
     )  // 포도-딸기-멜론-복숭아-레몬 순서
 
     private val droppedOrder = mutableListOf<Int>() // 드롭된 슬롯의 순서에 맞는 이미지 리소스를 저장
+    private lateinit var candies: Map<ImageView, Int>
+    private lateinit var dropTargets: List<ImageView>
+    private val filledSlots = mutableSetOf<ImageView>() // 클래스 수준으로 이동
 
     override fun setLayout() {
         initList()
@@ -32,7 +36,7 @@ open class Quiz3Fragment : BaseFragment<ItemCandyBinding>(R.layout.item_candy) {
     @SuppressLint("ClickableViewAccessibility")
     private fun initList() {
         // 각 이미지뷰와 실제 이미지 리소스 ID를 매핑
-        val candies = mapOf(
+        candies = mapOf(
             binding.itemCandyGrapeIv to R.drawable.activity_qiuz_order_candy_grape_iv,
             binding.itemCandyStrawberryIv to R.drawable.activity_qiuz_order_candy_strawberry_iv,
             binding.itemCandyMellonIv to R.drawable.activity_qiuz_order_candy_mellon_iv,
@@ -40,7 +44,7 @@ open class Quiz3Fragment : BaseFragment<ItemCandyBinding>(R.layout.item_candy) {
             binding.itemCandyLemonIv to R.drawable.activity_qiuz_order_candy_lemon_iv
         )
 
-        val dropTarget = listOf(
+        dropTargets = listOf(
             binding.targetSlot1,
             binding.targetSlot2,
             binding.targetSlot3,
@@ -48,8 +52,8 @@ open class Quiz3Fragment : BaseFragment<ItemCandyBinding>(R.layout.item_candy) {
             binding.targetSlot5
         )
 
-        // 이미 드롭된 슬롯을 추적하는 변수
-        val filledSlots = mutableSetOf<ImageView>()
+        // filledSlots 초기화
+        filledSlots.clear()
 
         // 드래그 시작 설정
         candies.forEach { (imageView, resourceId) ->
@@ -69,7 +73,7 @@ open class Quiz3Fragment : BaseFragment<ItemCandyBinding>(R.layout.item_candy) {
         }
 
         // 드롭 타겟 설정
-        dropTarget.forEach { target ->
+        dropTargets.forEach { target ->
             target.setOnDragListener { view, event ->
                 when (event.action) {
                     DragEvent.ACTION_DRAG_STARTED -> true
@@ -110,7 +114,7 @@ open class Quiz3Fragment : BaseFragment<ItemCandyBinding>(R.layout.item_candy) {
                             draggedView.visibility = View.INVISIBLE
 
                             // 현재 순서 업데이트
-                            updateDroppedOrder(dropTarget)
+                            updateDroppedOrder(dropTargets)
 
                             // 모든 슬롯이 채워졌을 때 정답 확인
                             if (filledSlots.size == answerOrder.size) {
@@ -145,13 +149,37 @@ open class Quiz3Fragment : BaseFragment<ItemCandyBinding>(R.layout.item_candy) {
         }
     }
 
+    private fun resetCandies() {
+        // 모든 캔디 이미지뷰 다시 보이게 설정
+        candies.keys.forEach { it.visibility = View.VISIBLE }
+
+        // 모든 슬롯 초기화 (기본 이미지로 변경)
+        dropTargets.forEach {
+            it.setImageResource(R.drawable.activity_quiz_order_candy_target_iv_2)
+            it.tag = null
+        }
+
+        // 드롭된 순서 초기화
+        droppedOrder.clear()
+
+        // filledSlots 세트도 초기화
+        filledSlots.clear()
+
+        // 사용자에게 피드백 제공
+        Toast.makeText(context, "이미 놓여진 곳에 사탕을 또 배치할 수 없어요 !", Toast.LENGTH_SHORT).show()
+    }
+
     private fun checkAnswer() {
         if (droppedOrder == answerOrder) {
             Toast.makeText(context, "Correct order!", Toast.LENGTH_LONG).show()
-            // TODO: 정답 처리 로직 추가 (다음 화면으로 이동 등)
+            // TODO 정답 처리
+
         } else {
             Toast.makeText(context, "Incorrect order. Try again!", Toast.LENGTH_LONG).show()
-            // TODO: 오답 처리 로직 추가
+            // TODO 오답 처리
+
+            // 모든 캔디 원래 위치로 초기화
+            resetCandies()
         }
     }
 }
