@@ -6,23 +6,22 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
-import android.view.ViewTreeObserver;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
-import android.view.Window;
 
 import androidx.core.view.ViewCompat;
 
 import com.google.androidgamesdk.GameActivity;
 
 
-public class UnityPlayerGameActivity extends GameActivity implements IUnityPlayerLifecycleEvents, IUnityPermissionRequestSupport, IUnityPlayerSupport
-{
-    class GameActivitySurfaceView extends InputEnabledSurfaceView
-    {
+public class UnityPlayerGameActivity extends GameActivity implements IUnityPlayerLifecycleEvents, IUnityPermissionRequestSupport, IUnityPlayerSupport {
+    private String stageId = "";
+
+    class GameActivitySurfaceView extends InputEnabledSurfaceView {
         GameActivity mGameActivity;
+
         public GameActivitySurfaceView(GameActivity activity) {
             super(activity);
             mGameActivity = activity;
@@ -30,28 +29,29 @@ public class UnityPlayerGameActivity extends GameActivity implements IUnityPlaye
 
         // Reroute motion events from captured pointer to normal events
         // Otherwise when doing Cursor.lockState = CursorLockMode.Locked from C# the touch and mouse events will stop working
-        @Override public boolean onCapturedPointerEvent(MotionEvent event) {
+        @Override
+        public boolean onCapturedPointerEvent(MotionEvent event) {
             return mGameActivity.onTouchEvent(event);
         }
     }
 
     protected UnityPlayerForGameActivity mUnityPlayer;
-    protected String updateUnityCommandLineArguments(String cmdLine)
-    {
+
+    protected String updateUnityCommandLineArguments(String cmdLine) {
         return cmdLine;
     }
 
-    static
-    {
+    static {
         System.loadLibrary("game");
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // On devices with API Level >= 30 system bars are no longer accounted for and because of that window/views don't resize (see https://jira.unity3d.com/browse/UUM-18618)
         // This is most likely due to deprecation of setSystemUiVisibility and changes to insets used in SystemUI.cpp
         // This fix forces views to shrink to account for system bars
+        stageId = getIntent().getStringExtra("stage");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             getWindow().setDecorFitsSystemWindows(true);
         }
@@ -63,17 +63,18 @@ public class UnityPlayerGameActivity extends GameActivity implements IUnityPlaye
     }
 
     // Soft keyboard relies on inset listener for listening to various events - keyboard opened/closed/text entered.
-    private void applyInsetListener(SurfaceView surfaceView)
-    {
+    private void applyInsetListener(SurfaceView surfaceView) {
         surfaceView.getViewTreeObserver().addOnGlobalLayoutListener(
                 () -> onApplyWindowInsets(surfaceView, ViewCompat.getRootWindowInsets(getWindow().getDecorView())));
     }
 
-    @Override protected InputEnabledSurfaceView createSurfaceView() {
+    @Override
+    protected InputEnabledSurfaceView createSurfaceView() {
         return new GameActivitySurfaceView(this);
     }
 
-    @Override protected void onCreateSurfaceView() {
+    @Override
+    protected void onCreateSurfaceView() {
         super.onCreateSurfaceView();
         FrameLayout frameLayout = findViewById(contentViewId);
 
@@ -100,58 +101,58 @@ public class UnityPlayerGameActivity extends GameActivity implements IUnityPlaye
     }
 
     // Quit Unity
-    @Override protected void onDestroy ()
-    {
+    @Override
+    protected void onDestroy() {
         mUnityPlayer.destroy();
         super.onDestroy();
     }
 
-    @Override protected void onStop()
-    {
+    @Override
+    protected void onStop() {
         // Note: we want Java onStop callbacks to be processed before the native part processes the onStop callback
         mUnityPlayer.onStop();
         super.onStop();
     }
 
-    @Override protected void onStart()
-    {
+    @Override
+    protected void onStart() {
         // Note: we want Java onStart callbacks to be processed before the native part processes the onStart callback
         mUnityPlayer.onStart();
         super.onStart();
     }
 
     // Pause Unity
-    @Override protected void onPause()
-    {
+    @Override
+    protected void onPause() {
         // Note: we want Java onPause callbacks to be processed before the native part processes the onPause callback
         mUnityPlayer.onPause();
         super.onPause();
     }
 
     // Resume Unity
-    @Override protected void onResume()
-    {
+    @Override
+    protected void onResume() {
         // Note: we want Java onResume callbacks to be processed before the native part processes the onResume callback
         mUnityPlayer.onResume();
         super.onResume();
     }
 
     // Configuration changes are used by Video playback logic in Unity
-    @Override public void onConfigurationChanged(Configuration newConfig)
-    {
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
         mUnityPlayer.configurationChanged(newConfig);
         super.onConfigurationChanged(newConfig);
     }
 
     // Notify Unity of the focus change.
-    @Override public void onWindowFocusChanged(boolean hasFocus)
-    {
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
         mUnityPlayer.windowFocusChanged(hasFocus);
         super.onWindowFocusChanged(hasFocus);
     }
 
-    @Override protected void onNewIntent(Intent intent)
-    {
+    @Override
+    protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         // To support deep linking, we need to make sure that the client can get access to
         // the last sent intent. The clients access this through a JNI api that allows them
@@ -163,14 +164,49 @@ public class UnityPlayerGameActivity extends GameActivity implements IUnityPlaye
 
     @Override
     @TargetApi(Build.VERSION_CODES.M)
-    public void requestPermissions(PermissionRequest request)
-    {
+    public void requestPermissions(PermissionRequest request) {
         mUnityPlayer.addPermissionRequest(request);
     }
 
-    @Override public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-    {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         mUnityPlayer.permissionResponse(this, requestCode, permissions, grantResults);
     }
+
+    public void receiveDataFromUnity(String str) {
+        Log.d("UnityMessage", "Received message from Unity: " + str);
+
+        // 수신된 메시지에 따라 동작 수행
+        switch (str) {
+            case "ok":
+                Log.d("UnityMessage", "OK command received");
+                break;
+            case "next":
+                Log.d("UnityMessage", "NEXT command received");
+
+                try {
+                    Context context = UnityPlayer.currentActivity;
+                    Intent intent = new Intent();
+                    intent.setClassName(context, "com.example.myapplication.presentation.ui.activity.QuizClearActivity");
+                    intent.putExtra("stage", Integer.parseInt(stageId) + 7 + "");
+                    intent.putExtra("game2Activity", true);
+                    context.startActivity(intent);
+                } catch (Exception e) {
+                    Log.e("UnityLibrary", "Failed to start QuizClearActivity", e);
+                }
+                break;
+            case "quit":
+                Log.d("UnityMessage", "QUIT command received");
+                finish();
+                break;
+            default:
+                Log.d("UnityMessage", "Unknown command: " + str);
+                break;
+        }
+
+        // 필요하다면 Unity로 결과 반환
+        // sendMessageToUnity("GameObjectName", "MethodName", "Response message");
+    }
 }
+
