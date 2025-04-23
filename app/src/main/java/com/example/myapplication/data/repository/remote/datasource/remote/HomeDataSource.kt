@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
 import retrofit2.Response
 
-interface HomeDataSource {
+interface HomeDataSource{
     //홈 등록
     suspend fun postHome(): Flow<BaseResponse<Any>>
 
