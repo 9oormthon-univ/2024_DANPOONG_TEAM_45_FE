@@ -27,6 +27,8 @@ import javax.inject.Inject
 class QuestChapterFragment :
     BaseFragment<FragmentQuestChapterBinding>(R.layout.fragment_quest_chapter), ItemClickListener {
 
+    @Inject
+    lateinit var tokenManager: TokenManager
     private lateinit var adapter: QuizAdapter
     private val loginViewModel: LoginViewModel by viewModels()
     private val chapterViewModel: ChapterViewModel by viewModels()
@@ -40,6 +42,7 @@ class QuestChapterFragment :
 
     //챕터 아이디
     var parseId = 0
+    // 섬 이름
     var islandName = ""
 
     //이미지 바인딩
@@ -71,8 +74,6 @@ class QuestChapterFragment :
         chapterViewModel.fetchQuizzesForChapter(parseId)
     }
 
-    @Inject
-    lateinit var tokenManager: TokenManager
     private fun observeLifeCycle() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
@@ -173,6 +174,8 @@ class QuestChapterFragment :
                     startActivity(this)
                 }
             }
+
+
         }
     }
 

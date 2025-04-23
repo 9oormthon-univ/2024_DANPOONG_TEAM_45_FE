@@ -1,0 +1,155 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <!-- 상단 프레임 이미지 -->
+        <ImageView
+            android:id="@+id/item_candy_frame_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/activity_quiz_order_candy_iv"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- 아래 수평 배치 -->
+        <LinearLayout
+            android:id="@+id/horizontalContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/item_candy_frame_iv"
+            android:gravity="center_horizontal">
+
+            <!-- GridLayout: 캔디 아이템 -->
+            <GridLayout
+                android:id="@+id/gridLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:columnCount="2"
+                android:rowCount="5"
+                android:padding="8dp">
+
+                <!-- 각 캔디에 ID 추가 -->
+                <ImageView
+                    android:id="@+id/item_candy_peach_iv"
+                    android:tag="@drawable/activity_qiuz_order_candy_peach_iv"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/activity_qiuz_order_candy_peach_iv"
+                    android:layout_row="0"
+                    android:layout_column="0"/>
+
+                <ImageView
+                    android:id="@+id/item_candy_mellon_iv"
+                    android:tag="@drawable/activity_qiuz_order_candy_mellon_iv"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/activity_qiuz_order_candy_mellon_iv"
+                    android:layout_row="1"
+                    android:layout_column="1" />
+
+                <ImageView
+                    android:id="@+id/item_candy_grape_iv"
+                    android:tag="@drawable/activity_qiuz_order_candy_grape_iv"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/activity_qiuz_order_candy_grape_iv"
+                    android:layout_row="2"
+                    android:layout_column="0"/>
+
+                <ImageView
+                    android:id="@+id/item_candy_lemon_iv"
+                    android:tag="@drawable/activity_qiuz_order_candy_lemon_iv"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/activity_qiuz_order_candy_lemon_iv"
+                    android:layout_row="3"
+                    android:layout_column="1"/>
+
+                <ImageView
+                    android:id="@+id/item_candy_strawberry_iv"
+                    android:tag="@drawable/activity_qiuz_order_candy_strawberry_iv"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/activity_qiuz_order_candy_strawberry_iv"
+                    android:layout_row="4"
+                    android:layout_column="0"/>
+            </GridLayout>
+
+            <FrameLayout
+                android:id="@+id/targetFrame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="70dp"
+                android:clipChildren="false"> <!-- 배경이 바깥으로 커지도록 -->
+
+                <!-- 배경 이미지: 크기 동적으로 설정 -->
+                <ImageView
+                    android:id="@+id/targetBackground"
+                    android:layout_width="120dp"
+                    android:layout_height="450dp"
+                    android:src="@drawable/activity_quize_order_candy_target_iv"
+                    android:scaleType="fitXY"
+                    android:adjustViewBounds="true"
+                    android:layout_gravity="center" />
+
+                <!-- 슬롯 이미지들 -->
+                <LinearLayout
+                    android:id="@+id/targetContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:padding="8dp"
+                    android:layout_margin="4dp"> <!-- 배경과 간격을 두기 위해 여유 추가 -->
+
+                    <!-- 슬롯 1 -->
+                    <ImageView
+                        android:id="@+id/target_slot_1"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/activity_quiz_order_candy_target_iv_2" />
+
+                    <!-- 슬롯 2 -->
+                    <ImageView
+                        android:id="@+id/target_slot_2"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/activity_quiz_order_candy_target_iv_2" />
+
+                    <!-- 슬롯 3 -->
+                    <ImageView
+                        android:id="@+id/target_slot_3"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/activity_quiz_order_candy_target_iv_2" />
+
+                    <!-- 슬롯 4 (이후 추가되는 슬롯들도 여기에 동일하게 추가) -->
+                    <ImageView
+                        android:id="@+id/target_slot_4"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/activity_quiz_order_candy_target_iv_2" />
+
+                    <!-- 슬롯 5 -->
+                    <ImageView
+                        android:id="@+id/target_slot_5"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/activity_quiz_order_candy_target_iv_2" />
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

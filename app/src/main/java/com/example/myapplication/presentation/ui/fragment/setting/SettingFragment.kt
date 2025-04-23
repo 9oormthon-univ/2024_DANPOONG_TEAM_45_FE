@@ -60,9 +60,9 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(R.layout.fragment_s
 
         binding.exitArrowPoint.setOnClickListener {
             lifecycleScope.launch {
-                getUserId()?.let { it1 ->
+                getUserId()?.let { userId ->
                     loginViewModel.deleteUser(
-                        it1.toInt() + 1
+                        userId.toInt()
                     )
                     observeLifeCycle()
                 }

@@ -39,14 +39,14 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
 
     val titleList = listOf(
         "Q.\n무무가 가야할 방향은\n어디일까요?",
-        "Q.\n맛있는 라면은 어떤 순서로 \n요리 해야할까요?",
-        "Q.\n알고리즘이란 무엇일까요?"
+        "Q.\n알고리즘이란 무엇일까요?",
+        "Q.\n사탕을 아래의 순서로 \n먹을 수 있게 도와주세요",
     )
 
     val subTitleList = listOf(
         "무무가 앞으로 가야 할 방향을 헷갈리고 있어요",
-        "무무가 순서를 잘 기억할 수 있도록 도와주세요!",
-        "아래 4가지 선택지 중 하나를 고르세요."
+        "아래 4가지 선택지 중 하나를 고르세요.",
+        "사탕은 위에서 부터 순서대로 먹을 수 있어요!"
     )
 
     private var levelCorrect = false
@@ -88,6 +88,7 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
                     buttonPosition = 3
                     matchNavigationWithFragment()
                 }
+
             }
         }
     }
@@ -170,7 +171,7 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
     private fun showCustomTwoDialog() {
         when (buttonPosition) {
             1 -> setDialog("덕분에 길을 잘 찾아갔어!")
-            2 -> setDialog("너무 맛있는 라면이야!")
+            2 -> setDialog("정말 똑똑하구나!")
             3 -> nextFragmentWithIndex()
         }
     }
@@ -202,11 +203,20 @@ class QuizActivity : BaseActivity<ActivityQuizBinding>(R.layout.activity_quiz),
                 finish() // QuizActivity 종료
             }
         }
-        else {
+        else if(id == 2) {
             navController.navigate(
                 id, null,
                 NavOptions.Builder()
                     .setPopUpTo(R.id.quiz1Fragment, true)  // 시작 프래그먼트 제거
+                    .setLaunchSingleTop(true)
+                    .build()
+            )
+        }
+        else{
+            navController.navigate(
+                id, null,
+                NavOptions.Builder()
+                    .setPopUpTo(R.id.quiz2Fragment, true)  // 시작 프래그먼트 제거
                     .setLaunchSingleTop(true)
                     .build()
             )

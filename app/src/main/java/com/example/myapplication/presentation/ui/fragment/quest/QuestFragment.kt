@@ -52,7 +52,7 @@ private lateinit var customDialog2: CustomDialog2
                         200 -> {
                             islandAdapter.submitList(islandList)
                             binding.fragmentQuestRv.adapter = islandAdapter
-                            Log.d("okhttp", "${islandList}")
+                            Log.d("okhttp", "$islandList")
                         }
                     }
                 }

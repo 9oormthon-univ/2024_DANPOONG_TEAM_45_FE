@@ -1,101 +1,100 @@
 package com.example.myapplication.presentation.ui.fragment.quest
 
-import android.util.Log
 import android.view.View
 import com.example.myapplication.presentation.base.BaseFragment
 import com.example.myapplication.R
-import com.example.myapplication.databinding.ItemRamenOrderBinding
+import com.example.myapplication.databinding.ItemAlgorithmBinding
 import com.example.myapplication.presentation.ui.activity.QuizActivity
+import com.example.myapplication.presentation.widget.extention.loadCropRoundedSquareImage
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class Quiz2Fragment : BaseFragment<ItemRamenOrderBinding>(R.layout.item_ramen_order) {
+open class Quiz2Fragment :
+    BaseFragment<ItemAlgorithmBinding>(R.layout.item_algorithm) {
 
-    private lateinit var correctList : List<View>
+    private var selectedNumber = 0
 
+    private lateinit var viewList: List<View>
 
-    private val buttonList = mutableListOf<View>()
     override fun setLayout() {
-        correctList = listOf(
-            binding.itemCharacterMoveClickRightBt,
-            binding.itemCharacterMoveClickLeftBt,
-            binding.itemCharacterMoveClickMiddleBt
+        initList()
+        btnClick()
+    }
+
+    private fun initList() {
+        viewList = listOf(
+            binding.btnBiginnerProblem3Answer1Off,
+            binding.btnBiginnerProblem3Answer2Off,
+            binding.btnBiginnerProblem3Answer3Off,
+            binding.btnBiginnerProblem3Answer4Off
         )
-        checkButtonState()
     }
 
-    private val drawableList = listOf(
-        R.drawable.selector_ramen_check_1,
-        R.drawable.selector_ramen_check_2,
-        R.drawable.selector_ramen_check_3
-    )
-
-
-    //버튼 세팅
-    private fun checkButtonState() {
-        binding.itemCharacterMoveClickLeftBt.setOnClickListener {
-            buttonClick(it)
-            confirmCorrectQuestion()
+    private fun btnClick() {
+        // 힌트
+        binding.ibBiginnerProblem3HintOff.setOnClickListener {
+            val view = binding.ibBiginnerProblem3HintContent
+            if(view.visibility == View.GONE) {
+                binding.ibBiginnerProblem3HintContent.visibility = View.VISIBLE
+            }
+            else{
+                binding.ibBiginnerProblem3HintContent.visibility = View.GONE
+            }
         }
-        binding.itemCharacterMoveClickMiddleBt.setOnClickListener {
-            buttonClick(it)
+        // 1번
+        binding.btnBiginnerProblem3Answer1Off.setOnClickListener {
+            selectAllAnswers(it)  // 모든 답변을 선택 해제
+            selectedNumber = 1
             confirmCorrectQuestion()
+            buttonSet(true)
         }
-        binding.itemCharacterMoveClickRightBt.setOnClickListener {
-            buttonClick(it)
+        // 2번
+        binding.btnBiginnerProblem3Answer2Off.setOnClickListener {
+            selectAllAnswers(it)  // 모든 답변을 선택 해제
+            selectedNumber = 2
             confirmCorrectQuestion()
+            buttonSet(true)
+        }
+        // 3번
+        binding.btnBiginnerProblem3Answer3Off.setOnClickListener {
+            selectAllAnswers(it)  // 모든 답변을 선택 해제
+            selectedNumber = 3
+            confirmCorrectQuestion()
+            buttonSet(true)
+        }
+
+        // 4번
+        binding.btnBiginnerProblem3Answer4Off.setOnClickListener {
+            selectAllAnswers(it)  // 모든 답변을 선택 해제
+            selectedNumber = 4
+            confirmCorrectQuestion()
+            buttonSet(true)
         }
     }
 
-    //클릭 함수 모음
-    private fun buttonClick(view : View){
-
-        buttonState(view)
-        orderNumberCheck()
-        onButton()
+    private fun selectAllAnswers(view: View) {
+        viewList.map {
+            it.isSelected = view == it
+        }
     }
-
-    // 버튼 활성화 유무
-    private fun onButton() {
+    private fun confirmCorrectQuestion() {
         val av = requireActivity() as QuizActivity
-        if (buttonList.size == 3) {
-            av.onButtonState(true)
+        if (selectedNumber == 2) {
+            av.setReplaceLevelState(true)
         } else {
-            av.onButtonState(false)
+            av.setReplaceLevelState(false)
         }
     }
 
-    // 선택, 취소
-    private fun buttonState(view: View) {
-        if (view.isSelected) {
-            view.isSelected = false
-            buttonList.remove(view)
-        } else {
-            view.isSelected = true
-            buttonList.add(view)
-        }
-        Log.d("로그", buttonList.toString())
+    private fun buttonSet(isState: Boolean) {
+        val av = requireActivity() as QuizActivity
+        av.onButtonState(isState)
     }
-
-    //리소스들을 체크해서 백그라운드 지정
-    private fun orderNumberCheck() {
-        buttonList.mapIndexed { index, v ->
-            v.setBackgroundResource(drawableList[index])
-        }
-    }
-
-    private fun confirmCorrectQuestion(){
-          val av = requireActivity() as QuizActivity
-          if(buttonList == correctList){
-              av.setReplaceLevelState(true)
-          }
-      }
-
 
     override fun onDestroy() {
         super.onDestroy()
+        buttonSet(false)
         val av = requireActivity() as QuizActivity
-        av.onButtonState(false)
         av.setReplaceLevelState(false)
     }
 }

@@ -1,9 +1,18 @@
 [versions]
+androidxConstraintlayout = "2.2.1"
+appcompatVersion = "1.6.1"
+constraintlayoutVersion = "2.1.4"
+core = "1.16.0"
+coreVersion = "1.9.0"
+gamesActivity = "4.0.0"
+gamesActivityVersion = "3.0.5"
+gamesFramePacing = "2.1.2"
+gamesFramePacingVersion = "1.10.0"
 profileinstaller = "1.4.1"
 projectApplicationId = "com.example.myapplication"
 projectVersionName = "1.0"
 projectVersionCode = "1"
-projectMinSdkVersion = "26"
+projectMinSdkVersion = "33"
 projectTargetSdkVersion = "35"
 projectCompileSdkVersion = "35"
 testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -41,6 +50,15 @@ jetbrainsKotlinJvm = "1.9.24"
 ksp = "1.9.24-1.0.20"
 
 [libraries]
+androidx-appcompat-v161 = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
+androidx-constraintlayout-v214 = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayoutVersion" }
+androidx-constraintlayout-v221 = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidxConstraintlayout" }
+androidx-core = { module = "androidx.core:core", version.ref = "core" }
+androidx-core-v190 = { module = "androidx.core:core", version.ref = "coreVersion" }
+androidx-games-activity = { module = "androidx.games:games-activity", version.ref = "gamesActivity" }
+androidx-games-activity-v305 = { module = "androidx.games:games-activity", version.ref = "gamesActivityVersion" }
+androidx-games-frame-pacing = { module = "androidx.games:games-frame-pacing", version.ref = "gamesFramePacing" }
+androidx-games-frame-pacing-v1100 = { module = "androidx.games:games-frame-pacing", version.ref = "gamesFramePacingVersion" }
 androidx-profileinstaller = { module = "androidx.profileinstaller:profileinstaller", version.ref = "profileinstaller" }
 desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
