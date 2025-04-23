@@ -4,7 +4,6 @@ plugins {
 
 android {
     namespace = "com.example.myapplication"
-    ndkVersion = "25.2.9519653" // NDK 명시
     buildFeatures {
         dataBinding = true
     }

@@ -2,16 +2,16 @@ apply plugin: 'com.android.library'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.core:core:1.9.0'
-    implementation 'androidx.games:games-activity:3.0.5'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.games:games-frame-pacing:1.10.0'
+    implementation libs.androidx.appcompat
+//    implementation libs.androidx.core.v190
+    implementation libs.androidx.games.activity.v305
+    implementation libs.androidx.constraintlayout.v221
+    implementation libs.androidx.games.frame.pacing.v1100
 }
 
 android {
     namespace "com.unity3d.player"
-//    ndkVersion "29.0.13113456"
+    ndkVersion "27.2.12479018"
     compileSdk 35
     buildToolsVersion = "34.0.0"
 
@@ -45,6 +45,7 @@ android {
 
     androidResources {
         ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
+        noCompress = ['.unity3d', '.ress', '.resource', '.obb', '.bundle', '.unityexp'] + unityStreamingAssets.tokenize(', ')
     }
 
     packaging {
@@ -70,10 +71,6 @@ def GetIl2CppSymbolPath(String workingDir, String abi) {
     return "${workingDir}/symbols/${abi}/libil2cpp.so";
 }
 
-def getNdkDir() {
-    return android.ndkDirectory.toString()
-}
-
 def BuildIl2CppImpl(String workingDir, String configuration, String architecture, String abi, String[] staticLibraries) {
     def commandLineArgs = []
     commandLineArgs.add("--compile-cpp")
@@ -92,8 +89,7 @@ def BuildIl2CppImpl(String workingDir, String configuration, String architecture
     commandLineArgs.add("--data-folder=${workingDir}/src/main/Il2CppOutputProject/Source/il2cppOutput/data")
     commandLineArgs.add("--generatedcppdir=${workingDir}/src/main/Il2CppOutputProject/Source/il2cppOutput")
     commandLineArgs.add("--cachedirectory=${workingDir}/build/il2cpp_${abi}_${configuration}/il2cpp_cache")
-//    commandLineArgs.add("--tool-chain-path=${android.ndkDirectory}")
-    commandLineArgs.add("--tool-chain-path=${getNdkDir()}")
+    commandLineArgs.add("--tool-chain-path=${android.ndkDirectory}")
 
     staticLibraries.eachWithIndex {fileName, i->
         commandLineArgs.add("--additional-libraries=${workingDir}/src/main/jniStaticLibs/${abi}/${fileName}")
